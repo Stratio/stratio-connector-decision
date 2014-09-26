@@ -20,10 +20,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.commons.connection.exceptions.HandlerConnectionException;
-import com.stratio.connector.elasticsearch.core.connection.ElasticSearchConnectionHandler;
-import com.stratio.connector.elasticsearch.core.engine.ElasticsearchMetadataEngine;
-import com.stratio.connector.elasticsearch.core.engine.ElasticsearchQueryEngine;
-import com.stratio.connector.elasticsearch.core.engine.ElasticsearchStorageEngine;
+import com.stratio.connector.streaming.core.connection.StreamingConnectionHandler;
+import com.stratio.connector.streaming.core.engine.StreamingMetadataEngine;
+import com.stratio.connector.streaming.core.engine.StreamingQueryEngine;
+import com.stratio.connector.streaming.core.engine.StreamingStorageEngine;
 import com.stratio.meta.common.connector.ConnectorClusterConfig;
 import com.stratio.meta.common.connector.IConfiguration;
 import com.stratio.meta.common.connector.IConnector;
@@ -48,7 +48,7 @@ public class StreamingConnector implements IConnector {
     /**
      * The connectionHandler.
      */
-    private ElasticSearchConnectionHandler connectionHandler = null;
+    private StreamingConnectionHandler connectionHandler = null;
 
     /**
      * Create a connection to Elasticsearch.
@@ -61,7 +61,7 @@ public class StreamingConnector implements IConnector {
     @Override
     public void init(IConfiguration configuration) {
 
-        connectionHandler = new ElasticSearchConnectionHandler(configuration);
+        connectionHandler = new StreamingConnectionHandler(configuration);
 
     }
 
@@ -122,7 +122,7 @@ public class StreamingConnector implements IConnector {
     @Override
     public IStorageEngine getStorageEngine() {
 
-        return new ElasticsearchStorageEngine(connectionHandler);
+        return new StreamingStorageEngine(connectionHandler);
 
     }
 
@@ -134,7 +134,7 @@ public class StreamingConnector implements IConnector {
     @Override
     public IQueryEngine getQueryEngine() {
 
-        return new ElasticsearchQueryEngine(connectionHandler);
+        return new StreamingQueryEngine(connectionHandler);
     }
 
     /**
@@ -144,7 +144,7 @@ public class StreamingConnector implements IConnector {
      */
     @Override
     public IMetadataEngine getMetadataEngine() {
-        return new ElasticsearchMetadataEngine(connectionHandler);
+        return new StreamingMetadataEngine(connectionHandler);
     }
 
     /**

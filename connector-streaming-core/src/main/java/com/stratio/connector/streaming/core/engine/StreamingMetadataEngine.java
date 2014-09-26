@@ -17,8 +17,10 @@ package com.stratio.connector.streaming.core.engine;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.connection.ConnectionHandler;
 import com.stratio.connector.commons.engine.CommonsMetadataEngine;
@@ -33,7 +35,9 @@ import com.stratio.meta2.common.metadata.IndexMetadata;
 import com.stratio.meta2.common.metadata.TableMetadata;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.api.messaging.ColumnNameType;
+import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
 import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
+import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
 
 /**
  * This class is the responsible of manage the ElasticSearchMetadata
@@ -95,11 +99,11 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
                          .getColumnType())));
               }
                connection.getNativeConnection().createStream(streamName, columnList);
-            } catch (StratioEngineOperationException e) {
-            String msg = "Fail creating the Stream ["+streamName+"]. "+e.getMessage();
-            logger.error(msg);
+            } catch (StratioEngineOperationException | StratioEngineStatusException |StratioAPISecurityException e) {
+            	String msg = "Fail creating the Stream ["+streamName+"]. "+e.getMessage();
+            	logger.error(msg);
             throw new ExecutionException(msg,e);
-        }
+        } 
 
     }
 

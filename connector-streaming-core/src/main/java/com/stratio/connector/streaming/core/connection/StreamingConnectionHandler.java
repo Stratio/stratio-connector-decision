@@ -16,32 +16,47 @@
 
 package com.stratio.connector.streaming.core.connection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.connection.ConnectionHandler;
-import com.stratio.connector.elasticsearch.core.configuration.ConfigurationOptions;
+import com.stratio.connector.commons.connection.exceptions.CreateNativeConnectionException;
 import com.stratio.meta.common.connector.ConnectorClusterConfig;
 import com.stratio.meta.common.connector.IConfiguration;
 import com.stratio.meta.common.security.ICredentials;
+import com.stratio.streaming.commons.exceptions.StratioEngineConnectionException;
+import com.stratio.connector.streaming.core.connection.StreamingConnection;
+
 
 /**
  * Created by jmgomez on 28/08/14.
  */
 public class StreamingConnectionHandler extends ConnectionHandler {
 
+    /**
+     * The Log.
+     */
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
+    
     public StreamingConnectionHandler(IConfiguration configuration) {
         super(configuration);
     }
 
     @Override
     protected Connection createNativeConnection(ICredentials iCredentials,
-            ConnectorClusterConfig connectorClusterConfig) {
-        Connection connection;
-
-        return new StreamingConnection();
+            ConnectorClusterConfig connectorClusterConfig) throws CreateNativeConnectionException{
+    		Connection con = null;
+        try {
+        	con= new StreamingConnection(iCredentials,connectorClusterConfig);
+		} catch (StratioEngineConnectionException e) {
+			String msg = "Fail creating Streaming connection. "+e.getMessage();
+			logger.error(msg);
+			throw new CreateNativeConnectionException(msg,e);
+		}
+        return con;
     }
 
-    private boolean isNodeClient(ConnectorClusterConfig config) {
-        return Boolean.parseBoolean((String) config.getOptions().get(ConfigurationOptions.NODE_TYPE.getOptionName()));
-    }
+  
 
 }
