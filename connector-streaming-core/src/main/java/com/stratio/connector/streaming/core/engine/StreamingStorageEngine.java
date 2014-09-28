@@ -15,7 +15,10 @@
  */
 package com.stratio.connector.streaming.core.engine;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +26,14 @@ import org.slf4j.LoggerFactory;
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.engine.CommonsStorageEngine;
 import com.stratio.connector.streaming.core.connection.StreamingConnectionHandler;
+import com.stratio.meta.common.data.Cell;
 import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.exceptions.ExecutionException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.meta2.common.metadata.TableMetadata;
 import com.stratio.streaming.api.IStratioStreamingAPI;
+import com.stratio.streaming.api.messaging.ColumnNameValue;
+import com.stratio.streaming.commons.exceptions.StratioStreamingException;
 
 /**
  * This class performs operations insert and delete in Elasticsearch.
@@ -51,24 +57,36 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
     }
 
     /**
-     * Insert a document in Elasticsearch.
+     * Insert a document in Streaming.
      *
      *
-     * @param targetTable   the targetName.
+     * @param targetStream   the targetName.
      * @param row           the row.
      * @throws com.stratio.meta.common.exceptions.ExecutionException   in case of failure during the execution.
      * @throws com.stratio.meta.common.exceptions.UnsupportedException it the operation is not supported.
      */
 
     @Override
-    protected void insert(TableMetadata targetTable, Row row, Connection<IStratioStreamingAPI> connection)
+    protected void insert(TableMetadata targetStream, Row row, Connection<IStratioStreamingAPI> connection)
             throws UnsupportedException, ExecutionException {
-
-    	 throw new UnsupportedException("insert not supported in Streaming connector");
+    		String streamName = targetStream.getName().getName();
+    	try {
+    		List<ColumnNameValue> streamData = new ArrayList();
+    		Map<String, Cell> cells = row.getCells();
+			for (String cellName: cells.keySet()){
+    			
+    			streamData.add( new ColumnNameValue(cellName, cells.get(cellName).getValue()));
+    		}
+	    		connection.getNativeConnection().insertData(streamName, streamData);
+    	} catch(StratioStreamingException e) {
+    		String msg = "Inserting data error in Streaming ["+streamName+"]. "+e.getMessage();
+        	logger.error(msg);
+        	throw new ExecutionException(msg,e);
+    	}
     }
 
     /**
-     * Insert a set of documents in Elasticsearch.
+     * Insert a set of documents in Streaming.
      *
      *
      * @param rows        the set of rows.
@@ -76,10 +94,18 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
      * @throws com.stratio.meta.common.exceptions.UnsupportedException if the operation is not supported.
      */
     @Override
-    protected void insert( TableMetadata targetTable, Collection<Row> rows,
+    protected void insert( TableMetadata targetStream, Collection<Row> rows,
             Connection<IStratioStreamingAPI> connection) throws UnsupportedException, ExecutionException {
-
-    	 throw new UnsupportedException("insert bulk not supported in Streaming connector");
+    	String streamName = targetStream.getName().getName();
+    		try{
+	    	 for (Row row: rows){
+	    		 insert(targetStream,row,connection);
+	    	 }
+    	}catch(ExecutionException e){
+    		String msg = "Inserting bulk data error in Streaming. ["+streamName+"]. "+e.getMessage();
+        	logger.error(msg);
+        	throw new ExecutionException(msg,e);
+    	}
     }
 
    

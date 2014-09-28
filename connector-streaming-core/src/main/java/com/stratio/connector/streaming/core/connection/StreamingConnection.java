@@ -62,7 +62,7 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
                         config.getOptions().get("zooKeeperServer"),Integer.parseInt(config.getOptions().get
                                 ("zooKeeperPort")));
         connectionName = config.getName().getName();
-        logger.info("Streaming  connection established ");
+        logger.info("Streaming  connection ["+connectionName+"] established ");
 
         isConnect = true;
     }

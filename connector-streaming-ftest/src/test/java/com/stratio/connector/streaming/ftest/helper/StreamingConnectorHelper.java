@@ -45,7 +45,7 @@ public class StreamingConnectorHelper implements IConnectorHelper {
 	private static final String ZOOKEEPER_PORT = "2181";
 	private static final String ZOOKEEPER_SERVER = "192.168.0.2";
 	protected String KAFKA_SERVER = "192.168.0.2";// 10.200.0.58, 10.200.0.59, 10.200.0.60, 10.200.0.62";
-    private String KAFKA_PORT = "9092";//,9300,9300,9300,9300";
+    private String KAFKA_PORT = "9092";
 	private ClusterName clusterName;
 
 

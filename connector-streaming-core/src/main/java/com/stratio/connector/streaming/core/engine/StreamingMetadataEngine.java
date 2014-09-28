@@ -38,6 +38,7 @@ import com.stratio.streaming.api.messaging.ColumnNameType;
 import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
 import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
 import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
+import com.stratio.streaming.commons.exceptions.StratioStreamingException;
 
 /**
  * This class is the responsible of manage the ElasticSearchMetadata
@@ -81,7 +82,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
      * This method create a type in ES.
      *
      *
-     * @param streamMetadata  the type configuration.
+     * @param streamMetadata  the stream configuration.
      * @throws com.stratio.meta.common.exceptions.UnsupportedException if any operation is not supported.
      * @throws com.stratio.meta.common.exceptions.ExecutionException   if an error occur.
      */
@@ -89,10 +90,10 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
     protected void createTable(TableMetadata streamMetadata, Connection<IStratioStreamingAPI> connection)
             throws UnsupportedException,
             ExecutionException {
-        String streamName = null;
+        String  streamName = streamMetadata.getName().getName();
         try {
              List columnList = new ArrayList();
-             streamName = streamMetadata.getName().getName();
+            
              for (ColumnName columnName : streamMetadata.getColumns().keySet()){
                  columnList.add(new ColumnNameType(columnName.getName(), convertType(streamMetadata.getColumns().get
                          (columnName)
@@ -102,7 +103,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
             } catch (StratioEngineOperationException | StratioEngineStatusException |StratioAPISecurityException e) {
             	String msg = "Fail creating the Stream ["+streamName+"]. "+e.getMessage();
             	logger.error(msg);
-            throw new ExecutionException(msg,e);
+            	throw new ExecutionException(msg,e);
         } 
 
     }
@@ -125,16 +126,24 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
      * This method drop a type in ES.
      *
      *
-     * @param typeName      the type name.
+     * @param stream      the stream name.
      */
     @Override
-    protected void dropTable( TableName typeName, Connection<IStratioStreamingAPI> connection)
+    protected void dropTable( TableName stream	, Connection<IStratioStreamingAPI> connection)
             throws ExecutionException, UnsupportedException {
-        throw new UnsupportedException("Drop table not supported in Streaming connector");
+    		String streamName = stream.getName();
+    	try {
+    		
+			connection.getNativeConnection().dropStream(streamName);
+    	} catch(StratioStreamingException e) {
+        	String msg = "Fail droping the Stream ["+streamName+"]. "+e.getMessage();
+        	logger.error(msg);
+        	throw new ExecutionException(msg,e);
+    	}
 
     }
 
-    @Override
+    @Override 
     protected void createIndex( IndexMetadata indexMetadata, Connection connection)
             throws UnsupportedException, ExecutionException {
         throw new UnsupportedException("Create Index not supported in Streaming connector");
