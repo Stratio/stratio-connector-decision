@@ -46,10 +46,7 @@ public class StreamingConnector extends CommonsConnector {
      */
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    /**
-     * The connectionHandler.
-     */
-    private StreamingConnectionHandler connectionHandler = null;
+
 
     /**
      * Create a connection to Elasticsearch.

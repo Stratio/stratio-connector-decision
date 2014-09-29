@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.commons.connection.Connection;
+import com.stratio.connector.commons.connection.ConnectionHandler;
 import com.stratio.connector.commons.engine.CommonsStorageEngine;
 import com.stratio.connector.streaming.core.connection.StreamingConnectionHandler;
 import com.stratio.meta.common.data.Cell;
@@ -51,7 +52,7 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
      *
      * @param connectionHandler the connection handler.
      */
-    public StreamingStorageEngine(StreamingConnectionHandler  connectionHandler) {
+    public StreamingStorageEngine(ConnectionHandler  connectionHandler) {
 
         super(connectionHandler);
     }
