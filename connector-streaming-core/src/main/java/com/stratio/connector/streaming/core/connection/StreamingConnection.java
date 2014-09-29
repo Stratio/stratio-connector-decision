@@ -57,10 +57,15 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
     public StreamingConnection(ICredentials credentiasl, ConnectorClusterConfig config)
             throws StratioEngineConnectionException {
 
+        String kafkaServer = config.getOptions().get("KafkaServer");
+        int kafkaPort = Integer.parseInt(config.getOptions().get("KafkaPort"));
+
+        String zooKeeperServer = config.getOptions().get("zooKeeperServer");
+        int zooKeeperPort = Integer.parseInt(config.getOptions().get("zooKeeperPort"));
+
         stratioStreamingAPI = StratioStreamingAPIFactory.create().initializeWithServerConfig
-                (config.getOptions().get("KafkaServer"), Integer.parseInt(config.getOptions().get("KafkaPort")),
-                        config.getOptions().get("zooKeeperServer"),Integer.parseInt(config.getOptions().get
-                                ("zooKeeperPort")));
+                (kafkaServer, kafkaPort, zooKeeperServer, zooKeeperPort);
+
         connectionName = config.getName().getName();
         logger.info("Streaming  connection ["+connectionName+"] established ");
 

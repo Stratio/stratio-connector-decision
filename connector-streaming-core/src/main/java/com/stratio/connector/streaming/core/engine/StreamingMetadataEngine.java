@@ -18,6 +18,8 @@ package com.stratio.connector.streaming.core.engine;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.table.TableRowSorter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +81,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
 
 
     /**
-     * This method create a type in ES.
+     * This method create a type in Streaming.
      *
      *
      * @param streamMetadata  the stream configuration.
@@ -94,22 +96,27 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
         try {
              List columnList = new ArrayList();
             
-             for (ColumnName columnName : streamMetadata.getColumns().keySet()){
-                 columnList.add(new ColumnNameType(columnName.getName(), convertType(streamMetadata.getColumns().get
-                         (columnName)
-                         .getColumnType())));
+             for (ColumnName columnInfo : streamMetadata.getColumns().keySet()){
+                 String columnName = columnInfo.getName();
+                 com.stratio.streaming.commons.constants.ColumnType columnType = convertType(
+                         streamMetadata.getColumns().get
+                                 (columnInfo)
+                                 .getColumnType());
+
+
+                 columnList.add(new ColumnNameType(columnName, columnType));
               }
                connection.getNativeConnection().createStream(streamName, columnList);
-            } catch (StratioEngineOperationException | StratioEngineStatusException |StratioAPISecurityException e) {
+            } catch (StratioEngineOperationException  | StratioEngineStatusException | StratioAPISecurityException e) {
             	String msg = "Fail creating the Stream ["+streamName+"]. "+e.getMessage();
             	logger.error(msg);
             	throw new ExecutionException(msg,e);
-        } 
+        }
 
     }
 
     /**
-     * This method drop a index in ES.
+     * This method drop a index in Streaming.
      *
 
      * @param indexName     the index name.
@@ -123,7 +130,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
     }
 
     /**
-     * This method drop a type in ES.
+     * This method drop a type in Streaming.
      *
      *
      * @param stream      the stream name.

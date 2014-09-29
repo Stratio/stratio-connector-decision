@@ -36,7 +36,7 @@ import com.stratio.streaming.api.messaging.ColumnNameValue;
 import com.stratio.streaming.commons.exceptions.StratioStreamingException;
 
 /**
- * This class performs operations insert and delete in Elasticsearch.
+ * This class performs operations insert and delete in Streaming.
  */
 
 public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreamingAPI> {
