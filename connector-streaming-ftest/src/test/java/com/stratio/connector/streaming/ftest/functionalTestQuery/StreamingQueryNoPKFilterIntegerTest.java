@@ -14,22 +14,24 @@
  *   You should have received a copy of the GNU Lesser General Public License along with this library.
  */
 
-package com.stratio.connector.streaming.ftest.functionalInsert;
+package com.stratio.connector.streaming.ftest.functionalTestQuery;
 
-import com.stratio.connector.commons.ftest.functionalInsert.GenericBulkInsertTest;
+import static org.junit.Assert.fail;
+
+import com.stratio.connector.commons.ftest.functionalTestQuery.GenericNotIndexedQueryIntegerFilterTest;
 import com.stratio.connector.commons.ftest.helper.IConnectorHelper;
 import com.stratio.connector.streaming.ftest.helper.StreamingConnectorHelper;
 import com.stratio.meta.common.exceptions.ConnectionException;
+import com.stratio.meta.common.exceptions.ExecutionException;
 import com.stratio.meta.common.exceptions.InitializationException;
+import com.stratio.meta.common.exceptions.UnsupportedException;
+
+
 
 /**
- * Created by jmgomez on 4/09/14.
+ * Created by jmgomez on 5/09/14.
  */
-public class StreamingBulkInsertTest extends GenericBulkInsertTest {
-
-    protected int getRowToInsert() {
-        return 1000;
-    }
+public class StreamingQueryNoPKFilterIntegerTest extends GenericNotIndexedQueryIntegerFilterTest {
 
     @Override
     protected IConnectorHelper getConnectorHelper() {
@@ -44,4 +46,8 @@ public class StreamingBulkInsertTest extends GenericBulkInsertTest {
         return streamingConnectorHelper;
     }
 
+    @Override
+    public void selectNotIndexedFilterBetween() throws ExecutionException, UnsupportedException {
+        fail("Not yet ElasticSearch  supported");
+    }
 }

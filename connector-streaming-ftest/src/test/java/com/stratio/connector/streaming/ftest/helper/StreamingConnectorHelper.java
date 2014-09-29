@@ -41,23 +41,21 @@ import com.stratio.meta2.common.metadata.ColumnType;
  */
 public class StreamingConnectorHelper implements IConnectorHelper {
 
-    
-	private static final String ZOOKEEPER_PORT = "2181";
-	private static final String ZOOKEEPER_SERVER = "10.200.0.58";//"192.168.0.2";
-	protected String KAFKA_SERVER = "10.200.0.58";//"192.168.0.2";
+    private static final String ZOOKEEPER_PORT = "2181";
+    private static final String ZOOKEEPER_SERVER = "10.200.0.58";//"192.168.0.2";
+    protected String KAFKA_SERVER = "10.200.0.58";//"192.168.0.2";
     private String KAFKA_PORT = "9092";
-	private ClusterName clusterName;
-
-
+    private ClusterName clusterName;
 
     public StreamingConnectorHelper(ClusterName clusterName) throws ConnectionException, InitializationException {
         super();
         this.clusterName = clusterName;
     }
+
     @Override
     public IConnector getConnector() {
-		return new StreamingConnector();
-        
+        return new StreamingConnector();
+
     }
 
     @Override
@@ -68,7 +66,7 @@ public class StreamingConnectorHelper implements IConnectorHelper {
     @Override
     public ConnectorClusterConfig getConnectorClusterConfig() {
         Map<String, String> optionsNode = new HashMap<>();
-     
+
         optionsNode.put("KafkaServer", KAFKA_SERVER);
         optionsNode.put("KafkaPort", KAFKA_PORT);
         optionsNode.put("zooKeeperServer", ZOOKEEPER_SERVER);
@@ -117,19 +115,16 @@ public class StreamingConnectorHelper implements IConnectorHelper {
         return 0;
     }
 
-
-
     @Override
     public void refresh(String schema) {
-    
-       
 
     }
-	@Override
-	public boolean isCatalogMandatory() {
-	
-		return false;
-	}
+
+    @Override
+    public boolean isCatalogMandatory() {
+
+        return false;
+    }
 
     @Override public boolean isTableMandatory() {
         return true;

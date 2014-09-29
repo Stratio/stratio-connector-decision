@@ -16,7 +16,6 @@
 
 package com.stratio.connector.streaming.ftest.functionalMetadata;
 
-import com.stratio.connector.commons.ftest.functionalMetadata.GenericMetadataCreateTest;
 import com.stratio.connector.commons.ftest.functionalMetadata.GenericMetadataDropTest;
 import com.stratio.connector.commons.ftest.helper.IConnectorHelper;
 import com.stratio.connector.streaming.ftest.helper.StreamingConnectorHelper;
@@ -30,7 +29,7 @@ public class StreamingDropMetadataFunctionalTest extends GenericMetadataDropTest
 
     @Override
     protected IConnectorHelper getConnectorHelper() {
-    	StreamingConnectorHelper esConnectorHelper = null;
+        StreamingConnectorHelper esConnectorHelper = null;
         try {
             esConnectorHelper = new StreamingConnectorHelper(getClusterName());
             return esConnectorHelper;

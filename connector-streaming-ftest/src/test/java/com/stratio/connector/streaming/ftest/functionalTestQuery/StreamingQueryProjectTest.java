@@ -14,21 +14,22 @@
  *   You should have received a copy of the GNU Lesser General Public License along with this library.
  */
 
-package com.stratio.connector.streaming.ftest.functionalInsert;
+package com.stratio.connector.streaming.ftest.functionalTestQuery;
 
-import com.stratio.connector.commons.ftest.functionalInsert.GenericBulkInsertTest;
+import com.stratio.connector.commons.ftest.functionalTestQuery.GenericQueryProjectTest;
 import com.stratio.connector.commons.ftest.helper.IConnectorHelper;
 import com.stratio.connector.streaming.ftest.helper.StreamingConnectorHelper;
 import com.stratio.meta.common.exceptions.ConnectionException;
 import com.stratio.meta.common.exceptions.InitializationException;
 
 /**
- * Created by jmgomez on 4/09/14.
+ * Created by jmgomez on 5/09/14.
  */
-public class StreamingBulkInsertTest extends GenericBulkInsertTest {
+public class StreamingQueryProjectTest extends GenericQueryProjectTest {
 
-    protected int getRowToInsert() {
-        return 1000;
+    @Override
+    protected Integer getRowsToSearch() {
+        return 2000;
     }
 
     @Override
@@ -43,5 +44,4 @@ public class StreamingBulkInsertTest extends GenericBulkInsertTest {
         }
         return streamingConnectorHelper;
     }
-
 }

@@ -27,13 +27,11 @@ import com.stratio.meta.common.exceptions.InitializationException;
  */
 public class StreamingSimpleInsertTest extends GenericSimpleInsertTest {
 
-
-
     @Override
     protected IConnectorHelper getConnectorHelper() {
         StreamingConnectorHelper streamingConnectorHelper = null;
         try {
-        	streamingConnectorHelper = new StreamingConnectorHelper(getClusterName());
+            streamingConnectorHelper = new StreamingConnectorHelper(getClusterName());
         } catch (InitializationException e) {
             e.printStackTrace();
         } catch (ConnectionException e) {
