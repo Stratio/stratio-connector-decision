@@ -130,4 +130,10 @@ public class StreamingConnectorHelper implements IConnectorHelper {
         return true;
     }
 
+	@Override
+	public boolean isIndexMandatory() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
