@@ -42,8 +42,8 @@ import com.stratio.meta2.common.metadata.ColumnType;
 public class StreamingConnectorHelper implements IConnectorHelper {
 
     private static final String ZOOKEEPER_PORT = "2181";
-    private static final String ZOOKEEPER_SERVER = "192.168.0.2"; //"10.200.0.58";//"192.168.0.2";
-    protected String KAFKA_SERVER = "192.168.0.2";//"10.200.0.58";//"192.168.0.2";
+    private static final String ZOOKEEPER_SERVER = "10.200.0.58"; // "10.200.0.58";//"192.168.0.2";
+    protected String KAFKA_SERVER = "10.200.0.58";// "10.200.0.58";//"192.168.0.2";
     private String KAFKA_PORT = "9092";
     private ClusterName clusterName;
 
@@ -126,14 +126,15 @@ public class StreamingConnectorHelper implements IConnectorHelper {
         return false;
     }
 
-    @Override public boolean isTableMandatory() {
+    @Override
+    public boolean isTableMandatory() {
         return true;
     }
 
-	@Override
-	public boolean isIndexMandatory() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean isIndexMandatory() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
 }

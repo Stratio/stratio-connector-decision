@@ -26,8 +26,6 @@ import com.stratio.meta.common.exceptions.ExecutionException;
 import com.stratio.meta.common.exceptions.InitializationException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 
-
-
 /**
  * Created by jmgomez on 5/09/14.
  */
@@ -48,6 +46,6 @@ public class StreamingQueryNoPKFilterIntegerTest extends GenericNotIndexedQueryI
 
     @Override
     public void selectNotIndexedFilterBetween() throws ExecutionException, UnsupportedException {
-        fail("Not yet ElasticSearch  supported");
+        fail("Not yet Streaming  supported");
     }
 }

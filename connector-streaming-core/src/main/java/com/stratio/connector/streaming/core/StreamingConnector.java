@@ -20,24 +20,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.commons.CommonsConnector;
-import com.stratio.connector.commons.connection.exceptions.HandlerConnectionException;
 import com.stratio.connector.streaming.core.connection.StreamingConnectionHandler;
 import com.stratio.connector.streaming.core.engine.StreamingMetadataEngine;
 import com.stratio.connector.streaming.core.engine.StreamingQueryEngine;
 import com.stratio.connector.streaming.core.engine.StreamingStorageEngine;
-import com.stratio.meta.common.connector.ConnectorClusterConfig;
 import com.stratio.meta.common.connector.IConfiguration;
-import com.stratio.meta.common.connector.IConnector;
 import com.stratio.meta.common.connector.IMetadataEngine;
 import com.stratio.meta.common.connector.IQueryEngine;
 import com.stratio.meta.common.connector.IStorageEngine;
-import com.stratio.meta.common.exceptions.ConnectionException;
-import com.stratio.meta.common.exceptions.ExecutionException;
-import com.stratio.meta.common.security.ICredentials;
 import com.stratio.meta2.common.data.ClusterName;
 
 /**
- * This class implements the connector for Elasticsearch.
+ * This class implements the connector for Streaming.
  */
 public class StreamingConnector extends CommonsConnector {
 
@@ -46,14 +40,12 @@ public class StreamingConnector extends CommonsConnector {
      */
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
-
     /**
-     * Create a connection to Elasticsearch.
-     * The client will be a transportClient by default unless stratio nodeClient is specified.
+     * Create a connection to Elasticsearch. The client will be a transportClient by default unless stratio nodeClient
+     * is specified.
      *
-     * @param configuration the connection configuration. It must be not null.
-     *                      onnection.
+     * @param configuration
+     *            the connection configuration. It must be not null. onnection.
      */
 
     @Override
@@ -63,13 +55,9 @@ public class StreamingConnector extends CommonsConnector {
 
     }
 
-
-
-  
-
     @Override
     public String getConnectorName() {
-        return "ElasticSearch";
+        return "Streaming";
     }
 
     /**
@@ -79,7 +67,7 @@ public class StreamingConnector extends CommonsConnector {
      */
     @Override
     public String[] getDatastoreName() {
-        return new String[] { "ElasticSearch" };
+        return new String[] { "Streaming" };
     }
 
     /**
@@ -118,7 +106,8 @@ public class StreamingConnector extends CommonsConnector {
     /**
      * The connection status.
      *
-     * @param name the cluster Name.
+     * @param name
+     *            the cluster Name.
      * @return true if the driver's client is not null.
      */
     @Override

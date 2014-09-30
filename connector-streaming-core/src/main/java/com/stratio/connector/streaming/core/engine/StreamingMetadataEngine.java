@@ -18,8 +18,6 @@ package com.stratio.connector.streaming.core.engine;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.table.TableRowSorter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,22 +41,21 @@ import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
 import com.stratio.streaming.commons.exceptions.StratioStreamingException;
 
 /**
- * This class is the responsible of manage the ElasticSearchMetadata
+ * This class is the responsible of manage the StreamingMetadata
  *
- * @author darroyo
  */
-public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStreamingAPI>  {
+public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStreamingAPI> {
 
     /**
      * The Log.
      */
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
     /**
      * Constructor.
      *
-     * @param connectionHandler the connector handle.
+     * @param connectionHandler
+     *            the connector handle.
      */
     public StreamingMetadataEngine(ConnectionHandler connectionHandler) {
         super(connectionHandler);
@@ -67,50 +64,51 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
     /**
      * This method create a index in ES.
      *
-
-     * @param indexMetaData the index configuration.
-     * @throws com.stratio.meta.common.exceptions.UnsupportedException if any operation is not supported.
-     * @throws com.stratio.meta.common.exceptions.ExecutionException   if an error occur.
+     * 
+     * @param indexMetaData
+     *            the index configuration.
+     * @throws com.stratio.meta.common.exceptions.UnsupportedException
+     *             if any operation is not supported.
+     * @throws com.stratio.meta.common.exceptions.ExecutionException
+     *             if an error occur.
      */
 
     @Override
-    protected void createCatalog( CatalogMetadata indexMetaData, Connection<IStratioStreamingAPI> connection)
-            throws UnsupportedException, ExecutionException {
+    protected void createCatalog(CatalogMetadata indexMetaData, Connection<IStratioStreamingAPI> connection)
+                    throws UnsupportedException, ExecutionException {
         throw new UnsupportedException("Create catalog not supported in Streaming connector");
     }
-
 
     /**
      * This method create a type in Streaming.
      *
      *
-     * @param streamMetadata  the stream configuration.
-     * @throws com.stratio.meta.common.exceptions.UnsupportedException if any operation is not supported.
-     * @throws com.stratio.meta.common.exceptions.ExecutionException   if an error occur.
+     * @param streamMetadata
+     *            the stream configuration.
+     * @throws com.stratio.meta.common.exceptions.UnsupportedException
+     *             if any operation is not supported.
+     * @throws com.stratio.meta.common.exceptions.ExecutionException
+     *             if an error occur.
      */
     @Override
     protected void createTable(TableMetadata streamMetadata, Connection<IStratioStreamingAPI> connection)
-            throws UnsupportedException,
-            ExecutionException {
-        String  streamName = streamMetadata.getName().getName();
+                    throws UnsupportedException, ExecutionException {
+        String streamName = streamMetadata.getName().getName();
         try {
-             List columnList = new ArrayList();
-            
-             for (ColumnName columnInfo : streamMetadata.getColumns().keySet()){
-                 String columnName = columnInfo.getName();
-                 com.stratio.streaming.commons.constants.ColumnType columnType = convertType(
-                         streamMetadata.getColumns().get
-                                 (columnInfo)
-                                 .getColumnType());
+            List columnList = new ArrayList();
 
+            for (ColumnName columnInfo : streamMetadata.getColumns().keySet()) {
+                String columnName = columnInfo.getName();
+                com.stratio.streaming.commons.constants.ColumnType columnType = convertType(streamMetadata.getColumns()
+                                .get(columnInfo).getColumnType());
 
-                 columnList.add(new ColumnNameType(columnName, columnType));
-              }
-               connection.getNativeConnection().createStream(streamName, columnList);
-            } catch (StratioEngineOperationException  | StratioEngineStatusException | StratioAPISecurityException e) {
-            	String msg = "Fail creating the Stream ["+streamName+"]. "+e.getMessage();
-            	logger.error(msg);
-            	throw new ExecutionException(msg,e);
+                columnList.add(new ColumnNameType(columnName, columnType));
+            }
+            connection.getNativeConnection().createStream(streamName, columnList);
+        } catch (StratioEngineOperationException | StratioEngineStatusException | StratioAPISecurityException e) {
+            String msg = "Fail creating the Stream [" + streamName + "]. " + e.getMessage();
+            logger.error(msg);
+            throw new ExecutionException(msg, e);
         }
 
     }
@@ -118,13 +116,14 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
     /**
      * This method drop a index in Streaming.
      *
-
-     * @param indexName     the index name.
+     * 
+     * @param indexName
+     *            the index name.
      */
 
     @Override
     protected void dropCatalog(CatalogName indexName, Connection<IStratioStreamingAPI> connection)
-            throws ExecutionException, UnsupportedException {
+                    throws ExecutionException, UnsupportedException {
         throw new UnsupportedException("Drop catalog not supported in Streaming connector");
 
     }
@@ -133,40 +132,38 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
      * This method drop a type in Streaming.
      *
      *
-     * @param stream      the stream name.
+     * @param stream
+     *            the stream name.
      */
     @Override
-    protected void dropTable( TableName stream	, Connection<IStratioStreamingAPI> connection)
-            throws ExecutionException, UnsupportedException {
-    		String streamName = stream.getName();
-    	try {
-    		
-			connection.getNativeConnection().dropStream(streamName);
-    	} catch(StratioStreamingException e) {
-        	String msg = "Fail droping the Stream ["+streamName+"]. "+e.getMessage();
-        	logger.error(msg);
-        	throw new ExecutionException(msg,e);
-    	}
+    protected void dropTable(TableName stream, Connection<IStratioStreamingAPI> connection) throws ExecutionException,
+                    UnsupportedException {
+        String streamName = stream.getName();
+        try {
+
+            connection.getNativeConnection().dropStream(streamName);
+        } catch (StratioStreamingException e) {
+            String msg = "Fail droping the Stream [" + streamName + "]. " + e.getMessage();
+            logger.error(msg);
+            throw new ExecutionException(msg, e);
+        }
 
     }
 
-    @Override 
-    protected void createIndex( IndexMetadata indexMetadata, Connection connection)
-            throws UnsupportedException, ExecutionException {
+    @Override
+    protected void createIndex(IndexMetadata indexMetadata, Connection<IStratioStreamingAPI> connection)
+                    throws UnsupportedException, ExecutionException {
         throw new UnsupportedException("Create Index not supported in Streaming connector");
     }
 
     @Override
-    protected void dropIndex(IndexMetadata indexMetadata, Connection connection)
-            throws UnsupportedException, ExecutionException {
+    protected void dropIndex(IndexMetadata indexMetadata, Connection connection) throws UnsupportedException,
+                    ExecutionException {
         throw new UnsupportedException("Drop Index not supported in Streaming connector");
     }
 
-
-
-
     private com.stratio.streaming.commons.constants.ColumnType convertType(ColumnType columnType)
-            throws UnsupportedException {
+                    throws UnsupportedException {
         com.stratio.streaming.commons.constants.ColumnType returnType = null;
         switch (columnType) {
 
@@ -192,11 +189,8 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
         default:
             throw new UnsupportedException("Column type " + columnType.name() + " not supported in Streaming");
 
-
         }
         return returnType;
     }
 
-
 }
-

@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.connection.ConnectionHandler;
 import com.stratio.connector.commons.engine.CommonsStorageEngine;
-import com.stratio.connector.streaming.core.connection.StreamingConnectionHandler;
 import com.stratio.meta.common.data.Cell;
 import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.exceptions.ExecutionException;
@@ -46,13 +45,14 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
      * The Log.
      */
     final Logger logger = LoggerFactory.getLogger(this.getClass());
- 
+
     /**
      * Constructor.
      *
-     * @param connectionHandler the connection handler.
+     * @param connectionHandler
+     *            the connection handler.
      */
-    public StreamingStorageEngine(ConnectionHandler  connectionHandler) {
+    public StreamingStorageEngine(ConnectionHandler connectionHandler) {
 
         super(connectionHandler);
     }
@@ -61,57 +61,59 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
      * Insert a document in Streaming.
      *
      *
-     * @param targetStream   the targetName.
-     * @param row           the row.
-     * @throws com.stratio.meta.common.exceptions.ExecutionException   in case of failure during the execution.
-     * @throws com.stratio.meta.common.exceptions.UnsupportedException it the operation is not supported.
+     * @param targetStream
+     *            the targetName.
+     * @param row
+     *            the row.
+     * @throws com.stratio.meta.common.exceptions.ExecutionException
+     *             in case of failure during the execution.
+     * @throws com.stratio.meta.common.exceptions.UnsupportedException
+     *             it the operation is not supported.
      */
 
     @Override
     protected void insert(TableMetadata targetStream, Row row, Connection<IStratioStreamingAPI> connection)
-            throws UnsupportedException, ExecutionException {
-    		String streamName = targetStream.getName().getName();
-    	try {
-    		List<ColumnNameValue> streamData = new ArrayList();
-    		Map<String, Cell> cells = row.getCells();
-			for (String cellName: cells.keySet()){
-    			
-    			streamData.add( new ColumnNameValue(cellName, cells.get(cellName).getValue()));
-    		}
-	    		connection.getNativeConnection().insertData(streamName, streamData);
-    	} catch(StratioStreamingException e) {
-    		String msg = "Inserting data error in Streaming ["+streamName+"]. "+e.getMessage();
-        	logger.error(msg);
-        	throw new ExecutionException(msg,e);
-    	}
+                    throws UnsupportedException, ExecutionException {
+        String streamName = targetStream.getName().getName();
+        try {
+            List<ColumnNameValue> streamData = new ArrayList<ColumnNameValue>();
+            Map<String, Cell> cells = row.getCells();
+            for (String cellName : cells.keySet()) {
+
+                streamData.add(new ColumnNameValue(cellName, cells.get(cellName).getValue()));
+            }
+            connection.getNativeConnection().insertData(streamName, streamData);
+        } catch (StratioStreamingException e) {
+            String msg = "Inserting data error in Streaming [" + streamName + "]. " + e.getMessage();
+            logger.error(msg);
+            throw new ExecutionException(msg, e);
+        }
     }
 
     /**
      * Insert a set of documents in Streaming.
      *
      *
-     * @param rows        the set of rows.
-     * @throws com.stratio.meta.common.exceptions.ExecutionException   in case of failure during the execution.
-     * @throws com.stratio.meta.common.exceptions.UnsupportedException if the operation is not supported.
+     * @param rows
+     *            the set of rows.
+     * @throws com.stratio.meta.common.exceptions.ExecutionException
+     *             in case of failure during the execution.
+     * @throws com.stratio.meta.common.exceptions.UnsupportedException
+     *             if the operation is not supported.
      */
     @Override
-    protected void insert( TableMetadata targetStream, Collection<Row> rows,
-            Connection<IStratioStreamingAPI> connection) throws UnsupportedException, ExecutionException {
-    	String streamName = targetStream.getName().getName();
-    		try{
-	    	 for (Row row: rows){
-	    		 insert(targetStream,row,connection);
-	    	 }
-    	}catch(ExecutionException e){
-    		String msg = "Inserting bulk data error in Streaming. ["+streamName+"]. "+e.getMessage();
-        	logger.error(msg);
-        	throw new ExecutionException(msg,e);
-    	}
+    protected void insert(TableMetadata targetStream, Collection<Row> rows, Connection<IStratioStreamingAPI> connection)
+                    throws UnsupportedException, ExecutionException {
+        String streamName = targetStream.getName().getName();
+        try {
+            for (Row row : rows) {
+                insert(targetStream, row, connection);
+            }
+        } catch (ExecutionException e) {
+            String msg = "Inserting bulk data error in Streaming. [" + streamName + "]. " + e.getMessage();
+            logger.error(msg);
+            throw new ExecutionException(msg, e);
+        }
     }
 
-   
-
 }
-
-
-

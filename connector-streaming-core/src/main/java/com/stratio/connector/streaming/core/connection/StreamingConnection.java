@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.commons.connection.Connection;
-
 import com.stratio.meta.common.connector.ConnectorClusterConfig;
 import com.stratio.meta.common.security.ICredentials;
 import com.stratio.streaming.api.IStratioStreamingAPI;
@@ -28,8 +27,7 @@ import com.stratio.streaming.api.StratioStreamingAPIFactory;
 import com.stratio.streaming.commons.exceptions.StratioEngineConnectionException;
 
 /**
- * This class represents a logic connection.
- * Created by jmgomez on 28/08/14.
+ * This class represents a logic connection. Created by jmgomez on 28/08/14.
  */
 public class StreamingConnection extends Connection<IStratioStreamingAPI> {
 
@@ -39,7 +37,7 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * The Streaming Connectio.
+     * The Streaming Connection.
      */
     private IStratioStreamingAPI stratioStreamingAPI = null;
     /**
@@ -48,14 +46,17 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
     private boolean isConnect = false;
 
     private String connectionName;
+
     /**
      * Constructor.
      *
-     * @param credentiasl the credentials.
-     * @param config      The cluster configuration.
+     * @param credentiasl
+     *            the credentials.
+     * @param config
+     *            The cluster configuration.
      */
     public StreamingConnection(ICredentials credentiasl, ConnectorClusterConfig config)
-            throws StratioEngineConnectionException {
+                    throws StratioEngineConnectionException {
 
         String kafkaServer = config.getOptions().get("KafkaServer");
         int kafkaPort = Integer.parseInt(config.getOptions().get("KafkaPort"));
@@ -63,11 +64,11 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
         String zooKeeperServer = config.getOptions().get("zooKeeperServer");
         int zooKeeperPort = Integer.parseInt(config.getOptions().get("zooKeeperPort"));
 
-        stratioStreamingAPI = StratioStreamingAPIFactory.create().initializeWithServerConfig
-                (kafkaServer, kafkaPort, zooKeeperServer, zooKeeperPort);
+        stratioStreamingAPI = StratioStreamingAPIFactory.create().initializeWithServerConfig(kafkaServer, kafkaPort,
+                        zooKeeperServer, zooKeeperPort);
 
         connectionName = config.getName().getName();
-        logger.info("Streaming  connection ["+connectionName+"] established ");
+        logger.info("Streaming  connection [" + connectionName + "] established ");
 
         isConnect = true;
     }
@@ -76,7 +77,7 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
         if (stratioStreamingAPI != null) {
             isConnect = false;
             stratioStreamingAPI = null;
-            logger.info("Streaming  connection ["+connectionName+"] close");
+            logger.info("Streaming  connection [" + connectionName + "] close");
         }
 
     }
