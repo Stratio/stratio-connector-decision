@@ -40,6 +40,8 @@ public class StreamingConnector extends CommonsConnector {
      */
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    QueryManager queryManager;
+
     /**
      * Create a connection to Elasticsearch. The client will be a transportClient by default unless stratio nodeClient
      * is specified.
@@ -52,6 +54,7 @@ public class StreamingConnector extends CommonsConnector {
     public void init(IConfiguration configuration) {
 
         connectionHandler = new StreamingConnectionHandler(configuration);
+        queryManager = new QueryManager();
 
     }
 
@@ -90,7 +93,7 @@ public class StreamingConnector extends CommonsConnector {
     @Override
     public IQueryEngine getQueryEngine() {
 
-        return new StreamingQueryEngine(connectionHandler);
+        return new StreamingQueryEngine(connectionHandler,queryManager);
     }
 
     /**

@@ -131,7 +131,7 @@ public class ConnectorQueryData {
      *
      * @return the matchList
      */
-    public Collection<Filter> getMatchList() {
+        public Collection<Filter> getMatchList() {
         return matchList;
     }
 

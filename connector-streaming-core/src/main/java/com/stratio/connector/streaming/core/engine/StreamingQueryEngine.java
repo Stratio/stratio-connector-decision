@@ -21,8 +21,10 @@ import org.slf4j.LoggerFactory;
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.connection.ConnectionHandler;
 import com.stratio.connector.commons.engine.UniqueProjectQueryEngine;
+import com.stratio.connector.streaming.core.QueryManager;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryBuilder;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
+import com.stratio.connector.streaming.core.engine.query.ConnectorQueryExecutor;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryParser;
 import com.stratio.meta.common.exceptions.ExecutionException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
@@ -44,16 +46,32 @@ public class StreamingQueryEngine extends UniqueProjectQueryEngine<IStratioStrea
     private ConnectorQueryParser queryParser = new ConnectorQueryParser();
 
     private ConnectorQueryBuilder queryBuilder = new ConnectorQueryBuilder();
+    private ConnectorQueryExecutor queryExecutor = new ConnectorQueryExecutor();
+
+    private QueryManager queryManager;
+
+    public StreamingQueryEngine(
+            ConnectionHandler connectionHandler, QueryManager queryManager) {
+        super(connectionHandler);
+        this.queryManager = queryManager;
+    }
 
     @Override
     protected QueryResult execute(Project project, Connection<IStratioStreamingAPI> connection)
                     throws UnsupportedException, ExecutionException {
 
 
+
+
         ConnectorQueryData queryData = queryParser.transformLogicalWorkFlow(project);
 
 
         StringBuffer result = queryBuilder.createQuery(queryData);
+        String streamingId = queryExecutor.executeQuery(result.toString());
+        queryManager.addQuery(getQueryId(project),streamingId);
         throw new UnsupportedException("execute not supported in Streaming connector");
+    }
+private String getQueryId(Project project) {
+        return "ID"; //TODO
     }
 }
