@@ -93,7 +93,8 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
     @Override
     protected void createTable(TableMetadata streamMetadata, Connection<IStratioStreamingAPI> connection)
                     throws UnsupportedException, ExecutionException {
-        String streamName = streamMetadata.getName().getName();
+        String streamName = streamMetadata.getName().getCatalogName().getName() + "_"
+                        + streamMetadata.getName().getName();
         try {
             List columnList = new ArrayList();
 
