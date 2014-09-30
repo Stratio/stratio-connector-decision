@@ -21,6 +21,9 @@ import org.slf4j.LoggerFactory;
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.connection.ConnectionHandler;
 import com.stratio.connector.commons.engine.UniqueProjectQueryEngine;
+import com.stratio.connector.streaming.core.engine.query.ConnectorQueryBuilder;
+import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
+import com.stratio.connector.streaming.core.engine.query.ConnectorQueryParser;
 import com.stratio.meta.common.exceptions.ExecutionException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.meta.common.logicalplan.Project;
@@ -38,10 +41,19 @@ public class StreamingQueryEngine extends UniqueProjectQueryEngine<IStratioStrea
      */
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private ConnectorQueryParser queryParser = new ConnectorQueryParser();
+
+    private ConnectorQueryBuilder queryBuilder = new ConnectorQueryBuilder();
+
     @Override
-    protected QueryResult execute(Project logicalWorkflow, Connection<IStratioStreamingAPI> connection)
+    protected QueryResult execute(Project project, Connection<IStratioStreamingAPI> connection)
                     throws UnsupportedException, ExecutionException {
 
+
+        ConnectorQueryData queryData = queryParser.transformLogicalWorkFlow(project);
+
+
+        StringBuffer result = queryBuilder.createQuery(queryData);
         throw new UnsupportedException("execute not supported in Streaming connector");
     }
 }

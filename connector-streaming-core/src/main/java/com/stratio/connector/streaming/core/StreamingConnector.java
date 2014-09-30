@@ -103,18 +103,6 @@ public class StreamingConnector extends CommonsConnector {
         return new StreamingMetadataEngine(connectionHandler);
     }
 
-    /**
-     * The connection status.
-     *
-     * @param name
-     *            the cluster Name.
-     * @return true if the driver's client is not null.
-     */
-    @Override
-    public boolean isConnected(ClusterName name) {
 
-        return connectionHandler.isConnected(name.getName());
-
-    }
 
 }
