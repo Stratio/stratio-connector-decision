@@ -29,6 +29,9 @@ import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.meta.common.logicalplan.Project;
 import com.stratio.meta.common.result.QueryResult;
 import com.stratio.streaming.api.IStratioStreamingAPI;
+import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
+import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
+import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
 
 public class StreamingQueryEngine extends UniqueProjectQueryEngine<IStratioStreamingAPI> {
 
@@ -49,11 +52,17 @@ public class StreamingQueryEngine extends UniqueProjectQueryEngine<IStratioStrea
     protected QueryResult execute(Project project, Connection<IStratioStreamingAPI> connection)
                     throws UnsupportedException, ExecutionException {
 
-
         ConnectorQueryData queryData = queryParser.transformLogicalWorkFlow(project);
 
-
-        StringBuffer result = queryBuilder.createQuery(queryData);
+        String query = queryBuilder.createQuery(queryData);
+        Project projection = queryData.getProjection();
+        String streamName = projection.getCatalogName() + "_" + projection.getTableName().getName();
+        try {
+            connection.getNativeConnection().addQuery(streamName, query);
+        } catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException e) {
+            // TODO
+            throw new ExecutionException("Exception: " + e.getClass() + " " + e.getMessage(), e);
+        }
         throw new UnsupportedException("execute not supported in Streaming connector");
     }
 }

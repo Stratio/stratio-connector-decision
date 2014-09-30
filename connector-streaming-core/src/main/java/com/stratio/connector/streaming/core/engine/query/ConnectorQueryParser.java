@@ -16,7 +16,6 @@
 
 package com.stratio.connector.streaming.core.engine.query;
 
-
 import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.meta.common.logicalplan.Filter;
 import com.stratio.meta.common.logicalplan.Limit;
@@ -30,40 +29,39 @@ import com.stratio.meta.common.statements.structures.relationships.Operator;
  */
 public class ConnectorQueryParser {
 
-    public ConnectorQueryData transformLogicalWorkFlow(Project logicalWorkFlow)
-            throws  UnsupportedException {
+    public ConnectorQueryData transformLogicalWorkFlow(Project logicalWorkFlow) throws UnsupportedException {
 
         ConnectorQueryData queryData = new ConnectorQueryData();
         LogicalStep lStep = logicalWorkFlow;
 
-            do {
-                if (lStep instanceof Project) {
-                    if (!queryData.hasProjection()) {
-                        queryData.setProjection((Project) lStep);
-                    } else {
-                        throw new UnsupportedOperationException(" # Project > 1");
-                    }
-                } else if (lStep instanceof Filter) {
-
-                    Filter step = (Filter) lStep;
-                    if (Operator.MATCH == step.getRelation().getOperator()) {
-                        queryData.addMatch((Filter) lStep);
-                    } else {
-                        queryData.addFilter((Filter) lStep);
-                    }
-                } else if (lStep instanceof Select) {
-                    queryData.setSelect((Select) lStep);
-
-                } else if (lStep instanceof Limit) {
-                    queryData.setLimit((Limit) lStep);
-                }else{
-                    throw new UnsupportedException(
-                            "LogicalStep [" + lStep.getClass().getCanonicalName() + " not supported");
+        do {
+            if (lStep instanceof Project) {
+                if (!queryData.hasProjection()) {
+                    queryData.setProjection((Project) lStep);
+                } else {
+                    throw new UnsupportedOperationException(" # Project > 1");
                 }
+            } else if (lStep instanceof Filter) {
 
-                lStep = lStep.getNextStep();
+                Filter step = (Filter) lStep;
+                if (Operator.MATCH == step.getRelation().getOperator()) {
+                    throw new UnsupportedException("LogicalStep [" + lStep.getClass().getCanonicalName()
+                                    + " not supported");
+                } else {
+                    queryData.addFilter((Filter) lStep);
+                }
+            } else if (lStep instanceof Select) {
+                queryData.setSelect((Select) lStep);
 
-            } while (lStep != null);
+            } else if (lStep instanceof Limit) {
+                queryData.setLimit((Limit) lStep);
+            } else {
+                throw new UnsupportedException("LogicalStep [" + lStep.getClass().getCanonicalName() + " not supported");
+            }
+
+            lStep = lStep.getNextStep();
+
+        } while (lStep != null);
 
         checkSupportedQuery(queryData);
 
@@ -71,7 +69,7 @@ public class ConnectorQueryParser {
     }
 
     private void checkSupportedQuery(ConnectorQueryData queryData) {
-        if (queryData.getSelect()==null) {
+        if (queryData.getSelect() == null) {
             throw new UnsupportedOperationException("no select found");
         }
 

@@ -19,15 +19,13 @@ package com.stratio.connector.streaming.core.engine.query;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
 import com.stratio.meta.common.logicalplan.Filter;
 import com.stratio.meta.common.logicalplan.Limit;
 import com.stratio.meta.common.logicalplan.Project;
 import com.stratio.meta.common.logicalplan.Select;
 
 /**
- * This class is a representation of a ElasticSearch query.
- * Created by jmgomez on 15/09/14.
+ * This class is a representation of a ElasticSearch query. Created by jmgomez on 15/09/14.
  */
 public class ConnectorQueryData {
 
@@ -36,15 +34,10 @@ public class ConnectorQueryData {
      */
     private Project projection = null;
 
-
     /**
      * The filters.
      */
     private Collection<Filter> filterList = new ArrayList<>();
-    /**
-     * The matchList;
-     */
-    private Collection<Filter> matchList = new ArrayList<>();
 
     /**
      * The select.
@@ -55,7 +48,8 @@ public class ConnectorQueryData {
     /**
      * Add a filter.
      *
-     * @param filter the filter.
+     * @param filter
+     *            the filter.
      */
     public void addFilter(Filter filter) {
 
@@ -85,14 +79,13 @@ public class ConnectorQueryData {
     /**
      * Set the projection.
      *
-     * @param projection the projection.
+     * @param projection
+     *            the projection.
      */
     public void setProjection(Project projection) {
 
         this.projection = projection;
     }
-
-
 
     /**
      * Get the filter.
@@ -101,38 +94,6 @@ public class ConnectorQueryData {
      */
     public Collection<Filter> getFilter() {
         return filterList;
-    }
-
-
-
-    /**
-     * Add filter to the matchList.
-     *
-     * @param filter the filter to add.
-     */
-    public void addMatch(Filter filter) {
-
-        matchList.add(filter);
-    }
-
-    /**
-     * This method ask query if has match list.
-     *
-     * @return true if the query has match list. False in other case.
-     */
-
-    public boolean hasMatchList() {
-
-        return !matchList.isEmpty();
-    }
-
-    /**
-     * Return The matchList
-     *
-     * @return the matchList
-     */
-    public Collection<Filter> getMatchList() {
-        return matchList;
     }
 
     /**
@@ -156,7 +117,8 @@ public class ConnectorQueryData {
     /**
      * Add a select type.
      *
-     * @param select the select.
+     * @param select
+     *            the select.
      */
     public void setSelect(Select select) {
         this.select = select;
