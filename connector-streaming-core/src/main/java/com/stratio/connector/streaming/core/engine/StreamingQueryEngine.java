@@ -64,7 +64,11 @@ public class StreamingQueryEngine extends UniqueProjectQueryEngine<IStratioStrea
         try {
 
             ConnectorQueryData queryData = queryParser.transformLogicalWorkFlow(project);
+
             String query = queryBuilder.createQuery(queryData);
+            if (logger.isDebugEnabled()) {
+                logger.debug("The streaming query is: ["+query+"]");
+            }
             String streamingId = queryExecutor.executeQuery(query,connection,queryData);
 
             mappedMetaQueryIdStreamingQueryId(project, streamingId);

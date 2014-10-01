@@ -16,6 +16,12 @@
 
 package com.stratio.connector.streaming.core;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,11 +30,23 @@ import com.stratio.connector.streaming.core.connection.StreamingConnectionHandle
 import com.stratio.connector.streaming.core.engine.StreamingMetadataEngine;
 import com.stratio.connector.streaming.core.engine.StreamingQueryEngine;
 import com.stratio.connector.streaming.core.engine.StreamingStorageEngine;
+import com.stratio.meta.common.connector.ConnectorClusterConfig;
 import com.stratio.meta.common.connector.IConfiguration;
 import com.stratio.meta.common.connector.IMetadataEngine;
 import com.stratio.meta.common.connector.IQueryEngine;
 import com.stratio.meta.common.connector.IStorageEngine;
+import com.stratio.meta.common.connector.Operations;
+import com.stratio.meta.common.exceptions.ConnectionException;
+import com.stratio.meta.common.exceptions.ExecutionException;
+import com.stratio.meta.common.exceptions.UnsupportedException;
+import com.stratio.meta.common.logicalplan.LogicalStep;
+import com.stratio.meta.common.logicalplan.LogicalWorkflow;
+import com.stratio.meta.common.logicalplan.Project;
+import com.stratio.meta.common.logicalplan.Select;
 import com.stratio.meta2.common.data.ClusterName;
+import com.stratio.meta2.common.data.ColumnName;
+import com.stratio.meta2.common.data.TableName;
+import com.stratio.meta2.common.metadata.ColumnType;
 
 /**
  * This class implements the connector for Streaming.
@@ -106,6 +124,57 @@ public class StreamingConnector extends CommonsConnector {
         return new StreamingMetadataEngine(connectionHandler);
     }
 
+
+    public static void main(String args[]){ //TODO
+
+        try {
+          String ZOOKEEPER_SERVER = "10.200.0.58"; // "10.200.0.58";//"192.168.0.2";
+         String KAFKA_SERVER = "10.200.0.58";// "10.200.0.58";//"192.168.0.2";
+         String KAFKA_PORT = "9092";
+          String ZOOKEEPER_PORT = "2181";
+
+
+        StreamingConnector sC = new StreamingConnector();
+        sC.init(null);
+
+
+        Map<String, String> optionsNode = new HashMap<>();
+
+        optionsNode.put("KafkaServer", KAFKA_SERVER);
+        optionsNode.put("KafkaPort", KAFKA_PORT);
+        optionsNode.put("zooKeeperServer", ZOOKEEPER_SERVER);
+        optionsNode.put("zooKeeperPort", ZOOKEEPER_PORT);
+
+        ConnectorClusterConfig config =  new ConnectorClusterConfig(new ClusterName("CLUSTERNAME"), optionsNode);
+
+
+            sC.connect(null,config);
+            List<ColumnName> columns = new ArrayList<>();
+            columns.add(new ColumnName("testC","testT","name1"));
+            columns.add(new ColumnName("testC","testT","name2"));
+            Project project = new Project(Operations.PROJECT,new TableName("testC","testT"),
+                    new ClusterName("CLUSTERNAME"),columns);
+            Map<String, ColumnType> type  = new LinkedHashMap<>();
+            type.put("name1",ColumnType.VARCHAR);
+            type.put("name2",ColumnType.VARCHAR);
+            Map<String, String> columnsAlias = new LinkedHashMap<>();
+            columnsAlias.put("name1","name1");
+            columnsAlias.put("name2","name2");
+            Select select = new Select(Operations.SELECT_WINDOW,columnsAlias,type);
+            project.setNextStep(select);
+            List<LogicalStep> initialStep = new ArrayList<>();
+            initialStep.add(project);
+            LogicalWorkflow lWF = new LogicalWorkflow(initialStep);
+            sC.getQueryEngine().execute(lWF);
+        } catch (ConnectionException e) {
+            e.printStackTrace();
+        } catch (UnsupportedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
 }
