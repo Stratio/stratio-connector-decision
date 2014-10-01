@@ -170,6 +170,7 @@ public class StreamingConnector extends CommonsConnector {
              * Operator.EQ, new StringSelector("value2_R1")); Filter filter2 = new
              * Filter(Operations.FILTER_NON_INDEXED_EQ, condition2);
              */
+
             Select select = new Select(Operations.SELECT_WINDOW, columnsAlias, type);
             project.setNextStep(filter);
 

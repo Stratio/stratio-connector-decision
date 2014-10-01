@@ -66,6 +66,7 @@ public class StreamingQueryEngine extends UniqueProjectQueryEngine<IStratioStrea
             ConnectorQueryData queryData = queryParser.transformLogicalWorkFlow(project);
             queryBuilder = new ConnectorQueryBuilder(queryData);
             String query = queryBuilder.createQuery();
+            System.out.println(query);//TODO
             if (logger.isDebugEnabled()) {
                 logger.debug("The streaming query is: [" + query + "]");
 
