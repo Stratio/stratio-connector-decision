@@ -164,12 +164,12 @@ public class StreamingConnector extends CommonsConnector {
             columnsAlias.put("name2", "name2");
 
             Relation condition = new Relation(new ColumnSelector(new ColumnName("testC", "testT", "name1")),
-                            Operator.GET, new IntegerSelector(22));
+                            Operator.LET, new IntegerSelector(22));
             Filter filter = new Filter(Operations.FILTER_NON_INDEXED_EQ, condition);
 
 
             Relation condition2 = new Relation(new ColumnSelector(new ColumnName("testC", "testT", "name2")),
-                    Operator.DISTINCT, new StringSelector("value2_R5"));
+                    Operator.EQ, new StringSelector("value2_R1"));
             Filter filter2 = new Filter(Operations.FILTER_NON_INDEXED_EQ, condition2);
 
 
