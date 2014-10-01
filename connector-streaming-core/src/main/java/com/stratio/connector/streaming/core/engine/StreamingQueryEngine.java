@@ -48,7 +48,7 @@ public class StreamingQueryEngine extends UniqueProjectQueryEngine<IStratioStrea
 
     private ConnectorQueryParser queryParser = new ConnectorQueryParser();
 
-    private ConnectorQueryBuilder queryBuilder = new ConnectorQueryBuilder();
+    private ConnectorQueryBuilder queryBuilder;
     private ConnectorQueryExecutor queryExecutor = new ConnectorQueryExecutor();
 
     private QueryManager queryManager;
@@ -64,23 +64,20 @@ public class StreamingQueryEngine extends UniqueProjectQueryEngine<IStratioStrea
         try {
 
             ConnectorQueryData queryData = queryParser.transformLogicalWorkFlow(project);
-
-            String query = queryBuilder.createQuery(queryData);
+            queryBuilder = new ConnectorQueryBuilder(queryData);
+            String query = queryBuilder.createQuery();
             if (logger.isDebugEnabled()) {
-                logger.debug("The streaming query is: ["+query+"]");
+                logger.debug("The streaming query is: [" + query + "]");
             }
-            String streamingId = queryExecutor.executeQuery(query,connection,queryData);
+            String streamingId = queryExecutor.executeQuery(query, connection, queryData);
 
             mappedMetaQueryIdStreamingQueryId(project, streamingId);
-
 
         } catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException e) {
             String msg = "Streaming query execution fail." + e.getMessage();
             logger.error(msg);
             throw new ExecutionException(msg, e);
         }
-
-
 
         throw new UnsupportedException("execute not supported in Streaming connector");
     }

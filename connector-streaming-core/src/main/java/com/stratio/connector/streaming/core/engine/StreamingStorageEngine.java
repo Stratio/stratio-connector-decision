@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.connection.ConnectionHandler;
 import com.stratio.connector.commons.engine.CommonsStorageEngine;
+import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.meta.common.data.Cell;
 import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.exceptions.ExecutionException;
@@ -74,7 +75,7 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
     @Override
     protected void insert(TableMetadata targetStream, Row row, Connection<IStratioStreamingAPI> connection)
                     throws UnsupportedException, ExecutionException {
-        String streamName = targetStream.getName().getCatalogName().getName() + "_" + targetStream.getName().getName();
+        String streamName = StreamUtil.createStreamName(targetStream.getName());
         try {
             List<ColumnNameValue> streamData = new ArrayList<ColumnNameValue>();
             Map<String, Cell> cells = row.getCells();

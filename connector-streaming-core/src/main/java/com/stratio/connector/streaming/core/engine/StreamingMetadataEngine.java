@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.connection.ConnectionHandler;
 import com.stratio.connector.commons.engine.CommonsMetadataEngine;
+import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.meta.common.exceptions.ExecutionException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.meta2.common.data.CatalogName;
@@ -94,8 +95,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
     protected void createTable(TableMetadata streamMetadata, Connection<IStratioStreamingAPI> connection)
                     throws UnsupportedException, ExecutionException {
         // TODO StreamUtils
-        String streamName = streamMetadata.getName().getCatalogName().getName() + "_"
-                        + streamMetadata.getName().getName();
+        String streamName = StreamUtil.createStreamName(streamMetadata.getName());
         try {
             List columnList = new ArrayList();
 
@@ -140,7 +140,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
     @Override
     protected void dropTable(TableName stream, Connection<IStratioStreamingAPI> connection) throws ExecutionException,
                     UnsupportedException {
-        String streamName = stream.getCatalogName().getName() + "_" + stream.getName();
+        String streamName = StreamUtil.createStreamName(stream);
         try {
 
             connection.getNativeConnection().dropStream(streamName);

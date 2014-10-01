@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -33,64 +34,50 @@ public class ConnectorQueryBuilder {
      */
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private ConnectorQueryData queryData;
+    private StringBuilder querySb = new StringBuilder();
+    private String streamName;
+    private String outgoing;
 
-    public String createQuery(ConnectorQueryData queryData) throws ExecutionException, UnsupportedException {
-
+    public ConnectorQueryBuilder(ConnectorQueryData queryData) {
+        this.queryData = queryData;
         // TODO String metaQueryId = queryData.getSelect().getQueryID();
         String metaQueryId = "01234";// TODO
-        String streamName = StreamUtil.createStreamName(queryData.getProjection());
-        String outgoing = StreamUtil.createOutgoingName(streamName,metaQueryId);
+        streamName = StreamUtil.createStreamName(queryData.getProjection());
+        outgoing = StreamUtil.createOutgoingName(streamName, metaQueryId);
+    }
 
-        StringBuilder querySb = new StringBuilder("from ");
-        querySb.append(streamName);
-        if (queryData.hasFilterList()) {
-            querySb.append("[");
-            Iterator<Filter> filterIter = queryData.getFilter().iterator();
-            while (filterIter.hasNext()) {
-                Relation rel = filterIter.next().getRelation();
-                querySb.append(getFieldName(rel.getLeftTerm())).append(" ")
-                                .append(getSiddhiOperator(rel.getOperator())).append(" ");
-                if (rel.getRightTerm() instanceof StringSelector) {
-                    querySb.append("'").append(((StringSelector) rel.getRightTerm()).getValue()).append("'");
-                } else {
-                    switch (rel.getRightTerm().getType()) {
-                    case BOOLEAN:
-                    case INTEGER:
-                    case FLOATING_POINT:
-                        querySb.append(rel.getRightTerm().toString());
-                        break;
-                    case COLUMN:
-                    case FUNCTION:
-                    case RELATION:
-                    case ASTERISK:
-                    default:
-                        throw new ExecutionException("Type " + rel.getRightTerm().getType() + "unsupported");
-                    }
-                }
+    public String createQuery() throws ExecutionException, UnsupportedException {
 
-                if (filterIter.hasNext()) {
-                    querySb.append(" and ");
-                }
-            }
-            querySb.append("]");
-        }
+        // #EXECUTION-QUERY => <input> <output> [<projection>]. See https://docs.wso2.com/display/CEP300/Language+Model
 
-        // TODO test if(queryData.hasWindow())
-        Window window = new Window(WindowType.TEMPORAL);
-        window.setTimeWindow(5, TimeUnit.SECONDS);
-        if (window != null) {
-            if (window.getType() == WindowType.TEMPORAL) {
-                querySb.append("#window.timeBatch( ").append(window.getDurationInMilliseconds())
-                                .append(" milliseconds)");
-            } else if (window.getType() == WindowType.NUM_ROWS) {
-                // TODO not supported
-            }
-        }
+        createInputQuery();
+        createProjection();// TODO check select
+        createOutputQuery();
+
+        return querySb.toString();
+    }
+
+    /**
+     * 
+     */
+    private void createOutputQuery() {
+        querySb.append(" insert into ");
+        querySb.append(outgoing);
+    }
+
+    /**
+     * @throws ExecutionException
+     * 
+     */
+    private void createProjection() throws ExecutionException {
 
         List<String> ids = new ArrayList<>();
         Select selectionClause = queryData.getSelect();
-        Set<String> columnMetadataList = selectionClause.getColumnMap().keySet();
+        Map<String, String> aliasMapping = selectionClause.getColumnMap();
+        Set<String> columnMetadataList = aliasMapping.keySet();
 
+        // Retrieving the fields
         if (columnMetadataList == null || columnMetadataList.isEmpty()) {
             String message = "The query has to retrieve data";
             logger.error(message);
@@ -104,10 +91,109 @@ public class ConnectorQueryBuilder {
 
         }
 
+        // Retrieving the alias
         String idsStr = Arrays.toString(ids.toArray()).replace("[", "").replace("]", "");
-        querySb.append(" select ").append(idsStr).append(" insert into ");
-        querySb.append(outgoing);
-        return querySb.toString();
+        for (String id : ids) {
+            querySb.append(id).append(" as ").append(aliasMapping.get(id));
+        }
+
+        querySb.append(" select ").append(idsStr);
+
+    }
+
+    /**
+     * @param queryData
+     * @return
+     * @throws UnsupportedException
+     */
+    private void createInputQuery() throws UnsupportedException {
+        querySb.append("from ");
+        createStreamsQuery();
+    }
+
+    /**
+     * @param queryData
+     * @return
+     * @throws UnsupportedException
+     */
+    private void createStreamsQuery() throws UnsupportedException {
+        // only one logicalWorkflow so always
+        createStreamQuery();
+        createWindowQuery();
+    }
+
+    /**
+     * @throws UnsupportedException
+     * 
+     */
+    private void createWindowQuery() throws UnsupportedException {
+        // TODO test if(queryData.hasWindow()) in createStreamsQuery
+        Window window = new Window(WindowType.TEMPORAL);
+        window.setTimeWindow(5, TimeUnit.SECONDS);
+        if (window != null) {
+            if (window.getType() == WindowType.TEMPORAL) {
+                querySb.append("#window.timeBatch( ").append(window.getDurationInMilliseconds())
+                                .append(" milliseconds)");
+            } else if (window.getType() == WindowType.NUM_ROWS) {
+                // TODO window.getDuration()
+                querySb.append("#window.lengthBatch( ").append(15).append(" milliseconds)");
+            } else
+                throw new UnsupportedException("Window " + window.getType().toString() + " is not supported");
+        }
+
+    }
+
+    /**
+     * @throws UnsupportedException
+     * 
+     */
+    private void createStreamQuery() throws UnsupportedException {
+        querySb.append(streamName);
+        if (queryData.hasFilterList()) {
+            createConditionList();
+        }
+
+    }
+
+    /**
+     * @throws UnsupportedException
+     * 
+     */
+    private void createConditionList() throws UnsupportedException {
+
+        querySb.append("[");
+        Iterator<Filter> filterIter = queryData.getFilter().iterator();
+        while (filterIter.hasNext()) {
+            Relation rel = filterIter.next().getRelation();
+
+            querySb.append(getFieldName(rel.getLeftTerm())).append(" ").append(getSiddhiOperator(rel.getOperator()))
+                            .append(" ");
+            if (rel.getRightTerm() instanceof StringSelector) {
+                querySb.append("'").append(((StringSelector) rel.getRightTerm()).getValue()).append("'");
+            } else {
+                switch (rel.getRightTerm().getType()) {
+                case BOOLEAN:
+                case INTEGER:
+                case FLOATING_POINT:
+                    querySb.append(rel.getRightTerm().toString());
+                    break;
+                case COLUMN:
+                    getFieldName(rel.getRightTerm());
+                    break;
+                case FUNCTION:
+                case RELATION:
+                case ASTERISK:
+                default:
+                    throw new UnsupportedException("Type " + rel.getRightTerm().getType() + "unsupported");
+                }
+            }
+
+            if (filterIter.hasNext()) {
+                querySb.append(" and ");
+            }
+        }
+        querySb.append("]");
+
     }
 
     private static String getFieldName(Selector selector) throws UnsupportedException {
@@ -116,14 +202,14 @@ public class ConnectorQueryBuilder {
             ColumnSelector columnSelector = (ColumnSelector) selector;
             field = columnSelector.getName().getName();
         } else
+            // TODO support right column selector
             throw new UnsupportedException("Left selector must be a columnSelector in filters");
         return field;
     }
 
-    private String getSiddhiOperator(Operator operator) throws UnsupportedException {
-        // TODO validation
-        String siddhiOperator;
+    private static String getSiddhiOperator(Operator operator) throws UnsupportedException {
 
+        String siddhiOperator;
         switch (operator) {
 
         case BETWEEN:

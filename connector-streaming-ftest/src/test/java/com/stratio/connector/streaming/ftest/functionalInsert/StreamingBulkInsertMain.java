@@ -17,6 +17,7 @@
 package com.stratio.connector.streaming.ftest.functionalInsert;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.stratio.connector.commons.ftest.schema.TableMetadataBuilder;
@@ -37,7 +38,7 @@ import com.stratio.meta2.common.metadata.TableMetadata;
 public class StreamingBulkInsertMain {
 
     protected static int getRowToInsert() {
-        return 10000;
+        return 10;
     }
 
     public static final String COLUMN_1 = "name1";
@@ -74,7 +75,7 @@ public class StreamingBulkInsertMain {
             sC.connect(null, config);
 
             TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder("testC", "testT");
-            tableMetadataBuilder.addColumn(COLUMN_KEY, ColumnType.VARCHAR).addColumn(COLUMN_1, ColumnType.VARCHAR)
+            tableMetadataBuilder.addColumn(COLUMN_KEY, ColumnType.VARCHAR).addColumn(COLUMN_1, ColumnType.INT)
                             .addColumn(COLUMN_2, ColumnType.VARCHAR).addColumn(COLUMN_3, ColumnType.VARCHAR);
 
             TableMetadata targetTable = tableMetadataBuilder.build();
@@ -84,10 +85,11 @@ public class StreamingBulkInsertMain {
             for (int i = 0; i < getRowToInsert(); i++) {
 
                 Row row = new Row();
-                Map<String, Cell> cells = new HashMap();
+                Map<String, Cell> cells = new LinkedHashMap<String, Cell>();
                 cells.put(COLUMN_KEY, new Cell(i));
+                Integer value1 = (i % 2 == 0) ? 25 : 20;
+                System.out.println(value1 + " =>" + VALUE_2 + i);
 
-                String value1 = (i % 2 == 0) ? "50" : "25";
                 cells.put(COLUMN_1, new Cell(value1));
                 cells.put(COLUMN_2, new Cell(VALUE_2 + i));
                 cells.put(COLUMN_3, new Cell(VALUE_3 + i));
