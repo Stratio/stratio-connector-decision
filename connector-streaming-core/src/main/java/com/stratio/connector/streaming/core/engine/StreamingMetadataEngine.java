@@ -93,6 +93,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
     @Override
     protected void createTable(TableMetadata streamMetadata, Connection<IStratioStreamingAPI> connection)
                     throws UnsupportedException, ExecutionException {
+        // TODO StreamUtils
         String streamName = streamMetadata.getName().getCatalogName().getName() + "_"
                         + streamMetadata.getName().getName();
         try {
@@ -139,7 +140,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
     @Override
     protected void dropTable(TableName stream, Connection<IStratioStreamingAPI> connection) throws ExecutionException,
                     UnsupportedException {
-        String streamName = stream.getName();
+        String streamName = stream.getCatalogName().getName() + "_" + stream.getName();
         try {
 
             connection.getNativeConnection().dropStream(streamName);
