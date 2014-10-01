@@ -74,7 +74,7 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
     @Override
     protected void insert(TableMetadata targetStream, Row row, Connection<IStratioStreamingAPI> connection)
                     throws UnsupportedException, ExecutionException {
-        String streamName = targetStream.getName().getName();
+        String streamName = targetStream.getName().getCatalogName().getName() + "_" + targetStream.getName().getName();
         try {
             List<ColumnNameValue> streamData = new ArrayList<ColumnNameValue>();
             Map<String, Cell> cells = row.getCells();

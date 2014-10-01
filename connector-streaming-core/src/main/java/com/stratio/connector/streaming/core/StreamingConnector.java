@@ -39,14 +39,19 @@ import com.stratio.meta.common.connector.Operations;
 import com.stratio.meta.common.exceptions.ConnectionException;
 import com.stratio.meta.common.exceptions.ExecutionException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
+import com.stratio.meta.common.logicalplan.Filter;
 import com.stratio.meta.common.logicalplan.LogicalStep;
 import com.stratio.meta.common.logicalplan.LogicalWorkflow;
 import com.stratio.meta.common.logicalplan.Project;
 import com.stratio.meta.common.logicalplan.Select;
+import com.stratio.meta.common.statements.structures.relationships.Operator;
+import com.stratio.meta.common.statements.structures.relationships.Relation;
 import com.stratio.meta2.common.data.ClusterName;
 import com.stratio.meta2.common.data.ColumnName;
 import com.stratio.meta2.common.data.TableName;
 import com.stratio.meta2.common.metadata.ColumnType;
+import com.stratio.meta2.common.statements.structures.selectors.ColumnSelector;
+import com.stratio.meta2.common.statements.structures.selectors.StringSelector;
 
 /**
  * This class implements the connector for Streaming.
@@ -111,7 +116,7 @@ public class StreamingConnector extends CommonsConnector {
     @Override
     public IQueryEngine getQueryEngine() {
 
-        return new StreamingQueryEngine(connectionHandler,queryManager);
+        return new StreamingQueryEngine(connectionHandler, queryManager);
     }
 
     /**
@@ -124,44 +129,46 @@ public class StreamingConnector extends CommonsConnector {
         return new StreamingMetadataEngine(connectionHandler);
     }
 
-
-    public static void main(String args[]){ //TODO
+    public static void main(String args[]) { // TODO
 
         try {
-          String ZOOKEEPER_SERVER = "10.200.0.58"; // "10.200.0.58";//"192.168.0.2";
-         String KAFKA_SERVER = "10.200.0.58";// "10.200.0.58";//"192.168.0.2";
-         String KAFKA_PORT = "9092";
-          String ZOOKEEPER_PORT = "2181";
+            String ZOOKEEPER_SERVER = "10.200.0.58"; // "10.200.0.58";//"192.168.0.2";
+            String KAFKA_SERVER = "10.200.0.58";// "10.200.0.58";//"192.168.0.2";
+            String KAFKA_PORT = "9092";
+            String ZOOKEEPER_PORT = "2181";
 
+            StreamingConnector sC = new StreamingConnector();
+            sC.init(null);
 
-        StreamingConnector sC = new StreamingConnector();
-        sC.init(null);
+            Map<String, String> optionsNode = new HashMap<>();
 
+            optionsNode.put("KafkaServer", KAFKA_SERVER);
+            optionsNode.put("KafkaPort", KAFKA_PORT);
+            optionsNode.put("zooKeeperServer", ZOOKEEPER_SERVER);
+            optionsNode.put("zooKeeperPort", ZOOKEEPER_PORT);
 
-        Map<String, String> optionsNode = new HashMap<>();
+            ConnectorClusterConfig config = new ConnectorClusterConfig(new ClusterName("CLUSTERNAME"), optionsNode);
 
-        optionsNode.put("KafkaServer", KAFKA_SERVER);
-        optionsNode.put("KafkaPort", KAFKA_PORT);
-        optionsNode.put("zooKeeperServer", ZOOKEEPER_SERVER);
-        optionsNode.put("zooKeeperPort", ZOOKEEPER_PORT);
-
-        ConnectorClusterConfig config =  new ConnectorClusterConfig(new ClusterName("CLUSTERNAME"), optionsNode);
-
-
-            sC.connect(null,config);
+            sC.connect(null, config);
             List<ColumnName> columns = new ArrayList<>();
-            columns.add(new ColumnName("testC","testT","name1"));
-            columns.add(new ColumnName("testC","testT","name2"));
-            Project project = new Project(Operations.PROJECT,new TableName("testC","testT"),
-                    new ClusterName("CLUSTERNAME"),columns);
-            Map<String, ColumnType> type  = new LinkedHashMap<>();
-            type.put("name1",ColumnType.VARCHAR);
-            type.put("name2",ColumnType.VARCHAR);
+            columns.add(new ColumnName("testC", "testT", "name1"));
+            columns.add(new ColumnName("testC", "testT", "name2"));
+            Project project = new Project(Operations.PROJECT, new TableName("testC", "testT"), new ClusterName(
+                            "CLUSTERNAME"), columns);
+            Map<String, ColumnType> type = new LinkedHashMap<>();
+            type.put("name1", ColumnType.VARCHAR);
+            type.put("name2", ColumnType.VARCHAR);
             Map<String, String> columnsAlias = new LinkedHashMap<>();
-            columnsAlias.put("name1","name1");
-            columnsAlias.put("name2","name2");
-            Select select = new Select(Operations.SELECT_WINDOW,columnsAlias,type);
-            project.setNextStep(select);
+            columnsAlias.put("name1", "name1");
+            columnsAlias.put("name2", "name2");
+
+            Relation filterGTE = new Relation(new ColumnSelector(new ColumnName("testC", "testT", "name1")),
+                            Operator.EQ, new StringSelector("50"));
+            Filter filter = new Filter(Operations.FILTER_NON_INDEXED_EQ, filterGTE);
+
+            Select select = new Select(Operations.SELECT_WINDOW, columnsAlias, type);
+            project.setNextStep(filter);
+            filter.setNextStep(select);
             List<LogicalStep> initialStep = new ArrayList<>();
             initialStep.add(project);
             LogicalWorkflow lWF = new LogicalWorkflow(initialStep);
@@ -175,6 +182,5 @@ public class StreamingConnector extends CommonsConnector {
         }
 
     }
-
 
 }
