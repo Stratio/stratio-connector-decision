@@ -54,7 +54,8 @@ public class ConnectorQueryParser {
                 queryData.setSelect((Select) lStep);
 
             } else if (lStep instanceof Limit) {
-                queryData.setLimit((Limit) lStep);
+                throw new UnsupportedException("LogicalStep [" + lStep.getClass().getCanonicalName()
+                                + " not yet supported");
             } else {
                 throw new UnsupportedException("LogicalStep [" + lStep.getClass().getCanonicalName() + " not supported");
             }

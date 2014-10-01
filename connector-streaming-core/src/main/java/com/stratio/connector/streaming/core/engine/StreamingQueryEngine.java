@@ -68,6 +68,7 @@ public class StreamingQueryEngine extends UniqueProjectQueryEngine<IStratioStrea
             String query = queryBuilder.createQuery();
             if (logger.isDebugEnabled()) {
                 logger.debug("The streaming query is: [" + query + "]");
+
             }
             String streamingId = queryExecutor.executeQuery(query, connection, queryData);
 

@@ -1,7 +1,6 @@
 package com.stratio.connector.streaming.core.engine.query;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -91,13 +90,17 @@ public class ConnectorQueryBuilder {
 
         }
 
+        querySb.append(" select ");
+
         // Retrieving the alias
-        String idsStr = Arrays.toString(ids.toArray()).replace("[", "").replace("]", "");
+
+        int numFields = ids.size();
+        int i = 0;
         for (String id : ids) {
             querySb.append(id).append(" as ").append(aliasMapping.get(id));
+            if (++i < numFields)
+                querySb.append(",");
         }
-
-        querySb.append(" select ").append(idsStr);
 
     }
 
@@ -128,7 +131,7 @@ public class ConnectorQueryBuilder {
      */
     private void createWindowQuery() throws UnsupportedException {
         // TODO test if(queryData.hasWindow()) in createStreamsQuery
-        Window window = new Window(WindowType.TEMPORAL);
+        Window window = new Window(WindowType.NUM_ROWS);
         window.setTimeWindow(5, TimeUnit.SECONDS);
         if (window != null) {
             if (window.getType() == WindowType.TEMPORAL) {
@@ -136,7 +139,7 @@ public class ConnectorQueryBuilder {
                                 .append(" milliseconds)");
             } else if (window.getType() == WindowType.NUM_ROWS) {
                 // TODO window.getDuration()
-                querySb.append("#window.lengthBatch( ").append(15).append(" milliseconds)");
+                querySb.append("#window.lengthBatch(").append(String.valueOf(7)).append(")");
             } else
                 throw new UnsupportedException("Window " + window.getType().toString() + " is not supported");
         }
@@ -178,7 +181,7 @@ public class ConnectorQueryBuilder {
                     querySb.append(rel.getRightTerm().toString());
                     break;
                 case COLUMN:
-                    getFieldName(rel.getRightTerm());
+                    querySb.append(getFieldName(rel.getRightTerm()));
                     break;
                 case FUNCTION:
                 case RELATION:

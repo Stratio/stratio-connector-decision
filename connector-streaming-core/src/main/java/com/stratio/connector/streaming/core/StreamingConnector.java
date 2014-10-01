@@ -51,8 +51,6 @@ import com.stratio.meta2.common.data.ColumnName;
 import com.stratio.meta2.common.data.TableName;
 import com.stratio.meta2.common.metadata.ColumnType;
 import com.stratio.meta2.common.statements.structures.selectors.ColumnSelector;
-import com.stratio.meta2.common.statements.structures.selectors.IntegerSelector;
-import com.stratio.meta2.common.statements.structures.selectors.StringSelector;
 
 /**
  * This class implements the connector for Streaming.
@@ -67,11 +65,11 @@ public class StreamingConnector extends CommonsConnector {
     QueryManager queryManager;
 
     /**
-     * Create a connection to Elasticsearch. The client will be a transportClient by default unless stratio nodeClient
-     * is specified.
+     * Create a connection to Streaming. The client will be a transportClient by default unless stratio nodeClient is
+     * specified.
      *
      * @param configuration
-     *            the connection configuration. It must be not null. onnection.
+     *            the connection configuration. It must be not null.
      */
 
     @Override
@@ -163,27 +161,24 @@ public class StreamingConnector extends CommonsConnector {
             columnsAlias.put("name1", "name1");
             columnsAlias.put("name2", "name2");
 
-            Relation condition = new Relation(new ColumnSelector(new ColumnName("testC", "testT", "name1")),
-                            Operator.GET, new IntegerSelector(22));
+            Relation condition = new Relation(new ColumnSelector(new ColumnName("testC", "testT", "name2")),
+                            Operator.EQ, new ColumnSelector(new ColumnName("testC", "testT", "name3")));
             Filter filter = new Filter(Operations.FILTER_NON_INDEXED_EQ, condition);
 
-
-            Relation condition2 = new Relation(new ColumnSelector(new ColumnName("testC", "testT", "name2")),
-                    Operator.DISTINCT, new StringSelector("value2_R5"));
-            Filter filter2 = new Filter(Operations.FILTER_NON_INDEXED_EQ, condition2);
-
-
-
+            /*
+             * Relation condition2 = new Relation(new ColumnSelector(new ColumnName("testC", "testT", "name2")),
+             * Operator.EQ, new StringSelector("value2_R1")); Filter filter2 = new
+             * Filter(Operations.FILTER_NON_INDEXED_EQ, condition2);
+             */
             Select select = new Select(Operations.SELECT_WINDOW, columnsAlias, type);
             project.setNextStep(filter);
-            filter.setNextStep(filter2);
-            filter2.setNextStep(select);
 
+            // filter.setNextStep(filter2);
+            // filter2.setNextStep(select);
+            filter.setNextStep(select);
             /**
              *
-
-            Select select = new Select(Operations.SELECT_WINDOW, columnsAlias, type);
-        project.setNextStep(select);
+             Select select = new Select(Operations.SELECT_WINDOW, columnsAlias, type); project.setNextStep(select);
              */
             List<LogicalStep> initialStep = new ArrayList<>();
             initialStep.add(project);

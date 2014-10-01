@@ -92,7 +92,7 @@ public class StreamingBulkInsertMain {
 
                 cells.put(COLUMN_1, new Cell(value1));
                 cells.put(COLUMN_2, new Cell(VALUE_2 + i));
-                cells.put(COLUMN_3, new Cell(VALUE_3 + i));
+                cells.put(COLUMN_3, new Cell(VALUE_2 + i));
                 row.setCells(cells);
                 sC.getStorageEngine().insert(clusterName, targetTable, row);
                 try {
