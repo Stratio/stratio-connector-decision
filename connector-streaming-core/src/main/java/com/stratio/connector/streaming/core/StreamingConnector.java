@@ -51,6 +51,7 @@ import com.stratio.meta2.common.data.ColumnName;
 import com.stratio.meta2.common.data.TableName;
 import com.stratio.meta2.common.metadata.ColumnType;
 import com.stratio.meta2.common.statements.structures.selectors.ColumnSelector;
+import com.stratio.meta2.common.statements.structures.selectors.IntegerSelector;
 import com.stratio.meta2.common.statements.structures.selectors.StringSelector;
 
 /**
@@ -162,13 +163,28 @@ public class StreamingConnector extends CommonsConnector {
             columnsAlias.put("name1", "name1");
             columnsAlias.put("name2", "name2");
 
-            Relation filterGTE = new Relation(new ColumnSelector(new ColumnName("testC", "testT", "name1")),
-                            Operator.EQ, new StringSelector("50"));
-            Filter filter = new Filter(Operations.FILTER_NON_INDEXED_EQ, filterGTE);
+            Relation condition = new Relation(new ColumnSelector(new ColumnName("testC", "testT", "name1")),
+                            Operator.GET, new IntegerSelector(22));
+            Filter filter = new Filter(Operations.FILTER_NON_INDEXED_EQ, condition);
+
+
+            Relation condition2 = new Relation(new ColumnSelector(new ColumnName("testC", "testT", "name2")),
+                    Operator.DISTINCT, new StringSelector("value2_R5"));
+            Filter filter2 = new Filter(Operations.FILTER_NON_INDEXED_EQ, condition2);
+
+
 
             Select select = new Select(Operations.SELECT_WINDOW, columnsAlias, type);
             project.setNextStep(filter);
-            filter.setNextStep(select);
+            filter.setNextStep(filter2);
+            filter2.setNextStep(select);
+
+            /**
+             *
+
+            Select select = new Select(Operations.SELECT_WINDOW, columnsAlias, type);
+        project.setNextStep(select);
+             */
             List<LogicalStep> initialStep = new ArrayList<>();
             initialStep.add(project);
             LogicalWorkflow lWF = new LogicalWorkflow(initialStep);

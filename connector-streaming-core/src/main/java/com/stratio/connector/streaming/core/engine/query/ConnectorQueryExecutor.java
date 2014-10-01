@@ -30,8 +30,11 @@ public class ConnectorQueryExecutor {
         String streamOutgoingName = StreamUtil.createOutgoingName(streamName,"01234"); //TODO
 
              stratioStreamingAPI.addQuery(streamName, query);
+        System.out.println(query);
+        System.out.println("DONE");
 
             KafkaStream<String, StratioStreamingMessage> streams = stratioStreamingAPI.listenStream(streamOutgoingName);
+        System.out.println("WAIT for messages");
             for (MessageAndMetadata stream: streams) {
                 StratioStreamingMessage theMessage = (StratioStreamingMessage)stream.message();
                 for (ColumnNameTypeValue column: theMessage.getColumns()) {
