@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.stratio.meta.common.exceptions.ExecutionException;
+import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.meta.common.logicalplan.Filter;
 import com.stratio.meta.common.logicalplan.Project;
 import com.stratio.meta.common.logicalplan.Select;
@@ -24,7 +25,7 @@ import com.stratio.meta2.common.statements.structures.selectors.StringSelector;
  */
 public class ConnectorQueryBuilder {
 
-    public String createQuery(ConnectorQueryData queryData) throws ExecutionException {
+    public String createQuery(ConnectorQueryData queryData) throws ExecutionException, UnsupportedException {
         Project projection = queryData.getProjection();
 
         // TODO String metaQueryId = queryData.getSelect().getQueryID();
@@ -99,24 +100,42 @@ public class ConnectorQueryBuilder {
         return querySb.toString();
     }
 
-    private static String getFieldName(Selector selector) throws ExecutionException {
+    private static String getFieldName(Selector selector) throws UnsupportedException {
         String field = null;
         if (selector instanceof ColumnSelector) {
             ColumnSelector columnSelector = (ColumnSelector) selector;
             field = columnSelector.getName().getName();
         } else
-            throw new ExecutionException("Left selector must be a columnSelector in filters");
+            throw new UnsupportedException("Left selector must be a columnSelector in filters");
         return field;
     }
 
-    private static String getSiddhiOperator(Operator operator) {
+    private static String getSiddhiOperator(Operator operator) throws UnsupportedException {
         // TODO validation
-        String siddhiOperator = operator.toString();
-        if (siddhiOperator.equalsIgnoreCase("=")) {
-            siddhiOperator = "==";
-        } else if (siddhiOperator.equalsIgnoreCase("<>")) {
+        String siddhiOperator;
+
+        switch (operator) {
+
+        case BETWEEN:
+            throw new UnsupportedException("Not yet supported");
+        case DISTINCT:
             siddhiOperator = "!=";
+            break;
+        case EQ:
+            siddhiOperator = "==";
+            break;
+        case GET:
+        case GT:
+        case LET:
+        case LT:
+            siddhiOperator = operator.toString();
+            break;
+
+        default:
+            throw new UnsupportedException("Operator " + operator.toString() + "is not supported");
+
         }
+
         return siddhiOperator;
     }
 
