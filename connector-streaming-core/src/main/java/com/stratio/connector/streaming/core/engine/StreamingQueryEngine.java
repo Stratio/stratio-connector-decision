@@ -61,23 +61,28 @@ public class StreamingQueryEngine extends UniqueProjectQueryEngine<IStratioStrea
     @Override
     protected QueryResult execute(Project project, Connection<IStratioStreamingAPI> connection)
                     throws UnsupportedException, ExecutionException {
-
-        ConnectorQueryData queryData = queryParser.transformLogicalWorkFlow(project);
-
-        String query = queryBuilder.createQuery(queryData);
-        Project projection = queryData.getProjection();
-        String streamName = projection.getCatalogName() + "_" + projection.getTableName().getName();
         try {
-            connection.getNativeConnection().addQuery(streamName, query);
+
+            ConnectorQueryData queryData = queryParser.transformLogicalWorkFlow(project);
+            String query = queryBuilder.createQuery(queryData);
+            String streamingId = queryExecutor.executeQuery(query,connection,queryData);
+
+            mappedMetaQueryIdStreamingQueryId(project, streamingId);
+
+
         } catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException e) {
-            // TODO
-            throw new ExecutionException("Exception: " + e.getClass() + " " + e.getMessage(), e);
+            String msg = "Streaming query execution fail." + e.getMessage();
+            logger.error(msg);
+            throw new ExecutionException(msg, e);
         }
 
-        String streamingId = queryExecutor.executeQuery(query);
-        queryManager.addQuery(getQueryId(project), streamingId);
+
 
         throw new UnsupportedException("execute not supported in Streaming connector");
+    }
+
+    private void mappedMetaQueryIdStreamingQueryId(Project project, String streamingId) throws ExecutionException {
+        queryManager.addQuery(getQueryId(project), streamingId);
     }
 
     private String getQueryId(Project project) {

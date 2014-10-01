@@ -6,10 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.meta.common.exceptions.ExecutionException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.meta.common.logicalplan.Filter;
-import com.stratio.meta.common.logicalplan.Project;
 import com.stratio.meta.common.logicalplan.Select;
 import com.stratio.meta.common.statements.structures.relationships.Operator;
 import com.stratio.meta.common.statements.structures.relationships.Relation;
@@ -25,13 +28,18 @@ import com.stratio.meta2.common.statements.structures.selectors.StringSelector;
  */
 public class ConnectorQueryBuilder {
 
+    /**
+     * The log.
+     */
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+
     public String createQuery(ConnectorQueryData queryData) throws ExecutionException, UnsupportedException {
-        Project projection = queryData.getProjection();
 
         // TODO String metaQueryId = queryData.getSelect().getQueryID();
         String metaQueryId = "01234";// TODO
-        String streamName = projection.getCatalogName() + "_" + projection.getTableName().getName();
-        String outgoing = streamName + "_" + metaQueryId.replace("-", "_");
+        String streamName = StreamUtil.createStreamName(queryData.getProjection());
+        String outgoing = StreamUtil.createOutgoingName(streamName,metaQueryId);
 
         StringBuilder querySb = new StringBuilder("from ");
         querySb.append(streamName);
@@ -84,7 +92,9 @@ public class ConnectorQueryBuilder {
         Set<String> columnMetadataList = selectionClause.getColumnMap().keySet();
 
         if (columnMetadataList == null || columnMetadataList.isEmpty()) {
-            throw new ExecutionException("The query has to retrieve data");
+            String message = "The query has to retrieve data";
+            logger.error(message);
+            throw new ExecutionException(message);
         } else {
 
             for (String columnName : columnMetadataList) {
@@ -110,7 +120,7 @@ public class ConnectorQueryBuilder {
         return field;
     }
 
-    private static String getSiddhiOperator(Operator operator) throws UnsupportedException {
+    private String getSiddhiOperator(Operator operator) throws UnsupportedException {
         // TODO validation
         String siddhiOperator;
 
