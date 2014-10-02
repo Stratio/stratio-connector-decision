@@ -19,6 +19,7 @@ import com.stratio.meta.common.statements.structures.relationships.Relation;
 import com.stratio.meta.common.statements.structures.window.TimeUnit;
 import com.stratio.meta.common.statements.structures.window.Window;
 import com.stratio.meta.common.statements.structures.window.WindowType;
+import com.stratio.meta2.common.data.ColumnName;
 import com.stratio.meta2.common.statements.structures.selectors.ColumnSelector;
 import com.stratio.meta2.common.statements.structures.selectors.Selector;
 import com.stratio.meta2.common.statements.structures.selectors.StringSelector;
@@ -73,8 +74,8 @@ public class ConnectorQueryBuilder {
 
         List<String> ids = new ArrayList<>();
         Select selectionClause = queryData.getSelect();
-        Map<String, String> aliasMapping = selectionClause.getColumnMap();
-        Set<String> columnMetadataList = aliasMapping.keySet();
+        Map<ColumnName, String> aliasMapping = selectionClause.getColumnMap();
+        Set<ColumnName> columnMetadataList = aliasMapping.keySet();
 
         // Retrieving the fields
         if (columnMetadataList == null || columnMetadataList.isEmpty()) {
@@ -83,9 +84,8 @@ public class ConnectorQueryBuilder {
             throw new ExecutionException(message);
         } else {
 
-            for (String columnName : columnMetadataList) {
-                String[] splitColumnName = columnName.split("\\.");
-                ids.add(splitColumnName[splitColumnName.length - 1]);
+            for (ColumnName columnName : columnMetadataList) {
+                ids.add(columnName.getName());
             }
 
         }

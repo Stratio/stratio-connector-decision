@@ -157,9 +157,9 @@ public class StreamingConnector extends CommonsConnector {
             Map<String, ColumnType> type = new LinkedHashMap<>();
             type.put("name1", ColumnType.VARCHAR);
             type.put("name2", ColumnType.VARCHAR);
-            Map<String, String> columnsAlias = new LinkedHashMap<>();
-            columnsAlias.put("name1", "name1");
-            columnsAlias.put("name2", "name2");
+            Map<ColumnName, String> columnsAlias = new LinkedHashMap<>();
+            columnsAlias.put(new ColumnName("testC", "testT", "name1"), "name1alias");
+            columnsAlias.put(new ColumnName("testC", "testT", "name2"), "name2alias");
 
             Relation condition = new Relation(new ColumnSelector(new ColumnName("testC", "testT", "name2")),
                             Operator.EQ, new ColumnSelector(new ColumnName("testC", "testT", "name3")));
