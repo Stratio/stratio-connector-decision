@@ -23,7 +23,7 @@ import kafka.message.MessageAndMetadata;
  */
 public class ConnectorQueryExecutor {
 
-    public boolean continueExecution = true;
+    
 
 
     public void  executeQuery(String query, Connection<IStratioStreamingAPI> connection,
@@ -40,7 +40,7 @@ public class ConnectorQueryExecutor {
 
             KafkaStream<String, StratioStreamingMessage> streams = stratioStreamingAPI.listenStream(streamOutgoingName);
         ConsumerIterator<String, StratioStreamingMessage> streamIterator = streams.iterator();
-            while(streamIterator.hasNext() && continueExecution){
+            while(streamIterator.hasNext()){
                 MessageAndMetadata stream = streamIterator.next();
                 StratioStreamingMessage theMessage = (StratioStreamingMessage)stream.message();
                 for (ColumnNameTypeValue column: theMessage.getColumns()) {
@@ -52,7 +52,14 @@ public class ConnectorQueryExecutor {
 
     }
 
-    public void endQuery() {
-        continueExecution = false;
-    }
+	public void endQuery(String streamName, String queryId, Connection<IStratioStreamingAPI> connection) throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
+		IStratioStreamingAPI streamConection = connection.getNativeConnection();
+		streamConection.stopListenStream(streamName);
+		streamConection.removeQuery(streamName, queryId);
+		
+	}
+    
+    
+
+   
 }

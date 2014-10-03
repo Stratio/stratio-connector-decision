@@ -1,5 +1,6 @@
 package com.stratio.connector.streaming.core.procces;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,9 +13,12 @@ import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.exceptions.ExecutionException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.meta.common.logicalplan.Project;
+import com.stratio.streaming.api.IStratioStreamingAPI;
+
 import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
 import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
 import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
+import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 
 /**
  * Created by jmgomez on 3/10/14.
@@ -28,7 +32,7 @@ public class QueryProcess implements ConnectorProcess{
 
     private  Project project;
     private  IResultHandler resultHandler;
-    private Connection connection;
+    private Connection<IStratioStreamingAPI> connection;
     private  ConnectorQueryExecutor queryExecutor;
 
 
@@ -69,7 +73,17 @@ public class QueryProcess implements ConnectorProcess{
     }
 
     @Override public void endQuery() {
-        queryExecutor.endQuery();
+    	
+    	try {
+    		String streamName = StreamUtil.createStreamName(project.getTableName());
+    		queryExecutor.endQuery(streamName, queryId,connection);	
+    		
+		} catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException e) {
+			String msg = "Streaming query stop fail." + e.getMessage();
+            logger.error(msg);
+            resultHandler.processException(queryId,new ExecutionException(msg,e));
+		}
+       
     }
 
 
