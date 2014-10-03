@@ -18,77 +18,82 @@ package com.stratio.connector.streaming.core.engine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.stratio.connector.commons.connection.Connection;
+
 import com.stratio.connector.commons.connection.ConnectionHandler;
-import com.stratio.connector.commons.engine.UniqueProjectQueryEngine;
-import com.stratio.connector.streaming.core.QueryManager;
-import com.stratio.connector.streaming.core.engine.query.ConnectorQueryBuilder;
-import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
-import com.stratio.connector.streaming.core.engine.query.ConnectorQueryExecutor;
-import com.stratio.connector.streaming.core.engine.query.ConnectorQueryParser;
+import com.stratio.connector.commons.connection.exceptions.HandlerConnectionException;
+
+import com.stratio.connector.streaming.core.procces.ConnectorProcessHandler;
+import com.stratio.connector.streaming.core.procces.QueryProcess;
+import com.stratio.connector.streaming.core.procces.exception.ConnectionProcessException;
+import com.stratio.meta.common.connector.IQueryEngine;
+import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.exceptions.ExecutionException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
+import com.stratio.meta.common.logicalplan.LogicalWorkflow;
 import com.stratio.meta.common.logicalplan.Project;
 import com.stratio.meta.common.result.QueryResult;
-import com.stratio.streaming.api.IStratioStreamingAPI;
-import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
-import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
-import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
 
-public class StreamingQueryEngine extends UniqueProjectQueryEngine<IStratioStreamingAPI> {
 
-    public StreamingQueryEngine(ConnectionHandler connectionHandler) {
-        super(connectionHandler);
+public class StreamingQueryEngine implements IQueryEngine {
+
+
+    private transient ConnectorProcessHandler connectorProcessHandler;
+    private transient ConnectionHandler connectionHandler;
+
+
+    public StreamingQueryEngine(ConnectionHandler connectionHandler,
+            ConnectorProcessHandler processHandler) {
+
+        this.connectionHandler = connectionHandler;
+        this.connectorProcessHandler = processHandler;
     }
 
-    /**
-     * The log.
-     */
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private ConnectorQueryParser queryParser = new ConnectorQueryParser();
-
-    private ConnectorQueryBuilder queryBuilder;
-    private ConnectorQueryExecutor queryExecutor = new ConnectorQueryExecutor();
-
-    private QueryManager queryManager;
-
-    public StreamingQueryEngine(ConnectionHandler connectionHandler, QueryManager queryManager) {
-        super(connectionHandler);
-        this.queryManager = queryManager;
-    }
-
-    @Override
-    protected QueryResult execute(Project project, Connection<IStratioStreamingAPI> connection)
-                    throws UnsupportedException, ExecutionException {
-        try {
-
-            ConnectorQueryData queryData = queryParser.transformLogicalWorkFlow(project);
-            queryBuilder = new ConnectorQueryBuilder(queryData);
-            String query = queryBuilder.createQuery();
-            System.out.println(query);//TODO
-            if (logger.isDebugEnabled()) {
-                logger.debug("The streaming query is: [" + query + "]");
-
-            }
-            String streamingId = queryExecutor.executeQuery(query, connection, queryData);
-
-            mappedMetaQueryIdStreamingQueryId(project, streamingId);
-
-        } catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException e) {
-            String msg = "Streaming query execution fail." + e.getMessage();
-            logger.error(msg);
-            throw new ExecutionException(msg, e);
-        }
-
+    @Override public QueryResult execute(LogicalWorkflow workflow) throws UnsupportedException, ExecutionException {
         throw new UnsupportedException("execute not supported in Streaming connector");
     }
 
-    private void mappedMetaQueryIdStreamingQueryId(Project project, String streamingId) throws ExecutionException {
-        queryManager.addQuery(getQueryId(project), streamingId);
+    @Override public void asyncExecute(String queryId, LogicalWorkflow workflow, IResultHandler resultHandler)
+            throws UnsupportedException, ExecutionException {
+        checkExceptions(queryId, workflow, resultHandler);
+        try {
+            initProcess(queryId, workflow, resultHandler).run();
+
+        } catch (ConnectionProcessException | HandlerConnectionException e) {
+            resultHandler.processException(queryId,new ExecutionException("Fail process creation",e));
+        }
     }
 
-    private String getQueryId(Project project) {
-        return "01234"; // TODO
+
+
+    @Override public void stop(String queryId) throws UnsupportedException, ExecutionException {
+        try {
+            connectorProcessHandler.getProcess(queryId).endQuery();
+        } catch (ConnectionProcessException e) {
+            throw new ExecutionException("Fail process stop",e);
+        }
     }
+
+
+    private QueryProcess initProcess(String queryId, LogicalWorkflow workflow, IResultHandler resultHandler)
+            throws ConnectionProcessException, HandlerConnectionException {
+
+        Project project = (Project) workflow.getInitialSteps().get(0);
+        String clusterName = project.getClusterName().getName();
+        connectionHandler.startWork(clusterName);
+        QueryProcess queryProcess = new QueryProcess(queryId,project, resultHandler,
+                connectionHandler.getConnection(clusterName));
+
+        connectorProcessHandler.addProcess(queryId, queryProcess);
+
+        return queryProcess;
+    }
+
+    private void checkExceptions(String queryId, LogicalWorkflow workflow, IResultHandler resultHandler) {
+        if (workflow.getInitialSteps().size()!=1){
+            resultHandler.processException(queryId,new ExecutionException("Only one project can be executed in " +
+                    "Streaming"));
+        }
+    }
+
+
 }

@@ -30,6 +30,7 @@ import com.stratio.connector.streaming.core.connection.StreamingConnectionHandle
 import com.stratio.connector.streaming.core.engine.StreamingMetadataEngine;
 import com.stratio.connector.streaming.core.engine.StreamingQueryEngine;
 import com.stratio.connector.streaming.core.engine.StreamingStorageEngine;
+import com.stratio.connector.streaming.core.procces.ConnectorProcessHandler;
 import com.stratio.meta.common.connector.ConnectorClusterConfig;
 import com.stratio.meta.common.connector.IConfiguration;
 import com.stratio.meta.common.connector.IMetadataEngine;
@@ -57,12 +58,15 @@ import com.stratio.meta2.common.statements.structures.selectors.ColumnSelector;
  */
 public class StreamingConnector extends CommonsConnector {
 
+
+    private transient ConnectorProcessHandler processHandler;
+
     /**
      * The Log.
      */
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    QueryManager queryManager;
+
 
     /**
      * Create a connection to Streaming. The client will be a transportClient by default unless stratio nodeClient is
@@ -76,7 +80,8 @@ public class StreamingConnector extends CommonsConnector {
     public void init(IConfiguration configuration) {
 
         connectionHandler = new StreamingConnectionHandler(configuration);
-        queryManager = new QueryManager();
+
+        processHandler = new ConnectorProcessHandler();
 
     }
 
@@ -115,7 +120,7 @@ public class StreamingConnector extends CommonsConnector {
     @Override
     public IQueryEngine getQueryEngine() {
 
-        return new StreamingQueryEngine(connectionHandler, queryManager);
+        return new StreamingQueryEngine(connectionHandler, processHandler);
     }
 
     /**

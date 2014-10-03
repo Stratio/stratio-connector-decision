@@ -29,9 +29,10 @@ import com.stratio.meta.common.statements.structures.relationships.Operator;
  */
 public class ConnectorQueryParser {
 
-    public ConnectorQueryData transformLogicalWorkFlow(Project logicalWorkFlow) throws UnsupportedException {
+    public ConnectorQueryData transformLogicalWorkFlow(Project logicalWorkFlow, String queryId) throws UnsupportedException {
 
         ConnectorQueryData queryData = new ConnectorQueryData();
+        queryData.setQueryId(queryId);
         LogicalStep lStep = logicalWorkFlow;
 
         do {

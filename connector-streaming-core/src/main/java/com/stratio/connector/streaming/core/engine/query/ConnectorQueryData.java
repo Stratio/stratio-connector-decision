@@ -44,6 +44,7 @@ public class ConnectorQueryData {
      */
     private Select select;
     private Limit limit;
+    private String queryId;
 
     /**
      * Add a filter.
@@ -131,5 +132,13 @@ public class ConnectorQueryData {
 
     public Limit getLimit() {
         return limit;
+    }
+
+    public String getQueryId() {
+        return queryId;
+    }
+
+    public void setQueryId(String queryId) {
+        this.queryId = queryId;
     }
 }
