@@ -37,4 +37,9 @@ public class ConnectorProcessHandler {
         }
         return process.get(queryId);
     }
+
+	public void removeProcess(String queryId) {
+		process.remove(queryId);
+		
+	}
 }

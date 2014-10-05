@@ -19,9 +19,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+
 import com.stratio.connector.commons.connection.ConnectionHandler;
 import com.stratio.connector.commons.connection.exceptions.HandlerConnectionException;
-
+import com.stratio.connector.streaming.core.procces.ConnectorProcess;
 import com.stratio.connector.streaming.core.procces.ConnectorProcessHandler;
 import com.stratio.connector.streaming.core.procces.QueryProcess;
 import com.stratio.connector.streaming.core.procces.exception.ConnectionProcessException;
@@ -56,7 +57,7 @@ public class StreamingQueryEngine implements IQueryEngine {
             throws UnsupportedException, ExecutionException {
         checkExceptions(queryId, workflow, resultHandler);
         try {
-            initProcess(queryId, workflow, resultHandler).run();
+            new Thread(initProcess(queryId, workflow, resultHandler)).start();
 
         } catch (ConnectionProcessException | HandlerConnectionException e) {
             resultHandler.processException(queryId,new ExecutionException("Fail process creation",e));
@@ -67,7 +68,10 @@ public class StreamingQueryEngine implements IQueryEngine {
 
     @Override public void stop(String queryId) throws UnsupportedException, ExecutionException {
         try {
-            connectorProcessHandler.getProcess(queryId).endQuery();
+        	ConnectorProcess process = connectorProcessHandler.getProcess(queryId);
+        	process.endQuery();
+            connectorProcessHandler.removeProcess(queryId);
+            connectionHandler.endWork(process.getProject().getClusterName().getName());
         } catch (ConnectionProcessException e) {
             throw new ExecutionException("Fail process stop",e);
         }

@@ -4,7 +4,12 @@ import java.util.Iterator;
 
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
+import com.stratio.meta.common.connector.IResultHandler;
+import com.stratio.meta.common.data.Cell;
+import com.stratio.meta.common.data.ResultSet;
+import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.logicalplan.Project;
+import com.stratio.meta.common.result.QueryResult;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.api.StratioStreamingAPI;
 import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
@@ -24,38 +29,51 @@ import kafka.message.MessageAndMetadata;
 public class ConnectorQueryExecutor {
 
     
-
+	String queryId;
 
     public void  executeQuery(String query, Connection<IStratioStreamingAPI> connection,
-            ConnectorQueryData queryData) throws StratioEngineOperationException, StratioAPISecurityException,
+            ConnectorQueryData queryData, IResultHandler resultHandler) throws StratioEngineOperationException, StratioAPISecurityException,
             StratioEngineStatusException {
 
 
         IStratioStreamingAPI stratioStreamingAPI = connection.getNativeConnection();
         String streamName = StreamUtil.createStreamName(queryData.getProjection());
         String streamOutgoingName = StreamUtil.createOutgoingName(streamName,queryData.getQueryId());
+        System.out.println("Creating query...");
+        System.out.println(query);
+       queryId = stratioStreamingAPI.addQuery(streamName, query);
 
-       stratioStreamingAPI.addQuery(streamName, query);
-
-
+       System.out.println("Listening...");
             KafkaStream<String, StratioStreamingMessage> streams = stratioStreamingAPI.listenStream(streamOutgoingName);
-        ConsumerIterator<String, StratioStreamingMessage> streamIterator = streams.iterator();
-            while(streamIterator.hasNext()){
-                MessageAndMetadata stream = streamIterator.next();
+        System.out.println("Wait for next 	...");
+        for (MessageAndMetadata stream: streams){
+        //TODO the send the metaInfo
+       //TODO how to send the correct window
                 StratioStreamingMessage theMessage = (StratioStreamingMessage)stream.message();
+                ResultSet resultSet = new ResultSet();
                 for (ColumnNameTypeValue column: theMessage.getColumns()) {
+                	
                     System.out.print(" Column: "+column.getColumn());
                     System.out.print(" Value: "+column.getValue());
                     System.out.print(" Type: "+column.getType());
+                    
+                    System.out.println("\n--------------------------");
+                    
+                    resultSet.add(new Row(column.getColumn(),new Cell(column.getValue())));
+					
                 }
+                QueryResult queryResutl = QueryResult.createQueryResult(resultSet);
+				resultHandler.processResult(queryResutl);
             }
 
     }
 
-	public void endQuery(String streamName, String queryId, Connection<IStratioStreamingAPI> connection) throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
+	public void endQuery(String streamName,  Connection<IStratioStreamingAPI> connection) throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
 		IStratioStreamingAPI streamConection = connection.getNativeConnection();
 		streamConection.stopListenStream(streamName);
-		streamConection.removeQuery(streamName, queryId);
+		if (queryId!=null){
+			streamConection.removeQuery(streamName, queryId);
+		}
 		
 	}
     

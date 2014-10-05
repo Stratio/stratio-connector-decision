@@ -59,7 +59,7 @@ public class QueryProcess implements ConnectorProcess{
             }
 
             queryExecutor = new ConnectorQueryExecutor();
-            queryExecutor.executeQuery(query, connection, queryData);
+            queryExecutor.executeQuery(query, connection, queryData,resultHandler);
 
 
 
@@ -76,7 +76,7 @@ public class QueryProcess implements ConnectorProcess{
     	
     	try {
     		String streamName = StreamUtil.createStreamName(project.getTableName());
-    		queryExecutor.endQuery(streamName, queryId,connection);	
+    		queryExecutor.endQuery(streamName, connection);	
     		
 		} catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException e) {
 			String msg = "Streaming query stop fail." + e.getMessage();
@@ -85,6 +85,12 @@ public class QueryProcess implements ConnectorProcess{
 		}
        
     }
+
+	@Override
+	public Project getProject() {
+		// TODO Auto-generated method stub
+		return project;
+	}
 
 
 }

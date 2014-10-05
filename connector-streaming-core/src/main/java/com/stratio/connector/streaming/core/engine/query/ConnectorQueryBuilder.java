@@ -42,7 +42,7 @@ public class ConnectorQueryBuilder {
     public ConnectorQueryBuilder(ConnectorQueryData queryData) {
         this.queryData = queryData;
         // TODO String metaQueryId = queryData.getSelect().getQueryID();
-        String metaQueryId = "01234";// TODO
+        String metaQueryId = queryData.getQueryId();
         streamName = StreamUtil.createStreamName(queryData.getProjection());
         outgoing = StreamUtil.createOutgoingName(streamName, metaQueryId);
     }
@@ -85,7 +85,7 @@ public class ConnectorQueryBuilder {
         } else {
 
             for (ColumnName columnName : columnMetadataList) {
-                ids.add(columnName.getName());
+                ids.add(columnName.getQualifiedName());
             }
 
         }
@@ -96,8 +96,8 @@ public class ConnectorQueryBuilder {
 
         int numFields = ids.size();
         int i = 0;
-        for (String id : ids) {
-            querySb.append(id).append(" as ").append(aliasMapping.get(id));
+        for (ColumnName id : aliasMapping.keySet()) {
+            querySb.append(id.getName());//.append(" as ").append(aliasMapping.get(id));
             if (++i < numFields)
                 querySb.append(",");
         }
