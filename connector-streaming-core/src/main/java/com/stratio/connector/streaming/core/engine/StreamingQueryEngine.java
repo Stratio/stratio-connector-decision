@@ -61,6 +61,8 @@ public class StreamingQueryEngine implements IQueryEngine {
 
         } catch (ConnectionProcessException | HandlerConnectionException e) {
             resultHandler.processException(queryId,new ExecutionException("Fail process creation",e));
+            
+            //TODO if the query fail must be remove from streaming..., finally 
         }
     }
 

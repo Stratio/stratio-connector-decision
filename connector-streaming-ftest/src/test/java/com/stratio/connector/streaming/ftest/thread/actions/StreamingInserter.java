@@ -25,6 +25,7 @@ public class StreamingInserter extends Thread{
 		this.stream = stream;
 	}
 
+	private static String TEXT = "Text ";
 	@Override
 	public void run(){
 		try {
@@ -36,20 +37,25 @@ public class StreamingInserter extends Thread{
 			
 			row.addCell(ThreadFunctionalTest.BOOLEAN_COLUMN, new Cell(true));
 			row.addCell(ThreadFunctionalTest.INTEGER_COLUMN, new Cell(i));
-			row.addCell(ThreadFunctionalTest.STRING_COLUMN, new Cell("Text "+i));
+			row.addCell(ThreadFunctionalTest.STRING_COLUMN, new Cell(TEXT));
 			
 				storageEngine.insert(clusterName, stream, row);
-				if ((i%100)==0) Thread.currentThread().sleep(1000);
+				if ((i%100)==0) Thread.currentThread().sleep(5000);
 		}
 			} catch (UnsupportedException | ExecutionException | InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		System.out.println("****************************** ENDING StreamingInserter **********************");
 		}
 
 	public void end() {
 		insert = false;
 		
+	}
+
+	public void changeOtuput(String stringOutput) {
+			TEXT = stringOutput;
 	}
 		
 	
