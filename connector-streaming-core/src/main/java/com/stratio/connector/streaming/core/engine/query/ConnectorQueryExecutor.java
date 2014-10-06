@@ -59,7 +59,7 @@ public class ConnectorQueryExecutor {
                     
                     System.out.println("\n--------------------------");
                     
-                    resultSet.add(new Row(column.getColumn(),new Cell(column.getValue())));
+x                    resultSet.add(new Row(column.getColumn(),new Cell(column.getValue())));
 					
                 }
                 QueryResult queryResutl = QueryResult.createQueryResult(resultSet);

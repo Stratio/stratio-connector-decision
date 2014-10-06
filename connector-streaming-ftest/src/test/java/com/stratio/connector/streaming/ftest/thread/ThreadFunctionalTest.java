@@ -41,8 +41,8 @@ public class ThreadFunctionalTest {
 	
 	private static final String CATALOG_NAME = "catalog_name";
 	private static final String TABLE_NAME = "table_name";
-	String ZOOKEEPER_SERVER = "192.168.0.2";// "10.200.0.58"; // "10.200.0.58";//"192.168.0.2";
-    String KAFKA_SERVER =  "192.168.0.2";//  "10.200.0.58";// "10.200.0.58";//"192.168.0.2";
+	String ZOOKEEPER_SERVER = "10.200.0.58";// "192.168.0.2";// // "10.200.0.58";//"192.168.0.2";
+    String KAFKA_SERVER =  "10.200.0.58"; //"192.168.0.2";//  // "10.200.0.58";//"192.168.0.2";
     String KAFKA_PORT = "9092";
     String ZOOKEEPER_PORT = "2181";
     public static String STRING_COLUMN ="string_column";

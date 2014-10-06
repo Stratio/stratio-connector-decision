@@ -97,7 +97,7 @@ public class ConnectorQueryBuilder {
         int numFields = ids.size();
         int i = 0;
         for (ColumnName id : aliasMapping.keySet()) {
-            querySb.append(id.getName());//.append(" as ").append(aliasMapping.get(id));
+            querySb.append(id.getName()).append(" as ").append(aliasMapping.get(id));
             if (++i < numFields)
                 querySb.append(",");
         }
@@ -105,7 +105,7 @@ public class ConnectorQueryBuilder {
     }
 
     /**
-     * @param queryData
+     *
      * @return
      * @throws UnsupportedException
      */
@@ -115,7 +115,7 @@ public class ConnectorQueryBuilder {
     }
 
     /**
-     * @param queryData
+     *
      * @return
      * @throws UnsupportedException
      */
