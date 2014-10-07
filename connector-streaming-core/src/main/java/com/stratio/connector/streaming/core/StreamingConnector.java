@@ -35,6 +35,7 @@ import com.stratio.meta.common.connector.ConnectorClusterConfig;
 import com.stratio.meta.common.connector.IConfiguration;
 import com.stratio.meta.common.connector.IMetadataEngine;
 import com.stratio.meta.common.connector.IQueryEngine;
+import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.connector.IStorageEngine;
 import com.stratio.meta.common.connector.Operations;
 import com.stratio.meta.common.exceptions.ConnectionException;
@@ -45,6 +46,7 @@ import com.stratio.meta.common.logicalplan.LogicalStep;
 import com.stratio.meta.common.logicalplan.LogicalWorkflow;
 import com.stratio.meta.common.logicalplan.Project;
 import com.stratio.meta.common.logicalplan.Select;
+import com.stratio.meta.common.result.QueryResult;
 import com.stratio.meta.common.statements.structures.relationships.Operator;
 import com.stratio.meta.common.statements.structures.relationships.Relation;
 import com.stratio.meta2.common.data.ClusterName;
@@ -58,15 +60,12 @@ import com.stratio.meta2.common.statements.structures.selectors.ColumnSelector;
  */
 public class StreamingConnector extends CommonsConnector {
 
-
     private transient ConnectorProcessHandler processHandler;
 
     /**
      * The Log.
      */
     final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-
 
     /**
      * Create a connection to Streaming. The client will be a transportClient by default unless stratio nodeClient is
@@ -189,7 +188,21 @@ public class StreamingConnector extends CommonsConnector {
             List<LogicalStep> initialStep = new ArrayList<>();
             initialStep.add(project);
             LogicalWorkflow lWF = new LogicalWorkflow(initialStep);
-            sC.getQueryEngine().execute(lWF);
+            sC.getQueryEngine().asyncExecute("AB", lWF, new IResultHandler() {
+
+                @Override
+                public void processResult(QueryResult result) {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void processException(String queryId, ExecutionException exception) {
+                    // TODO Auto-generated method stub
+
+                }
+            });
+
         } catch (ConnectionException e) {
             e.printStackTrace();
         } catch (UnsupportedException e) {

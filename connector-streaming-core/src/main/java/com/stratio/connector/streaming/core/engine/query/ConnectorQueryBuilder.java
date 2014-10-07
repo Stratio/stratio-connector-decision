@@ -87,7 +87,9 @@ public class ConnectorQueryBuilder {
         int numFields = columnMetadataList.size();
         int i = 0;
         for (ColumnName colName : columnMetadataList) {
-            querySb.append(colName.getName()).append(" as ").append(aliasMapping.get(colName));
+
+            querySb.append(StreamUtil.createStreamName(queryData.getProjection())).append(".")
+                            .append(colName.getName()).append(" as ").append(aliasMapping.get(colName));
             if (++i < numFields)
                 querySb.append(",");
         }
