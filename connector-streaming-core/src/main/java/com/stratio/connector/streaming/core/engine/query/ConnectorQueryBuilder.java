@@ -124,14 +124,14 @@ public class ConnectorQueryBuilder {
     private void createWindowQuery() throws UnsupportedException {
         // TODO test if(queryData.hasWindow()) in createStreamsQuery
         Window window = new Window(WindowType.NUM_ROWS);
-        window.setTimeWindow(5, TimeUnit.SECONDS);
+        window.setTimeWindow(20, TimeUnit.SECONDS);
         if (window != null) {
             if (window.getType() == WindowType.TEMPORAL) {
                 querySb.append("#window.timeBatch( ").append(window.getDurationInMilliseconds())
                                 .append(" milliseconds)");
             } else if (window.getType() == WindowType.NUM_ROWS) {
                 // TODO window.getDuration()
-                querySb.append("#window.lengthBatch(").append(String.valueOf(7)).append(")");
+                querySb.append("#window.lengthBatch(").append(String.valueOf(1)).append(")");
             } else
                 throw new UnsupportedException("Window " + window.getType().toString() + " is not supported");
         }

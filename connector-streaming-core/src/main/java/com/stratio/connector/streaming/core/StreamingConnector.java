@@ -192,7 +192,6 @@ public class StreamingConnector extends CommonsConnector {
 
                 @Override
                 public void processResult(QueryResult result) {
-                    // TODO Auto-generated method stub
 
                 }
 
