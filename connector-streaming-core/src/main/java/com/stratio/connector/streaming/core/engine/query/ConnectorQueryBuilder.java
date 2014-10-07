@@ -1,8 +1,6 @@
 package com.stratio.connector.streaming.core.engine.query;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -67,12 +65,11 @@ public class ConnectorQueryBuilder {
     }
 
     /**
-     * @throws ExecutionException
+     * @throws UnsupportedException
      * 
      */
-    private void createProjection() throws ExecutionException {
+    private void createProjection() throws UnsupportedException {
 
-        List<String> ids = new ArrayList<>();
         Select selectionClause = queryData.getSelect();
         Map<ColumnName, String> aliasMapping = selectionClause.getColumnMap();
         Set<ColumnName> columnMetadataList = aliasMapping.keySet();
@@ -81,23 +78,16 @@ public class ConnectorQueryBuilder {
         if (columnMetadataList == null || columnMetadataList.isEmpty()) {
             String message = "The query has to retrieve data";
             logger.error(message);
-            throw new ExecutionException(message);
-        } else {
-
-            for (ColumnName columnName : columnMetadataList) {
-                ids.add(columnName.getQualifiedName());
-            }
-
+            throw new UnsupportedException(message);
         }
 
         querySb.append(" select ");
 
         // Retrieving the alias
-
-        int numFields = ids.size();
+        int numFields = columnMetadataList.size();
         int i = 0;
-        for (ColumnName id : aliasMapping.keySet()) {
-            querySb.append(id.getName()).append(" as ").append(aliasMapping.get(id));
+        for (ColumnName colName : columnMetadataList) {
+            querySb.append(colName.getName()).append(" as ").append(aliasMapping.get(colName));
             if (++i < numFields)
                 querySb.append(",");
         }

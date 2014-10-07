@@ -25,9 +25,8 @@ import com.stratio.connector.commons.connection.exceptions.CreateNativeConnectio
 import com.stratio.meta.common.connector.ConnectorClusterConfig;
 import com.stratio.meta.common.connector.IConfiguration;
 import com.stratio.meta.common.security.ICredentials;
+import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.exceptions.StratioEngineConnectionException;
-import com.stratio.connector.streaming.core.connection.StreamingConnection;
-
 
 /**
  * Created by jmgomez on 28/08/14.
@@ -38,25 +37,23 @@ public class StreamingConnectionHandler extends ConnectionHandler {
      * The Log.
      */
     final Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
     public StreamingConnectionHandler(IConfiguration configuration) {
         super(configuration);
     }
 
     @Override
-    protected Connection createNativeConnection(ICredentials iCredentials,
-            ConnectorClusterConfig connectorClusterConfig) throws CreateNativeConnectionException{
-    		Connection con = null;
+    protected Connection<IStratioStreamingAPI> createNativeConnection(ICredentials iCredentials,
+                    ConnectorClusterConfig connectorClusterConfig) throws CreateNativeConnectionException {
+        Connection<IStratioStreamingAPI> con = null;
         try {
-        	con= new StreamingConnection(iCredentials,connectorClusterConfig);
-		} catch (StratioEngineConnectionException e) {
-			String msg = "Fail creating Streaming connection. "+e.getMessage();
-			logger.error(msg);
-			throw new CreateNativeConnectionException(msg,e);
-		}
+            con = new StreamingConnection(iCredentials, connectorClusterConfig);
+        } catch (StratioEngineConnectionException e) {
+            String msg = "Fail creating Streaming connection. " + e.getMessage();
+            logger.error(msg);
+            throw new CreateNativeConnectionException(msg, e);
+        }
         return con;
     }
-
-  
 
 }
