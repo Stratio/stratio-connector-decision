@@ -1,8 +1,6 @@
 package com.stratio.connector.streaming.core.engine.query;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -67,12 +65,11 @@ public class ConnectorQueryBuilder {
     }
 
     /**
-     * @throws ExecutionException
+     * @throws UnsupportedException
      * 
      */
-    private void createProjection() throws ExecutionException {
+    private void createProjection() throws UnsupportedException {
 
-        List<String> ids = new ArrayList<>();
         Select selectionClause = queryData.getSelect();
         Map<ColumnName, String> aliasMapping = selectionClause.getColumnMap();
         Set<ColumnName> columnMetadataList = aliasMapping.keySet();
@@ -81,23 +78,18 @@ public class ConnectorQueryBuilder {
         if (columnMetadataList == null || columnMetadataList.isEmpty()) {
             String message = "The query has to retrieve data";
             logger.error(message);
-            throw new ExecutionException(message);
-        } else {
-
-            for (ColumnName columnName : columnMetadataList) {
-                ids.add(columnName.getQualifiedName());
-            }
-
+            throw new UnsupportedException(message);
         }
 
         querySb.append(" select ");
 
         // Retrieving the alias
-
-        int numFields = ids.size();
+        int numFields = columnMetadataList.size();
         int i = 0;
-        for (ColumnName id : aliasMapping.keySet()) {
-            querySb.append(id.getName()).append(" as ").append(aliasMapping.get(id));
+        for (ColumnName colName : columnMetadataList) {
+
+            querySb.append(StreamUtil.createStreamName(queryData.getProjection())).append(".")
+                            .append(colName.getName()).append(" as ").append(aliasMapping.get(colName));
             if (++i < numFields)
                 querySb.append(",");
         }
@@ -131,15 +123,15 @@ public class ConnectorQueryBuilder {
      */
     private void createWindowQuery() throws UnsupportedException {
         // TODO test if(queryData.hasWindow()) in createStreamsQuery
-        Window window = new Window(WindowType.TEMPORAL);
-        window.setTimeWindow(5, TimeUnit.SECONDS);
+        Window window = new Window(WindowType.NUM_ROWS);
+        window.setTimeWindow(20, TimeUnit.SECONDS);
         if (window != null) {
             if (window.getType() == WindowType.TEMPORAL) {
                 querySb.append("#window.timeBatch( ").append(window.getDurationInMilliseconds())
                                 .append(" milliseconds)");
             } else if (window.getType() == WindowType.NUM_ROWS) {
                 // TODO window.getDuration()
-                querySb.append("#window.lengthBatch(").append(String.valueOf(7)).append(")");
+                querySb.append("#window.lengthBatch(").append(String.valueOf(1)).append(")");
             } else
                 throw new UnsupportedException("Window " + window.getType().toString() + " is not supported");
         }

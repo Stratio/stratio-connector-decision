@@ -97,7 +97,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
         // TODO StreamUtils
         String streamName = StreamUtil.createStreamName(streamMetadata.getName());
         try {
-            List columnList = new ArrayList();
+            List<ColumnNameType> columnList = new ArrayList<ColumnNameType>();
 
             for (ColumnName columnInfo : streamMetadata.getColumns().keySet()) {
                 String columnName = columnInfo.getName();
@@ -145,7 +145,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
 
             connection.getNativeConnection().dropStream(streamName);
         } catch (StratioStreamingException e) {
-            String msg = "Fail droping the Stream [" + streamName + "]. " + e.getMessage();
+            String msg = "Fail dropping the Stream [" + streamName + "]. " + e.getMessage();
             logger.error(msg);
             throw new ExecutionException(msg, e);
         }

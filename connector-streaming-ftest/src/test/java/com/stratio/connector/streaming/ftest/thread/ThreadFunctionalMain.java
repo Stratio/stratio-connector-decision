@@ -1,15 +1,9 @@
 package com.stratio.connector.streaming.ftest.thread;
 
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.junit.Before;
-import org.junit.Test;
 
 import com.stratio.connector.commons.ftest.workFlow.LogicalWorkFlowCreator;
 import com.stratio.connector.streaming.core.StreamingConnector;
@@ -17,8 +11,6 @@ import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
 import com.stratio.meta.common.connector.ConnectorClusterConfig;
 import com.stratio.meta.common.connector.IResultHandler;
-import com.stratio.meta.common.data.Cell;
-import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.exceptions.ConnectionException;
 import com.stratio.meta.common.exceptions.ExecutionException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
@@ -31,35 +23,29 @@ import com.stratio.meta2.common.metadata.ColumnMetadata;
 import com.stratio.meta2.common.metadata.ColumnType;
 import com.stratio.meta2.common.metadata.TableMetadata;
 
-public class ThreadFunctionalTest {
+public class ThreadFunctionalMain {
 
-	
-	
+    public static void main(String[] args) throws ConnectionException, UnsupportedException, InterruptedException {
+        final String OTHER_TEXT = "OTHER...... ";
+        final int WAIT_TIME = 40000;
+        final String CATALOG_NAME = "_name";
+        final String TABLE_NAME = "table_name";
+        String ZOOKEEPER_SERVER = "10.200.0.58";
+        ;// "192.168.0.2";
+        String KAFKA_SERVER = "10.200.0.58";// "192.168.0.2";
+        String KAFKA_PORT = "9092";
+        String ZOOKEEPER_PORT = "2181";
+        String STRING_COLUMN = "string_column";
+        String INTEGER_COLUMN = "integer_column";
+        String BOOLEAN_COLUMN = "boolean_column";
 
+        StreamingConnector sC;
+        TableMetadata tableMetadata;
 
+        ClusterName clusterName = new ClusterName("CLUSTERNAME");
 
-    private static final String OTHER_TEXT = "OTHER...... ";
-    private static final int WAIT_TIME = 20000;
-    private static final String CATALOG_NAME = "catalog_name";
-    private static final String TABLE_NAME = "table_name";
-    String ZOOKEEPER_SERVER = "10.200.0.58";;// "192.168.0.2";
-    String KAFKA_SERVER = "10.200.0.58";// "192.168.0.2";
+        Boolean correct = true;
 
-    String KAFKA_PORT = "9092";
-    String ZOOKEEPER_PORT = "2181";
-    public static String STRING_COLUMN = "string_column";
-    public static String INTEGER_COLUMN = "integer_column";
-    public static String BOOLEAN_COLUMN = "boolean_column";
-
-    StreamingConnector sC;
-    TableMetadata tableMetadata;
-
-    ClusterName clusterName = new ClusterName("CLUSTERNAME");
-
-    Boolean correct = true;
-
-    @Before
-    public void setUp() throws ConnectionException, UnsupportedException, ExecutionException {
         sC = new StreamingConnector();
 
         sC.init(null);
@@ -90,11 +76,6 @@ public class ThreadFunctionalTest {
 
         }
 
-    }
-
-    @Test
-    public void testStopReadBeforeStopWrite() throws InterruptedException {
-
         System.out.println("Thread Query ID " + Thread.currentThread().getId());
         System.out.println("TEST ********************** Inserting ......");
         StreamingInserter stramingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
@@ -105,92 +86,38 @@ public class ThreadFunctionalTest {
                         .getLogicalWorkflow();
 
         StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, logicalWokflow,
-                        new ResultHandler());
+                        new IResultHandler() {
+
+                            @Override
+                            public void processResult(QueryResult result) {
+                                // TODO Auto-generated method stub
+
+                            }
+
+                            @Override
+                            public void processException(String queryId, ExecutionException exception) {
+                                // TODO Auto-generated method stub
+
+                            }
+                        });
 
         stremingRead.start();
         System.out.println("TEST ********************** Quering......");
-        Thread.sleep(WAIT_TIME);
+        Thread.sleep(4 * WAIT_TIME);
 
         stremingRead.end();
         System.out.println("TEST ********************** END Quering Test......");
         Thread.sleep(WAIT_TIME);
         System.out.println("TEST ********************** Change Test Quering......");
+
         stramingInserter.changeOtuput(OTHER_TEXT);
         Thread.sleep(WAIT_TIME);
 
         System.out.println("TEST ********************** END Insert......");
         stramingInserter.interrupt();
         Thread.sleep(WAIT_TIME);
-
-        assertTrue("all is correct", correct);
-
-    }
-
-    @Test
-    public void testStopWriteBeforeStopRead() throws InterruptedException {
-
-        StreamingInserter stramingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
-        stramingInserter.start();
-
-        LogicalWorkflow logicalWokflow = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME, clusterName)
-                        .addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
-                        .getLogicalWorkflow();
-
-        ResultHandler resultHandler = new ResultHandler();
-        StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, logicalWokflow, resultHandler);
-
-        stremingRead.start();
-        System.out.println("TEST ********************** Quering......");
-        Thread.sleep(WAIT_TIME);
-
-        System.out.println("TEST ********************** END Insert......");
-        stramingInserter.interrupt();
-        Thread.sleep(10000); // it must be at least bigger than the windows time
-        resultHandler.mustNotReadMore();
-        System.out.println("TEST ********************** Wait for stoped read......");
-        Thread.sleep(2 * WAIT_TIME);
-
-        stremingRead.end();
-        System.out.println("TEST ********************** END Quering......");
-        Thread.sleep(WAIT_TIME);
-
-        assertTrue("all is correct", correct);
+        System.out.println("End");
+        sC.close(clusterName);
 
     }
-
-    private class ResultHandler implements IResultHandler {
-
-        boolean mustRead = true;
-
-        @Override
-        public void processException(String queryId, ExecutionException exception) {
-            System.out.println(queryId + " " + exception.getMessage());
-            exception.printStackTrace();
-
-        }
-
-        public void mustNotReadMore() {
-            mustRead = false;
-
-        }
-
-        @Override
-        public void processResult(QueryResult result) {
-            assertTrue("Now it must read", mustRead);
-            if (!mustRead) {
-                correct = false;
-            }
-            for (Row row : result.getResultSet()) {
-                Cell cell = row.getCell(STRING_COLUMN);
-                if (cell != null) {
-                    Object value = cell.getValue();
-                    assertNotEquals("The result must not be different", OTHER_TEXT, value);
-                    correct = false;
-                }
-            }
-
-        }
-
-    }
-
 }
