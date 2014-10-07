@@ -47,8 +47,8 @@ public class ThreadFunctionalTest {
 	private static final int WAIT_TIME = 30000;
 	private static final String CATALOG_NAME = "catalog_name";
 	private static final String TABLE_NAME = "table_name";
-	String ZOOKEEPER_SERVER = "192.168.0.2"; //"10.200.0.58";// 
-    String KAFKA_SERVER =  "192.168.0.2"; //"10.200.0.58"; //
+	String ZOOKEEPER_SERVER = "10.200.0.58" ;;//"192.168.0.2";
+    String KAFKA_SERVER =  "10.200.0.58";// "192.168.0.2";
     String KAFKA_PORT = "9092";
     String ZOOKEEPER_PORT = "2181";
     public static String STRING_COLUMN ="string_column";
@@ -59,7 +59,8 @@ public class ThreadFunctionalTest {
     TableMetadata tableMetadata;
     
     ClusterName clusterName = new ClusterName("CLUSTERNAME");
-    
+
+    Boolean correct = true;
 	@Before
 	public void setUp() throws ConnectionException, UnsupportedException, ExecutionException{
 		 sC = new StreamingConnector();
@@ -92,13 +93,15 @@ public class ThreadFunctionalTest {
 	        }catch(ExecutionException t){
 	        	
 	        }
+
 	}
 	
 	
 	@Test
 	public void testStopReadBeforeStopWrite() throws InterruptedException{
-		
-	
+
+        System.out.println("Thread Query ID "+ Thread.currentThread().getId());
+        System.out.println("********************** Inserting ......");
 		StreamingInserter stramingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
 		stramingInserter.start();
 		
@@ -113,7 +116,7 @@ public class ThreadFunctionalTest {
 		
 
 		stremingRead.end();
-		System.out.println("********************** END Quering......");
+		System.out.println("********************** END Quering Test......");
 		Thread.currentThread().sleep(WAIT_TIME);
 		System.out.println("********************** Change Test Quering......");
 		stramingInserter.changeOtuput(OTHER_TEXT);
@@ -122,6 +125,9 @@ public class ThreadFunctionalTest {
 		System.out.println("********************** END Insert......");
 		stramingInserter.end();
 		Thread.currentThread().sleep(WAIT_TIME);
+
+
+        assertTrue("all is correct",correct);
         
 		
 	}
@@ -154,6 +160,8 @@ public class ThreadFunctionalTest {
 		stremingRead.end();
 		System.out.println("********************** END Quering......");
 		Thread.currentThread().sleep(WAIT_TIME);
+
+        assertTrue("all is correct",correct);
         
 		
 	}
@@ -177,11 +185,15 @@ public class ThreadFunctionalTest {
 		@Override
 		public void processResult(QueryResult result) {
 			assertTrue("Now it must read",mustRead);
+            if (!mustRead){
+                correct =false;
+            }
 			for (Row row: result.getResultSet()){
 				Cell cell = row.getCell(STRING_COLUMN);
 				if (cell!=null){
 					Object value = cell.getValue();
 					assertNotEquals("The result must not be different", OTHER_TEXT,value);
+                    correct =false;
 				}
 			}
 			
