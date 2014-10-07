@@ -1,8 +1,9 @@
-package com.stratio.connector.streaming.core.engine.query;
+package com.stratio.connector.streaming.core.engine.query.queryExecutor;
 
-import java.util.Iterator;
+
 
 import com.stratio.connector.commons.connection.Connection;
+import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.data.Cell;
@@ -26,7 +27,7 @@ import kafka.message.MessageAndMetadata;
 /**
  * Created by jmgomez on 30/09/14.
  */
-public class ConnectorQueryExecutor {
+public abstract class ConnectorQueryExecutor {
 
     
 	String queryId;
@@ -56,29 +57,30 @@ public class ConnectorQueryExecutor {
         //TODO how to send the correct window
         StratioStreamingMessage theMessage = (StratioStreamingMessage) stream.message();
         ResultSet resultSet = new ResultSet();
-        System.out.println("TimeStamp: " + theMessage.getTimestamp());
-        System.out.println("getRequest_id: "+theMessage.getRequest_id());
-        System.out.println("getSession_id: "+theMessage.getSession_id());
-        System.out.println("getSe: "+theMessage.());
-        for (ColumnNameTypeValue column : theMessage.getColumns()) {
 
-
-            //                    System.out.print(" Column: " + column.getColumn());
-            //                    System.out.print(" || Type: " + column.getType());
-            //                    System.out.print(" || Value: " + column.getValue());
-            //                    System.out.println("\n--------- (" + i + ") -----------------");
-
-            i++;
-            resultSet.add(new Row(column.getColumn(), new Cell(column.getValue())));
-
-        }
-        QueryResult queryResult = QueryResult.createQueryResult(resultSet);
-        resultHandler.processResult(queryResult);
+        processMessage(theMessage,resultHandler,queryData);
+//        for (ColumnNameTypeValue column : theMessage.getColumns()) {
+//
+//
+//                               System.out.print(" Column: " + column.getColumn());
+//                               System.out.print(" || Type: " + column.getType());
+//                               System.out.print(" || Value: " + column.getValue());
+//                               System.out.println("\n--------- (" + i + ") -----------------");
+//
+//            i++;
+//            resultSet.add(new Row(column.getColumn(), new Cell(column.getValue())));
+//
+//        }
+//        QueryResult queryResult = QueryResult.createQueryResult(resultSet);
+//        resultHandler.processResult(queryResult);
     }
 
     }
 
-	public void endQuery(String streamName,  Connection<IStratioStreamingAPI> connection) throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
+    protected abstract void processMessage(StratioStreamingMessage theMessage, IResultHandler resultHandler,
+            ConnectorQueryData queryData);
+
+    public void endQuery(String streamName,  Connection<IStratioStreamingAPI> connection) throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
 		IStratioStreamingAPI streamConection = connection.getNativeConnection();
 		streamConection.stopListenStream(streamName);
 		if (queryId!=null){

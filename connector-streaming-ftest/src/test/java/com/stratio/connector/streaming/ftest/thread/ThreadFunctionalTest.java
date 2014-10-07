@@ -44,7 +44,7 @@ public class ThreadFunctionalTest {
 	
 	
 	private static final String OTHER_TEXT = "OTHER...... ";
-	private static final int WAIT_TIME = 30000;
+	private static final int WAIT_TIME = 10000;
 	private static final String CATALOG_NAME = "catalog_name";
 	private static final String TABLE_NAME = "table_name";
 	String ZOOKEEPER_SERVER = "10.200.0.58" ;;//"192.168.0.2";
