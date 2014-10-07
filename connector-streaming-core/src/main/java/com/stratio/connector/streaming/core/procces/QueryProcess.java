@@ -69,6 +69,9 @@ public class QueryProcess implements ConnectorProcess{
             logger.error(msg);
             resultHandler.processException(queryId,new ExecutionException(msg,e));
 
+        }catch (InterruptedException e){
+            logger.info("The query is stop");
+            System.out.println("here "+e);
         }
     }
 
@@ -80,8 +83,7 @@ public class QueryProcess implements ConnectorProcess{
     		queryExecutor.endQuery(streamName, connection);
 
             System.out.println("************** Interrupt");
-            System.out.println("Thread Query ID "+ Thread.currentThread().getId());
-            Thread.currentThread().interrupt();
+
     		
 		} catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException e) {
 			String msg = "Streaming query stop fail." + e.getMessage();

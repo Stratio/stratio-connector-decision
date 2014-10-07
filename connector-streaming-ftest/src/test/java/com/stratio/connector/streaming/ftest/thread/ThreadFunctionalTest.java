@@ -101,7 +101,7 @@ public class ThreadFunctionalTest {
 	public void testStopReadBeforeStopWrite() throws InterruptedException{
 
         System.out.println("Thread Query ID "+ Thread.currentThread().getId());
-        System.out.println("********************** Inserting ......");
+        System.out.println("TEST ********************** Inserting ......");
 		StreamingInserter stramingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
 		stramingInserter.start();
 		
@@ -111,18 +111,18 @@ public class ThreadFunctionalTest {
 		StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata,logicalWokflow, new ResultHandler());
 		
 		stremingRead.start();
-		System.out.println("********************** Quering......");
+		System.out.println("TEST ********************** Quering......");
 		Thread.currentThread().sleep(WAIT_TIME);
 		
 
 		stremingRead.end();
-		System.out.println("********************** END Quering Test......");
+		System.out.println("TEST ********************** END Quering Test......");
 		Thread.currentThread().sleep(WAIT_TIME);
-		System.out.println("********************** Change Test Quering......");
+		System.out.println("TEST ********************** Change Test Quering......");
 		stramingInserter.changeOtuput(OTHER_TEXT);
 		Thread.currentThread().sleep(WAIT_TIME);
 		
-		System.out.println("********************** END Insert......");
+		System.out.println("TEST ********************** END Insert......");
 		stramingInserter.end();
 		Thread.currentThread().sleep(WAIT_TIME);
 
@@ -147,18 +147,18 @@ public class ThreadFunctionalTest {
 		StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata,logicalWokflow, resultHandler);
 		
 		stremingRead.start();
-		System.out.println("********************** Quering......");
+		System.out.println("TEST ********************** Quering......");
 		Thread.currentThread().sleep(WAIT_TIME);
 		
-		System.out.println("********************** END Insert......");
+		System.out.println("TEST ********************** END Insert......");
 		stramingInserter.end();
 		Thread.currentThread().sleep(10000); //it must be at least bigger than the windows time
 		resultHandler.mustNotReadMore();
-		System.out.println("********************** Wait for stoped read......");
+		System.out.println("TEST ********************** Wait for stoped read......");
 		Thread.currentThread().sleep(2*WAIT_TIME);
 		
 		stremingRead.end();
-		System.out.println("********************** END Quering......");
+		System.out.println("TEST ********************** END Quering......");
 		Thread.currentThread().sleep(WAIT_TIME);
 
         assertTrue("all is correct",correct);

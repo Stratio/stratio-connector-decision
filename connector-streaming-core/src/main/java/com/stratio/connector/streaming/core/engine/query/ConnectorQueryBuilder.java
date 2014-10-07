@@ -131,7 +131,7 @@ public class ConnectorQueryBuilder {
      */
     private void createWindowQuery() throws UnsupportedException {
         // TODO test if(queryData.hasWindow()) in createStreamsQuery
-        Window window = new Window(WindowType.NUM_ROWS);
+        Window window = new Window(WindowType.TEMPORAL);
         window.setTimeWindow(5, TimeUnit.SECONDS);
         if (window != null) {
             if (window.getType() == WindowType.TEMPORAL) {

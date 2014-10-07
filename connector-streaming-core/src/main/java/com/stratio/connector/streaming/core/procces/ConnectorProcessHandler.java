@@ -5,7 +5,6 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.procces.exception.ConnectionProcessException;
 
 /**
@@ -18,28 +17,46 @@ public class ConnectorProcessHandler {
      */
     final transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private HashMap<String, ConnectorProcess> process = new HashMap<>();
+    private HashMap<String, ThreadProcess> processMap = new HashMap<>();
 
-    public void addProcess(String queryId, QueryProcess queryProcess) throws ConnectionProcessException {
-    if (process.containsKey(queryId)) {
-        String msg = "The process with id " + queryId + " already exists ";
+
+
+    public void strartProcess(String queryId, ConnectorProcess connectorProcess) throws ConnectionProcessException {
+    if (processMap.containsKey(queryId)) {
+        String msg = "The processMap with id " + queryId + " already exists ";
         logger.error(msg);
         throw new ConnectionProcessException(msg);
     }
-        process.put(queryId,queryProcess);
+        Thread thread = new Thread(connectorProcess);
+        processMap.put(queryId, new ThreadProcess(thread, connectorProcess));
+        thread.start();
     }
 
     public ConnectorProcess getProcess(String queryId) throws ConnectionProcessException {
-        if (!process.containsKey(queryId)) {
-            String msg = "The process with id " + queryId + " not exists ";
+        if (!processMap.containsKey(queryId)) {
+            String msg = "The processMap with id " + queryId + " not exists ";
             logger.error(msg);
             throw new ConnectionProcessException(msg);
         }
-        return process.get(queryId);
+        return processMap.get(queryId).process;
     }
 
-	public void removeProcess(String queryId) {
-		process.remove(queryId);
+	public void stopProcess(String queryId) {
+        processMap.get(queryId).thread.interrupt();
+		processMap.remove(queryId);
 		
 	}
+
+    private class ThreadProcess{
+
+        Thread thread;
+        ConnectorProcess process;
+
+        ThreadProcess(Thread thread, ConnectorProcess process){
+            this.thread = thread;
+            this.process = process;
+        }
+
+    }
+
 }

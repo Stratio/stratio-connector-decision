@@ -38,9 +38,11 @@ public class StreamingInserter extends Thread{
 			row.addCell(ThreadFunctionalTest.BOOLEAN_COLUMN, new Cell(true));
 			row.addCell(ThreadFunctionalTest.INTEGER_COLUMN, new Cell(i));
 			row.addCell(ThreadFunctionalTest.STRING_COLUMN, new Cell(TEXT));
-			
-				storageEngine.insert(clusterName, stream, row);
-				if ((i%100)==0) Thread.currentThread().sleep(5000);
+            storageEngine.insert(clusterName, stream, row);
+            System.out.println("pre insert");
+            Thread.currentThread().sleep(10000);
+            System.out.println("post insert");
+				//if ((i%100)==0) Thread.currentThread().sleep(5000);
 		}
 			} catch (UnsupportedException | ExecutionException | InterruptedException e) {
 				// TODO Auto-generated catch block
