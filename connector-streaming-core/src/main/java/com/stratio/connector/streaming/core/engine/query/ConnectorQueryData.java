@@ -141,4 +141,16 @@ public class ConnectorQueryData {
     public void setQueryId(String queryId) {
         this.queryId = queryId;
     }
+
+    public void setWindow() {
+        // TODO Auto-generated method stub
+    }
+
+    /**
+     * @return
+     */
+    public Object getWindow() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

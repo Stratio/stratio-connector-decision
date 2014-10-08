@@ -6,13 +6,10 @@ import org.slf4j.LoggerFactory;
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryBuilder;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
-
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryParser;
-
-
-
+import com.stratio.connector.streaming.core.engine.query.queryExecutor.ConnectorQueryExecutor;
+import com.stratio.connector.streaming.core.engine.query.queryExecutor.QueryExecutorFactory;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
-
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.exceptions.ExecutionException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
@@ -21,12 +18,6 @@ import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
 import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
 import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
-
-import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
-import com.stratio.connector.streaming.core.engine.query.queryExecutor.ConnectorQueryExecutor;
-import com.stratio.connector.streaming.core.engine.query.queryExecutor.QueryExecutorFactory;
-
-
 
 /**
  * Created by jmgomez on 3/10/14.
@@ -63,14 +54,9 @@ public class QueryProcess implements ConnectorProcess {
 
             }
 
-
-
             queryExecutor = QueryExecutorFactory.getQueryExecutor(queryData);
 
-            queryExecutor.executeQuery(query, connection, queryData,resultHandler);
-
-
-
+            queryExecutor.executeQuery(query, connection, queryData, resultHandler);
 
         } catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException
                         | UnsupportedException | ExecutionException e) {
@@ -84,19 +70,18 @@ public class QueryProcess implements ConnectorProcess {
         }
     }
 
-    @Override public void endQuery() {
-    	
-    	try {
+    @Override
+    public void endQuery() {
+
+        try {
             String streamName = StreamUtil.createStreamName(project.getTableName());
-    		queryExecutor.endQuery(streamName, connection);
-		} catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException e) {
-			String msg = "Streaming query stop fail." + e.getMessage();
+            queryExecutor.endQuery(streamName, connection);
+        } catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException e) {
+            String msg = "Streaming query stop fail." + e.getMessage();
 
             System.out.println("here " + e);
         }
     }
-
-
 
     @Override
     public Project getProject() {
