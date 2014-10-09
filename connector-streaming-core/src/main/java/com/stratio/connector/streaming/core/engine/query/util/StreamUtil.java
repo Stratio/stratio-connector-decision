@@ -1,5 +1,6 @@
 package com.stratio.connector.streaming.core.engine.query.util;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,7 +50,8 @@ public class StreamUtil {
         return streamName + "_" + metaQueryId.replace("-", "_");
     }
 
-    public static void insertRandomData(IStratioStreamingAPI stratioStreamingAPI, String streamName,Select select) {
+    public static void insertRandomData(IStratioStreamingAPI stratioStreamingAPI, String streamName,Select select)
+            throws UnsupportedException {
         try {
        double randomDouble = Math.random() * 100;
             int randomInt = (int) (randomDouble * Math.random() * 2);
@@ -83,11 +85,12 @@ public class StreamUtil {
         Object ramdomObject = null;
 
         switch (type){
-            case BIGINT: break;
-            case BOOLEAN: break;
-            case DOUBLE: break;
+            case INT:ramdomObject = random.nextInt(); break;
+            case BIGINT: ramdomObject = new BigInteger(500,random); break;
+            case BOOLEAN: ramdomObject = random.nextBoolean(); break;
+            case DOUBLE: ramdomObject = random.nextDouble(); break;
             case FLOAT: break;
-            case INT: break;
+
             case TEXT:
             case VARCHAR:
                     break;

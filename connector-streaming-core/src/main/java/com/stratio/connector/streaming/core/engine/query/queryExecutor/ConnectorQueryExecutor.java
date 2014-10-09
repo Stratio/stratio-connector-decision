@@ -8,6 +8,8 @@ import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.util.StreamResultSet;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.meta.common.connector.IResultHandler;
+import com.stratio.meta.common.exceptions.UnsupportedException;
+import com.stratio.meta.common.logicalplan.Select;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
 import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
@@ -38,8 +40,9 @@ public abstract class ConnectorQueryExecutor {
 
     }
 
-    public void executeQuery(String query, Connection<IStratioStreamingAPI> connection ) throws StratioEngineOperationException, StratioAPISecurityException,
-                    StratioEngineStatusException, InterruptedException {
+    public void executeQuery(String query, Connection<IStratioStreamingAPI> connection )
+            throws StratioEngineOperationException, StratioAPISecurityException,
+            StratioEngineStatusException, InterruptedException, UnsupportedException {
 
         IStratioStreamingAPI stratioStreamingAPI = connection.getNativeConnection();
         String streamName = StreamUtil.createStreamName(queryData.getProjection());
@@ -50,7 +53,8 @@ public abstract class ConnectorQueryExecutor {
 
         logger.info("Listening stream..." + streamOutgoingName);
         KafkaStream<String, StratioStreamingMessage> streams = stratioStreamingAPI.listenStream(streamOutgoingName);
-        StreamUtil.insertRandomData(stratioStreamingAPI, streamOutgoingName);
+        Select select = null;
+        StreamUtil.insertRandomData(stratioStreamingAPI, streamOutgoingName,select);
         logger.info("Waiting a message...");
        for (MessageAndMetadata stream : streams) {
             // TODO the send the metaInfo
