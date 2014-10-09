@@ -7,6 +7,7 @@ import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryBuilder;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryParser;
+
 import com.stratio.connector.streaming.core.engine.query.queryExecutor.ConnectorQueryExecutor;
 import com.stratio.connector.streaming.core.engine.query.queryExecutor.QueryExecutorFactory;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
@@ -47,16 +48,17 @@ public class QueryProcess implements ConnectorProcess {
 
             ConnectorQueryParser queryParser = new ConnectorQueryParser();
             ConnectorQueryData queryData = queryParser.transformLogicalWorkFlow(project, queryId);
-            ConnectorQueryBuilder queryBuilder = new ConnectorQueryBuilder(queryData);
+            ConnectorQueryBuilder queryBuilder =new ConnectorQueryBuilder(queryData);
             String query = queryBuilder.createQuery();
             if (logger.isDebugEnabled()) {
                 logger.debug("The streaming query is: [" + query + "]");
 
             }
 
-            queryExecutor = QueryExecutorFactory.getQueryExecutor(queryData);
-
-            queryExecutor.executeQuery(query, connection, queryData, resultHandler);
+            queryExecutor = QueryExecutorFactory.getQueryExecutor(queryData,resultHandler);
+            System.out.println("->>>>>>>>>>>>>>>>>>>> QUERY<<<<<<<<<<<<<<<<<<<<<<<<<<<< ");
+            System.out.println(query);
+            queryExecutor.executeQuery(query, connection);
 
         } catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException
                         | UnsupportedException | ExecutionException e) {

@@ -114,16 +114,16 @@ public class ConnectorQueryBuilder {
     private void createStreamsQuery() throws UnsupportedException {
         // only one logicalWorkflow so always
         createStreamQuery();
-        createWindowQuery();
+        //createWindowQuery();
     }
 
     /**
      * @throws UnsupportedException
      * 
-     */
+     * /
     private void createWindowQuery() throws UnsupportedException {
         // TODO test if(queryData.hasWindow()) in createStreamsQuery
-        Window window = new Window(WindowType.NUM_ROWS);
+        Window window = new Window(WindowType.TEMPORAL);
         window.setTimeWindow(20, TimeUnit.SECONDS);
         if (window != null) {
             if (window.getType() == WindowType.TEMPORAL) {
@@ -136,7 +136,7 @@ public class ConnectorQueryBuilder {
                 throw new UnsupportedException("Window " + window.getType().toString() + " is not supported");
         }
 
-    }
+    } */
 
     /**
      * @throws UnsupportedException

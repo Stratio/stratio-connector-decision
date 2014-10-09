@@ -19,6 +19,7 @@ package com.stratio.connector.streaming.core.engine.query;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.stratio.connector.temp.Window;
 import com.stratio.meta.common.logicalplan.Filter;
 import com.stratio.meta.common.logicalplan.Limit;
 import com.stratio.meta.common.logicalplan.Project;
@@ -45,6 +46,7 @@ public class ConnectorQueryData {
     private Select select;
     private Limit limit;
     private String queryId;
+    private Window window = new Window(); //TODO
 
     /**
      * Add a filter.
@@ -142,15 +144,14 @@ public class ConnectorQueryData {
         this.queryId = queryId;
     }
 
-    public void setWindow() {
-        // TODO Auto-generated method stub
+    public void setWindow(Window window) {
+        this.window = window;
     }
 
     /**
      * @return
      */
-    public Object getWindow() {
-        // TODO Auto-generated method stub
-        return null;
+    public Window getWindow() {
+        return window;
     }
 }

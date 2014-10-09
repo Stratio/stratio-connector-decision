@@ -1,13 +1,19 @@
 package com.stratio.connector.streaming.ftest.thread;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,14 +39,14 @@ import com.stratio.meta2.common.metadata.TableMetadata;
 
 public class ThreadFunctionalTest {
 
-	
-	
+    public static final int ELEMENTS_WRITE = 2000;
 
 
+    private static Random random = new Random(new Date().getTime());
 
     private static final String OTHER_TEXT = "OTHER...... ";
     private static final int WAIT_TIME = 20000;
-    private static final String CATALOG_NAME = "catalog_name";
+    private static final String CATALOG_NAME = "catalog_name_"+ Math.abs(random.nextLong());
     private static final String TABLE_NAME = "table_name";
     String ZOOKEEPER_SERVER = "10.200.0.58";;// "192.168.0.2";
     String KAFKA_SERVER = "10.200.0.58";// "192.168.0.2";
@@ -51,6 +57,8 @@ public class ThreadFunctionalTest {
     public static String INTEGER_COLUMN = "integer_column";
     public static String BOOLEAN_COLUMN = "boolean_column";
 
+    Set<Double> returnSet = new HashSet<>();
+
     StreamingConnector sC;
     TableMetadata tableMetadata;
 
@@ -60,6 +68,7 @@ public class ThreadFunctionalTest {
 
     @Before
     public void setUp() throws ConnectionException, UnsupportedException, ExecutionException {
+        returnSet = new HashSet<>();
         sC = new StreamingConnector();
 
         sC.init(null);
@@ -84,12 +93,27 @@ public class ThreadFunctionalTest {
         tableMetadata = new TableMetadata(tableName, Collections.EMPTY_MAP, columns, Collections.EMPTY_MAP,
                         clusterName, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
 
+
+
+
+
         try {
             sC.getMetadataEngine().createTable(clusterName, tableMetadata);
+//             tableMetadata = new TableMetadata(new TableName(CATALOG_NAME, TABLE_NAME+"_"+"queryId"), Collections.EMPTY_MAP,
+//                    columns,
+//                    Collections.EMPTY_MAP,
+//                    clusterName, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+//            sC.getMetadataEngine().createTable(clusterName, tableMetadata);
         } catch (ExecutionException t) {
 
         }
 
+    }
+
+    @After
+    public void tearDown() throws UnsupportedException, ExecutionException {
+        sC.getMetadataEngine().dropTable(clusterName,new TableName(CATALOG_NAME,TABLE_NAME));
+        sC.close(clusterName);
     }
 
     @Test
@@ -119,7 +143,7 @@ public class ThreadFunctionalTest {
         Thread.sleep(WAIT_TIME);
 
         System.out.println("TEST ********************** END Insert......");
-        stramingInserter.interrupt();
+        stramingInserter.end();
         Thread.sleep(WAIT_TIME);
 
         assertTrue("all is correct", correct);
@@ -158,6 +182,61 @@ public class ThreadFunctionalTest {
 
     }
 
+    @Test
+    public void testInsertConcreteNumber() throws InterruptedException {
+
+
+        LogicalWorkflow logicalWokflow = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME, clusterName)
+                .addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
+                .getLogicalWorkflow();
+
+        StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, logicalWokflow,
+                new ResultHandler());
+
+        stremingRead.start();
+        System.out.println("TEST ********************** Quering......");
+        Thread.sleep(20000);
+
+
+        StreamingInserter stramingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
+        stramingInserter.numOfElement(ELEMENTS_WRITE).elementPerSecond(ELEMENTS_WRITE);
+        stramingInserter.start();
+        Thread.sleep(50000);
+        stremingRead.end();
+        stramingInserter.end();
+        assertEquals("the number of elements read is correct",ELEMENTS_WRITE, returnSet.size());
+
+
+
+    }
+
+    @Test
+    public void testManyThread() throws UnsupportedException, ExecutionException, InterruptedException {
+        LogicalWorkflow logicalWokflow = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME, clusterName)
+                .addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
+                .getLogicalWorkflow();
+        sC.getQueryEngine().asyncExecute("query1",logicalWokflow,new ResultHandler());
+        Thread.sleep(WAIT_TIME);
+        sC.getQueryEngine().asyncExecute("query2",logicalWokflow,new ResultHandler());
+        Thread.sleep(WAIT_TIME);
+        sC.getQueryEngine().asyncExecute("query3",logicalWokflow,new ResultHandler());
+        Thread.sleep(WAIT_TIME);
+        sC.getQueryEngine().stop("query3");
+        sC.getQueryEngine().asyncExecute("query4",logicalWokflow,new ResultHandler());
+        Thread.sleep(WAIT_TIME);
+        sC.getQueryEngine().stop("query2");
+        sC.getQueryEngine().asyncExecute("query5",logicalWokflow,new ResultHandler());
+        Thread.sleep(WAIT_TIME);
+        sC.getQueryEngine().stop("query1");
+        sC.getQueryEngine().asyncExecute("query6",logicalWokflow,new ResultHandler());
+        sC.getQueryEngine().stop("query4");
+
+        Thread.sleep(WAIT_TIME);
+
+        sC.getQueryEngine().stop("query5");
+        sC.getQueryEngine().stop("query6");
+
+    }
     private class ResultHandler implements IResultHandler {
 
         boolean mustRead = true;
@@ -166,7 +245,6 @@ public class ThreadFunctionalTest {
         public void processException(String queryId, ExecutionException exception) {
             System.out.println(queryId + " " + exception.getMessage());
             exception.printStackTrace();
-
         }
 
         public void mustNotReadMore() {
@@ -174,13 +252,20 @@ public class ThreadFunctionalTest {
 
         }
 
+
         @Override
         public void processResult(QueryResult result) {
             assertTrue("Now it must read", mustRead);
+
+
             if (!mustRead) {
                 correct = false;
             }
             for (Row row : result.getResultSet()) {
+
+                Double cellValue = (Double) row.getCell(INTEGER_COLUMN).getValue();
+                System.out.println(cellValue);
+                returnSet.add(cellValue); //To remove duplicates
                 Cell cell = row.getCell(STRING_COLUMN);
                 if (cell != null) {
                     Object value = cell.getValue();

@@ -1,5 +1,8 @@
 package com.stratio.connector.streaming.core.engine.query.queryExecutor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.util.StreamResultSet;
@@ -19,41 +22,47 @@ import kafka.message.MessageAndMetadata;
  */
 public abstract class ConnectorQueryExecutor {
 
-    String queryId;
-    StreamResultSet streamResultSet;
-    ConnectorQueryData queryData;
 
-    public ConnectorQueryExecutor(ConnectorQueryData queryData) {
+    /**
+     * The Log.
+     */
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    protected String queryId;
+    protected ConnectorQueryData queryData;
+    IResultHandler resultHandler;
+
+    public ConnectorQueryExecutor(ConnectorQueryData queryData,IResultHandler resultHandler) {
         this.queryData = queryData;
-        streamResultSet = new StreamResultSet(queryData);
+        this.resultHandler = resultHandler;
+
     }
 
-    public void executeQuery(String query, Connection<IStratioStreamingAPI> connection, ConnectorQueryData queryData,
-                    IResultHandler resultHandler) throws StratioEngineOperationException, StratioAPISecurityException,
+    public void executeQuery(String query, Connection<IStratioStreamingAPI> connection ) throws StratioEngineOperationException, StratioAPISecurityException,
                     StratioEngineStatusException, InterruptedException {
 
         IStratioStreamingAPI stratioStreamingAPI = connection.getNativeConnection();
         String streamName = StreamUtil.createStreamName(queryData.getProjection());
         String streamOutgoingName = StreamUtil.createOutgoingName(streamName, queryData.getQueryId());
-        System.out.println("********************** Creating query...");
-        System.out.println(query);
+        logger.info("add query...");
+        logger.debug(query);
         queryId = stratioStreamingAPI.addQuery(streamName, query);
 
-        System.out.println("********************** Listening..." + streamOutgoingName);
+        logger.info("Listening stream..." + streamOutgoingName);
         KafkaStream<String, StratioStreamingMessage> streams = stratioStreamingAPI.listenStream(streamOutgoingName);
-        System.out.println("********************** Wait for next 	...");
-        int i = 0;
-
-        for (MessageAndMetadata stream : streams) {
+        StreamUtil.insertRandomData(stratioStreamingAPI, streamOutgoingName);
+        logger.info("Waiting a message...");
+       for (MessageAndMetadata stream : streams) {
             // TODO the send the metaInfo
-            // TODO how to send the correct window
+
             StratioStreamingMessage theMessage = (StratioStreamingMessage) stream.message();
-            processMessage(theMessage, resultHandler);
+
+            processMessage(theMessage);
         }
 
     }
 
-    protected abstract void processMessage(StratioStreamingMessage theMessage, IResultHandler resultHandler);
+
 
     public void endQuery(String streamName, Connection<IStratioStreamingAPI> connection)
                     throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
@@ -64,5 +73,8 @@ public abstract class ConnectorQueryExecutor {
         }
 
     }
+
+    protected abstract void processMessage(StratioStreamingMessage theMessage);
+
 
 }

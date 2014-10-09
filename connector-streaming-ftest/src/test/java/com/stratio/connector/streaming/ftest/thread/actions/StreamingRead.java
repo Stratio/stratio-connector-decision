@@ -10,6 +10,7 @@ import com.stratio.meta2.common.metadata.TableMetadata;
 
 public class StreamingRead extends Thread {
 
+
     private StreamingConnector streamingConnector;
     private ClusterName clusterName;
     private TableMetadata tableMetadata;
@@ -18,6 +19,7 @@ public class StreamingRead extends Thread {
 
     public StreamingRead(StreamingConnector sC, ClusterName clusterName, TableMetadata tableMetadata,
                     LogicalWorkflow logicalWorkFlow, IResultHandler resultHandler) {
+        super ("StreamingRead");
         this.streamingConnector = sC;
         this.clusterName = clusterName;
         this.tableMetadata = tableMetadata;

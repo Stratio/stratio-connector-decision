@@ -66,7 +66,6 @@ public class StreamingQueryEngine implements IQueryEngine {
     @Override public void stop(String queryId) throws UnsupportedException, ExecutionException {
         try {
             ConnectorProcess process = connectorProcessHandler.getProcess(queryId);
-            process.endQuery();
             connectionHandler.endWork(process.getProject().getClusterName().getName());
         	connectorProcessHandler.stopProcess(queryId);
         } catch (ConnectionProcessException e) {
