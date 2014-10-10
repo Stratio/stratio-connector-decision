@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.streaming.core.procces.exception.ConnectionProcessException;
+import com.stratio.meta.common.exceptions.ExecutionException;
 
 /**
  * Created by jmgomez on 3/10/14.
@@ -41,7 +42,7 @@ public class ConnectorProcessHandler {
         return processMap.get(queryId).process;
     }
 
-	public void stopProcess(String queryId) throws ConnectionProcessException {
+	public void stopProcess(String queryId) throws ConnectionProcessException, ExecutionException {
         getProcess(queryId).endQuery();
         processMap.get(queryId).thread.interrupt();
 		processMap.remove(queryId);

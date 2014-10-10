@@ -47,20 +47,18 @@ public class StreamingInserter extends Thread {
             System.out.println("****************************** STARTING StreamingInserter **********************");
             IStorageEngine storageEngine = streamingConnector.getStorageEngine();
             for (int i = 0; !finishThread; i++) {
-                if (numOfElement!=0 && numOfElement==i) break;
+                if (numOfElement!=0 && numOfElement-1==i) finishThread=true;
                 Row row = new Row();
 
                 row.addCell(ThreadTimeWindowFunctionalTest.BOOLEAN_COLUMN, new Cell(true));
                 row.addCell(ThreadTimeWindowFunctionalTest.INTEGER_COLUMN, new Cell(i));
                 row.addCell(ThreadTimeWindowFunctionalTest.STRING_COLUMN, new Cell(TEXT));
-
                 storageEngine.insert(clusterName, stream, row);
-                System.out.println("insert name =>" + i);
 
-               // if (i==0) Thread.sleep(10000);
-               // storageEngine.insert(clusterName, stream, row);
+
+
                 if ((i%elementPerSecond)==0) Thread.sleep(1000);
-                if (numOfElement!=0 && numOfElement+1==i) finishThread=true;
+
 
             }
         } catch (UnsupportedException | ExecutionException   | InterruptedException e) {

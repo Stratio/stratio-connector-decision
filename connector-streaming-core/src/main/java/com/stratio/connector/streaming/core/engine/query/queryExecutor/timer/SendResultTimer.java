@@ -17,6 +17,5 @@ public class SendResultTimer extends TimerTask {
     @Override
     public void run() {
         timeWindowQueryExecutor.sendMessages();
-        System.out.println("---------------------------->  "+System.currentTimeMillis());
     }
 }

@@ -23,6 +23,7 @@ import com.stratio.connector.commons.connection.Connection;
 import com.stratio.meta.common.connector.ConnectorClusterConfig;
 import com.stratio.meta.common.security.ICredentials;
 import com.stratio.streaming.api.IStratioStreamingAPI;
+import com.stratio.streaming.api.StratioStreamingAPI;
 import com.stratio.streaming.api.StratioStreamingAPIFactory;
 import com.stratio.streaming.commons.exceptions.StratioEngineConnectionException;
 

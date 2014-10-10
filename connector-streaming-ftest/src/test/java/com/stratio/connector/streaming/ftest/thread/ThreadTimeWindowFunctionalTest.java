@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -30,6 +31,7 @@ import com.stratio.meta.common.exceptions.ConnectionException;
 import com.stratio.meta.common.exceptions.ExecutionException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.meta.common.logicalplan.LogicalWorkflow;
+import com.stratio.meta.common.logicalplan.Select;
 import com.stratio.meta.common.result.QueryResult;
 import com.stratio.meta2.common.data.ClusterName;
 import com.stratio.meta2.common.data.ColumnName;
@@ -57,8 +59,8 @@ public class ThreadTimeWindowFunctionalTest {
     public static String STRING_COLUMN = "string_column";
     public static String INTEGER_COLUMN = "integer_column";
     public static String BOOLEAN_COLUMN = "boolean_column";
-
-    Set<Double> returnSet = new HashSet<>();
+    boolean correctOrder = true;
+    Set<Integer> returnSet = new HashSet<>();
 
     StreamingConnector sC;
     TableMetadata tableMetadata;
@@ -66,6 +68,8 @@ public class ThreadTimeWindowFunctionalTest {
     ClusterName clusterName = new ClusterName("CLUSTERNAME");
 
     Boolean correct = true;
+      Boolean correctType = true;
+    Boolean returnTypes = true;
 
     @Before
     public void setUp() throws ConnectionException, UnsupportedException, ExecutionException {
@@ -93,10 +97,6 @@ public class ThreadTimeWindowFunctionalTest {
         columns.put(columnNameBoolean, new ColumnMetadata(columnNameBoolean, new Object[] {}, ColumnType.BOOLEAN));
         tableMetadata = new TableMetadata(tableName, Collections.EMPTY_MAP, columns, Collections.EMPTY_MAP,
                         clusterName, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
-
-
-
-
 
         try {
             sC.getMetadataEngine().createTable(clusterName, tableMetadata);
@@ -134,8 +134,9 @@ public class ThreadTimeWindowFunctionalTest {
         LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
                         .getLogicalWorkflow();
 
+
         StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, logicalWokflow,
-                        new ResultHandler());
+                        new ResultHandler((Select)logicalWokflow.getLastStep()));
 
         stremingRead.start();
         System.out.println("TEST ********************** Quering......");
@@ -153,6 +154,9 @@ public class ThreadTimeWindowFunctionalTest {
         Thread.sleep(WAIT_TIME);
 
         assertTrue("all is correct", correct);
+        assertTrue("Result is ordered",correctOrder);
+        assertTrue("The types are correct",correctType);
+        assertTrue("Return types",returnTypes);
 
     }
 
@@ -173,7 +177,7 @@ public class ThreadTimeWindowFunctionalTest {
         LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
                         .getLogicalWorkflow();
 
-        ResultHandler resultHandler = new ResultHandler();
+        ResultHandler resultHandler = new ResultHandler((Select)logicalWokflow.getLastStep());
         StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, logicalWokflow, resultHandler);
 
         stremingRead.start();
@@ -181,7 +185,7 @@ public class ThreadTimeWindowFunctionalTest {
         Thread.sleep(WAIT_TIME);
 
         System.out.println("TEST ********************** END Insert......");
-        stramingInserter.interrupt();
+        stramingInserter.end();
         Thread.sleep(10000); // it must be at least bigger than the windows time
         resultHandler.mustNotReadMore();
         System.out.println("TEST ********************** Wait for stoped read......");
@@ -192,6 +196,10 @@ public class ThreadTimeWindowFunctionalTest {
         Thread.sleep(WAIT_TIME);
 
         assertTrue("all is correct", correct);
+        assertTrue("Result is ordered",correctOrder);
+        assertTrue("The types are correct",correctType);
+        assertTrue("Return types",returnTypes);
+
 
     }
 
@@ -211,7 +219,7 @@ public class ThreadTimeWindowFunctionalTest {
                 .getLogicalWorkflow();
 
         StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, logicalWokflow,
-                new ResultHandler());
+                new ResultHandler((Select)logicalWokflow.getLastStep()));
 
         stremingRead.start();
         System.out.println("TEST ********************** Quering......");
@@ -224,7 +232,13 @@ public class ThreadTimeWindowFunctionalTest {
         Thread.sleep(50000);
         stremingRead.end();
         stramingInserter.end();
+
         assertEquals("the number of elements read is correct",ELEMENTS_WRITE, returnSet.size());
+        assertTrue("all is correct", correct);
+        assertTrue("Result is ordered",correctOrder);
+        assertTrue("The types are correct",correctType);
+        assertTrue("Return types",returnTypes);
+
 
 
 
@@ -235,20 +249,21 @@ public class ThreadTimeWindowFunctionalTest {
         LogicalWorkflow logicalWokflow = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME, clusterName)
                 .addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
                 .getLogicalWorkflow();
-        sC.getQueryEngine().asyncExecute("query1",logicalWokflow,new ResultHandler());
+        sC.getQueryEngine().asyncExecute("query1",logicalWokflow,new ResultHandler((Select)logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
-        sC.getQueryEngine().asyncExecute("query2",logicalWokflow,new ResultHandler());
+        sC.getQueryEngine().asyncExecute("query2", logicalWokflow, new ResultHandler((Select) logicalWokflow.getLastStep
+                ()));
         Thread.sleep(WAIT_TIME);
-        sC.getQueryEngine().asyncExecute("query3",logicalWokflow,new ResultHandler());
+        sC.getQueryEngine().asyncExecute("query3",logicalWokflow,new ResultHandler((Select)logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
         sC.getQueryEngine().stop("query3");
-        sC.getQueryEngine().asyncExecute("query4",logicalWokflow,new ResultHandler());
+        sC.getQueryEngine().asyncExecute("query4",logicalWokflow,new ResultHandler((Select)logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
         sC.getQueryEngine().stop("query2");
-        sC.getQueryEngine().asyncExecute("query5",logicalWokflow,new ResultHandler());
+        sC.getQueryEngine().asyncExecute("query5",logicalWokflow,new ResultHandler((Select)logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
         sC.getQueryEngine().stop("query1");
-        sC.getQueryEngine().asyncExecute("query6",logicalWokflow,new ResultHandler());
+        sC.getQueryEngine().asyncExecute("query6",logicalWokflow,new ResultHandler((Select)logicalWokflow.getLastStep()));
         sC.getQueryEngine().stop("query4");
 
         Thread.sleep(WAIT_TIME);
@@ -256,10 +271,23 @@ public class ThreadTimeWindowFunctionalTest {
         sC.getQueryEngine().stop("query5");
         sC.getQueryEngine().stop("query6");
 
+
+
     }
     private class ResultHandler implements IResultHandler {
 
         boolean mustRead = true;
+
+
+        private ColumnName[] orderendColumnaName;
+
+
+        public ResultHandler(Select select){
+
+
+            orderendColumnaName = select.getColumnMap().keySet().toArray(new ColumnName[0]);
+
+        }
 
         @Override
         public void processException(String queryId, ExecutionException exception) {
@@ -268,29 +296,43 @@ public class ThreadTimeWindowFunctionalTest {
         }
 
         public void mustNotReadMore() {
-            mustRead = false;
+       boolean     mustRead = false;
 
         }
 
 
         @Override
         public void processResult(QueryResult result) {
-            assertTrue("Now it must read", mustRead);
-
-
-            if (!mustRead) {
+             if (!mustRead) {
                 correct = false;
             }
+            List<com.stratio.meta.common.metadata.structures.ColumnMetadata> columnMetadataList = result.getResultSet()
+                    .getColumnMetadata();
+            if (columnMetadataList==null){
+                returnTypes = false;
+            }
+            ColumnMetadata[] columnMetadata = columnMetadataList.toArray(new ColumnMetadata[0]);
+            if (!columnMetadata[0].getColumnType().equals(ColumnType.TEXT) ||  ! columnMetadata[1].getColumnType()
+                    .equals(ColumnType.INT) || !columnMetadata[2].getColumnType().equals(ColumnType.BOOLEAN)){
+                correctType = false;
+            };
             for (Row row : result.getResultSet()) {
-
-                Double cellValue = (Double) row.getCell(INTEGER_COLUMN).getValue();
+                String[] recoveredColumn = row.getCells().keySet().toArray(new String[0]);
+                for (int i=0;i<recoveredColumn.length;i++){
+                    if (!orderendColumnaName[i].getName().equals(recoveredColumn[i])){
+                        System.out.println(orderendColumnaName[i] +"<-->"+recoveredColumn[i]);
+                        correctOrder = false;
+                    }
+                }
+                Integer cellValue = ((Double)row.getCell(INTEGER_COLUMN).getValue()).intValue();
                 System.out.println(cellValue);
                 returnSet.add(cellValue); //To remove duplicates
                 Cell cell = row.getCell(STRING_COLUMN);
                 if (cell != null) {
                     Object value = cell.getValue();
-                    assertNotEquals("The result must not be different", OTHER_TEXT, value);
-                    correct = false;
+                    if (OTHER_TEXT.equals(value)) {
+                        correct = false;
+                    }
                 }
             }
 

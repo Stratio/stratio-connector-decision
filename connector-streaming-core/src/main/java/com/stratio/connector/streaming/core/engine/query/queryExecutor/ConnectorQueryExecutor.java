@@ -50,6 +50,7 @@ public abstract class ConnectorQueryExecutor {
     public ConnectorQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler) {
         this.queryData = queryData;
         this.resultHandler = resultHandler;
+        rowOrder = new ArrayList();
         setColumnMetadata();
 
     }
@@ -72,11 +73,8 @@ public abstract class ConnectorQueryExecutor {
         StreamUtil.insertRandomData(stratioStreamingAPI, streamOutgoingName,queryData.getSelect());
         logger.info("Waiting a message...");
         for (MessageAndMetadata stream : streams) {
-            // TODO the send the metaInfo
-
             StratioStreamingMessage theMessage = (StratioStreamingMessage) stream.message();
-
-            processMessage(theMessage);
+           processMessage(theMessage);
         }
 
     }
@@ -109,6 +107,7 @@ public abstract class ConnectorQueryExecutor {
             columnMetadata.setColumnAlias(select.getColumnMap().get(colName));
             columnsMetadata.add(columnMetadata);
         }
+
 
     }
 
@@ -153,15 +152,19 @@ public abstract class ConnectorQueryExecutor {
     }
 
     protected Row getSortRow(List<ColumnNameTypeValue> columns) {
-        Row row = new Row();
 
-        if (rowOrder != null)
-            setRowOrder(columns);
+         Row row = new Row();
+         for( ColumnNameTypeValue column : columns) {
+             row.addCell(column.getColumn(), new Cell(column.getValue()));
+         }
 
-        for (Integer rowElement : rowOrder) {
-            ColumnNameTypeValue column = columns.get(rowElement);
-            row.addCell(column.getColumn(), new Cell(column.getValue()));
-        }
+//        if (rowOrder != null)
+//            setRowOrder(columns);
+//
+//        for (Integer rowElement : rowOrder) {
+//            ColumnNameTypeValue column = columns.get(rowElement);
+//
+//        }
 
         return row;
 

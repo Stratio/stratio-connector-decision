@@ -71,15 +71,16 @@ public class QueryProcess implements ConnectorProcess {
     }
 
     @Override
-    public void endQuery() {
+    public void endQuery() throws ExecutionException {
 
         try {
             String streamName = StreamUtil.createStreamName(project.getTableName());
             queryExecutor.endQuery(streamName, connection);
         } catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException e) {
             String msg = "Streaming query stop fail." + e.getMessage();
+            logger.error(msg);
+            throw new ExecutionException(msg,e);
 
-            System.out.println("here " + e);
         }
     }
 
