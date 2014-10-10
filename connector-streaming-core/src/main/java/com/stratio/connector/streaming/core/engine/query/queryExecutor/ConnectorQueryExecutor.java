@@ -96,7 +96,7 @@ public abstract class ConnectorQueryExecutor {
      * 
      */
     private void setColumnMetadata() {
-        List<ColumnMetadata> columnsMetadata = new ArrayList<>();
+        columnsMetadata = new ArrayList<>();
         Select select = queryData.getSelect();
         Project projection = queryData.getProjection();
 
@@ -183,6 +183,5 @@ public abstract class ConnectorQueryExecutor {
         for (String alias : aliases) {
             rowOrder.add(columnsReceived.indexOf(alias));
         }
-
     }
 }
