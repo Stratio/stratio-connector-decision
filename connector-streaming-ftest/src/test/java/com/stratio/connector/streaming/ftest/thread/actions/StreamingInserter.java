@@ -1,7 +1,7 @@
 package com.stratio.connector.streaming.ftest.thread.actions;
 
 import com.stratio.connector.streaming.core.StreamingConnector;
-import com.stratio.connector.streaming.ftest.thread.ThreadFunctionalTest;
+import com.stratio.connector.streaming.ftest.thread.ThreadTimeWindowFunctionalTest;
 import com.stratio.meta.common.connector.IStorageEngine;
 import com.stratio.meta.common.data.Cell;
 import com.stratio.meta.common.data.Row;
@@ -20,7 +20,7 @@ public class StreamingInserter extends Thread {
     private boolean finishThread = false;
 
     public StreamingInserter(StreamingConnector sC, ClusterName clusterName, TableMetadata stream) {
-        super ("StreamingInserter");
+        super ("[StreamingInserter]");
         this.streamingConnector = sC;
         this.clusterName = clusterName;
         this.stream = stream;
@@ -50,9 +50,9 @@ public class StreamingInserter extends Thread {
                 if (numOfElement!=0 && numOfElement==i) break;
                 Row row = new Row();
 
-                row.addCell(ThreadFunctionalTest.BOOLEAN_COLUMN, new Cell(true));
-                row.addCell(ThreadFunctionalTest.INTEGER_COLUMN, new Cell(i));
-                row.addCell(ThreadFunctionalTest.STRING_COLUMN, new Cell(TEXT));
+                row.addCell(ThreadTimeWindowFunctionalTest.BOOLEAN_COLUMN, new Cell(true));
+                row.addCell(ThreadTimeWindowFunctionalTest.INTEGER_COLUMN, new Cell(i));
+                row.addCell(ThreadTimeWindowFunctionalTest.STRING_COLUMN, new Cell(TEXT));
 
                 storageEngine.insert(clusterName, stream, row);
                 System.out.println("insert name =>" + i);

@@ -19,7 +19,7 @@ public class StreamingRead extends Thread {
 
     public StreamingRead(StreamingConnector sC, ClusterName clusterName, TableMetadata tableMetadata,
                     LogicalWorkflow logicalWorkFlow, IResultHandler resultHandler) {
-        super ("StreamingRead");
+        super ("[StreamingRead]");
         this.streamingConnector = sC;
         this.clusterName = clusterName;
         this.tableMetadata = tableMetadata;

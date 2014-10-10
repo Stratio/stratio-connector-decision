@@ -27,7 +27,7 @@ public class ConnectorProcessHandler {
         logger.error(msg);
         throw new ConnectionProcessException(msg);
     }
-        Thread thread = new Thread(connectorProcess,"StreamingQuery-"+queryId);
+        Thread thread = new Thread(connectorProcess,"[StreamingQuery-"+queryId+"]");
         processMap.put(queryId, new ThreadProcess(thread, connectorProcess));
         thread.start();
     }

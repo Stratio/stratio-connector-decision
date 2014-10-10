@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -37,9 +38,9 @@ import com.stratio.meta2.common.metadata.ColumnMetadata;
 import com.stratio.meta2.common.metadata.ColumnType;
 import com.stratio.meta2.common.metadata.TableMetadata;
 
-public class ThreadFunctionalTest {
+public class ThreadTimeWindowFunctionalTest {
 
-    public static final int ELEMENTS_WRITE = 2000;
+    public static final int ELEMENTS_WRITE = 500;
 
 
     private static Random random = new Random(new Date().getTime());
@@ -99,11 +100,7 @@ public class ThreadFunctionalTest {
 
         try {
             sC.getMetadataEngine().createTable(clusterName, tableMetadata);
-//             tableMetadata = new TableMetadata(new TableName(CATALOG_NAME, TABLE_NAME+"_"+"queryId"), Collections.EMPTY_MAP,
-//                    columns,
-//                    Collections.EMPTY_MAP,
-//                    clusterName, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
-//            sC.getMetadataEngine().createTable(clusterName, tableMetadata);
+
         } catch (ExecutionException t) {
 
         }
@@ -124,8 +121,17 @@ public class ThreadFunctionalTest {
         StreamingInserter stramingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
         stramingInserter.start();
 
-        LogicalWorkflow logicalWokflow = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME, clusterName)
-                        .addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
+        LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME,
+                clusterName);
+
+        LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN,STRING_COLUMN,ColumnType.TEXT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN,INTEGER_COLUMN,ColumnType.INT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN,BOOLEAN_COLUMN,ColumnType.BOOLEAN));
+
+
+
+        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
                         .getLogicalWorkflow();
 
         StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, logicalWokflow,
@@ -156,8 +162,15 @@ public class ThreadFunctionalTest {
         StreamingInserter stramingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
         stramingInserter.start();
 
-        LogicalWorkflow logicalWokflow = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME, clusterName)
-                        .addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
+        LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME,
+                clusterName);
+
+        LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN,STRING_COLUMN,ColumnType.TEXT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN,INTEGER_COLUMN,ColumnType.INT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN,BOOLEAN_COLUMN,ColumnType.BOOLEAN));
+
+        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
                         .getLogicalWorkflow();
 
         ResultHandler resultHandler = new ResultHandler();
@@ -185,9 +198,16 @@ public class ThreadFunctionalTest {
     @Test
     public void testInsertConcreteNumber() throws InterruptedException {
 
+        LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME,
+                clusterName);
 
-        LogicalWorkflow logicalWokflow = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME, clusterName)
-                .addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
+        LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN,STRING_COLUMN,ColumnType.TEXT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN,INTEGER_COLUMN,ColumnType.INT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN,BOOLEAN_COLUMN,ColumnType.BOOLEAN));
+        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator
+                .addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect
+                        (selectColumns)
                 .getLogicalWorkflow();
 
         StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, logicalWokflow,

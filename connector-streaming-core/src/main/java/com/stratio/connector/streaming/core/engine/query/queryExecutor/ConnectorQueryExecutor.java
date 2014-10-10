@@ -53,8 +53,8 @@ public abstract class ConnectorQueryExecutor {
 
         logger.info("Listening stream..." + streamOutgoingName);
         KafkaStream<String, StratioStreamingMessage> streams = stratioStreamingAPI.listenStream(streamOutgoingName);
-        Select select = null;
-        StreamUtil.insertRandomData(stratioStreamingAPI, streamOutgoingName,select);
+
+        StreamUtil.insertRandomData(stratioStreamingAPI, streamOutgoingName,queryData.getSelect());
         logger.info("Waiting a message...");
        for (MessageAndMetadata stream : streams) {
             // TODO the send the metaInfo

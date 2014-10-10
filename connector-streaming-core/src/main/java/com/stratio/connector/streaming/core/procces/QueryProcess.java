@@ -56,8 +56,6 @@ public class QueryProcess implements ConnectorProcess {
             }
 
             queryExecutor = QueryExecutorFactory.getQueryExecutor(queryData,resultHandler);
-            System.out.println("->>>>>>>>>>>>>>>>>>>> QUERY<<<<<<<<<<<<<<<<<<<<<<<<<<<< ");
-            System.out.println(query);
             queryExecutor.executeQuery(query, connection);
 
         } catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException

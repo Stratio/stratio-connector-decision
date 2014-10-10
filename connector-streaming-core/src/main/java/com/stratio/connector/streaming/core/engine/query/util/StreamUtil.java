@@ -26,6 +26,10 @@ import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
 public class StreamUtil {
 
     private static Random  random=  new Random(System.currentTimeMillis());
+    private static  String[] text = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T",
+            "U","V","W","X","Y","Z","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s",
+            "t","u","v","w","x","y","z"};
+
 
     /**
      * The Log.
@@ -53,15 +57,8 @@ public class StreamUtil {
     public static void insertRandomData(IStratioStreamingAPI stratioStreamingAPI, String streamName,Select select)
             throws UnsupportedException {
         try {
-       double randomDouble = Math.random() * 100;
-            int randomInt = (int) (randomDouble * Math.random() * 2);
-            StringBuilder sb = new StringBuilder(String.valueOf(randomDouble));
-            sb.append(randomInt);
-            String str = convertRandomNumberToString(sb.toString()) + "___" + numItem;
-            numItem++;
-            if (numItem == 20) {
-                numItem = 0;
-            }
+
+
 
             List<ColumnNameValue> streamData = new LinkedList<>();
             for (ColumnName columnName: select.getColumnMap().keySet()){
@@ -82,17 +79,20 @@ public class StreamUtil {
 
 
     private static Object getRamdomValue(ColumnType type) throws UnsupportedException {
-        Object ramdomObject = null;
+        Object ramdomObject;
+
+
 
         switch (type){
             case INT:ramdomObject = random.nextInt(); break;
             case BIGINT: ramdomObject = new BigInteger(500,random); break;
             case BOOLEAN: ramdomObject = random.nextBoolean(); break;
             case DOUBLE: ramdomObject = random.nextDouble(); break;
-            case FLOAT: break;
+            case FLOAT:ramdomObject = random.nextFloat(); break;
 
             case TEXT:
             case VARCHAR:
+                ramdomObject = getRamndonText();
                     break;
         default: throw new UnsupportedException("Type "+type+" is not supported in streaming");
 
@@ -101,9 +101,21 @@ public class StreamUtil {
         return ramdomObject;
     }
 
-    public static String convertRandomNumberToString(String str) {
-        return str.replace('0', 'o').replace('1', 'i').replace('2', 'u').replace('3', 'e')
-                .replace('4', 'a').replace('5', 'b').replace('6', 'c').replace('7', 'd').replace('8', 'f')
-                .replace('9', 'g').replace('.', 'm');
+    private static Object getRamndonText() {
+
+        Object ramdomObject;
+
+        ramdomObject = getRamdonLetter() + getRamdonLetter() + getRamdonLetter() +getRamdonLetter()+getRamdonLetter()
+                +getRamdonLetter()+getRamdonLetter()+getRamdonLetter() + getRamdonLetter() + getRamdonLetter() +getRamdonLetter()+getRamdonLetter()
+                +getRamdonLetter()+getRamdonLetter();
+
+        return ramdomObject;
     }
+
+
+
+    private static String getRamdonLetter() {
+        return text[Math.abs(random.nextInt())%text.length];
+    }
+
 }
