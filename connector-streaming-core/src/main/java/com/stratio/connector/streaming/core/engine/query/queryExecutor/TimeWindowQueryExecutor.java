@@ -9,7 +9,6 @@ import java.util.TimerTask;
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.queryExecutor.timer.SendResultTimer;
-import com.stratio.connector.streaming.core.engine.query.util.StreamResultSet;
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.data.Cell;
 import com.stratio.meta.common.data.ResultSet;
@@ -27,8 +26,6 @@ import com.stratio.streaming.commons.messages.StratioStreamingMessage;
  */
 public class TimeWindowQueryExecutor extends ConnectorQueryExecutor {
 
-
-
     private Timer timer;
 
     private List<Row> list = Collections.synchronizedList(new ArrayList());
@@ -38,7 +35,7 @@ public class TimeWindowQueryExecutor extends ConnectorQueryExecutor {
      * @param queryData
      */
     public TimeWindowQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler) {
-        super(queryData,resultHandler);
+        super(queryData, resultHandler);
 
         TimerTask timerTask = new SendResultTimer(this);
         timer = new Timer("[Timer_"+queryData.getQueryId()+"]",true);
@@ -48,19 +45,16 @@ public class TimeWindowQueryExecutor extends ConnectorQueryExecutor {
 
     @Override
     public void endQuery(String streamName, Connection<IStratioStreamingAPI> connection)
-            throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
+                    throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
 
-        super.endQuery(streamName,connection);
+        super.endQuery(streamName, connection);
         isInterrupted = true;
         timer.cancel();
-
-
 
     }
 
     @Override
     protected void processMessage(StratioStreamingMessage theMessage) {
-
 
         Row row = new Row();
         for (ColumnNameTypeValue column : theMessage.getColumns()) {
@@ -75,6 +69,7 @@ public class TimeWindowQueryExecutor extends ConnectorQueryExecutor {
     public void sendMessages() {
         if (!isInterrupted) {
             ResultSet resultSet = new ResultSet();
+            resultSet.setColumnMetadata(this.columnsMetadata);
             ArrayList<Row> copyNotSyncrhonizedList;
             synchronized (list) {
                 copyNotSyncrhonizedList = new ArrayList<>(list);
@@ -84,7 +79,6 @@ public class TimeWindowQueryExecutor extends ConnectorQueryExecutor {
             QueryResult result = QueryResult.createQueryResult(resultSet);
             resultHandler.processResult(result);
         }
-
 
     }
 }

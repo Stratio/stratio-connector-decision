@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
-import com.stratio.connector.streaming.core.engine.query.util.StreamResultSet;
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.data.Cell;
 import com.stratio.meta.common.data.ResultSet;
@@ -31,7 +30,7 @@ public class ElementNumberQueryExecutor extends ConnectorQueryExecutor {
      * @param resultHandler
      */
     public ElementNumberQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler) {
-        super(queryData,resultHandler);
+        super(queryData, resultHandler);
         windowLength = queryData.getWindow().numOfElement;
         // TODO SetWindowLength Auto-generated constructor stub
     }
@@ -49,26 +48,24 @@ public class ElementNumberQueryExecutor extends ConnectorQueryExecutor {
             row.addCell(column.getColumn(), new Cell(column.getValue()));
         }
 
-        synchronized (list){ //TODO ver si se puede sincronizar menos
+        boolean isWindowReady = false;
+        ArrayList<Row> copyNotSyncrhonizedList = null;
+        synchronized (list) { // TODO ver si se puede sincronizar menos
             list.add(row);
-            if (list.size() == windowLength){
-
-                ResultSet resultSet = new ResultSet();
-                ArrayList<Row> copyNotSyncrhonizedList;
-
+            isWindowReady = (list.size() == windowLength);
+            if (isWindowReady) {
                 copyNotSyncrhonizedList = new ArrayList<>(list);
                 list.clear();
-                resultSet.setRows(copyNotSyncrhonizedList);
-                QueryResult result = QueryResult.createQueryResult(resultSet);
-                resultHandler.processResult(result);
-                }
-
-
             }
         }
 
-
-
-
+        if (isWindowReady) {
+            ResultSet resultSet = new ResultSet();
+            resultSet.setColumnMetadata(this.columnsMetadata);
+            resultSet.setRows(copyNotSyncrhonizedList);
+            QueryResult result = QueryResult.createQueryResult(resultSet);
+            resultHandler.processResult(result);
+        }
     }
 
+}
