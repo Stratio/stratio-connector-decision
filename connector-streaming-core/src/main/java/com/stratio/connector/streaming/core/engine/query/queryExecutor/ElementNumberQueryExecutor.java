@@ -6,11 +6,7 @@ import java.util.List;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.meta.common.connector.IResultHandler;
-import com.stratio.meta.common.data.Cell;
-import com.stratio.meta.common.data.ResultSet;
 import com.stratio.meta.common.data.Row;
-import com.stratio.meta.common.result.QueryResult;
-import com.stratio.streaming.commons.messages.ColumnNameTypeValue;
 import com.stratio.streaming.commons.messages.StratioStreamingMessage;
 
 /**
@@ -38,15 +34,7 @@ public class ElementNumberQueryExecutor extends ConnectorQueryExecutor {
     @Override
     protected void processMessage(StratioStreamingMessage theMessage) {
 
-        Row row = new Row();
-
-        for (ColumnNameTypeValue column : theMessage.getColumns()) {
-            System.out.print(" Column: " + column.getColumn());
-            System.out.print(" || Type: " + column.getType());
-            System.out.print(" || Value: " + column.getValue());
-
-            row.addCell(column.getColumn(), new Cell(column.getValue()));
-        }
+        Row row = getSortRow(theMessage.getColumns());
 
         boolean isWindowReady = false;
         ArrayList<Row> copyNotSyncrhonizedList = null;
@@ -60,11 +48,7 @@ public class ElementNumberQueryExecutor extends ConnectorQueryExecutor {
         }
 
         if (isWindowReady) {
-            ResultSet resultSet = new ResultSet();
-            resultSet.setColumnMetadata(this.columnsMetadata);
-            resultSet.setRows(copyNotSyncrhonizedList);
-            QueryResult result = QueryResult.createQueryResult(resultSet);
-            resultHandler.processResult(result);
+            sendResultSet(copyNotSyncrhonizedList);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.stratio.connector.streaming.core.engine.query.queryExecutor;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,16 +11,21 @@ import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.meta.common.connector.IResultHandler;
+import com.stratio.meta.common.data.Cell;
+import com.stratio.meta.common.data.ResultSet;
+import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.meta.common.logicalplan.Project;
 import com.stratio.meta.common.logicalplan.Select;
 import com.stratio.meta.common.metadata.structures.ColumnMetadata;
+import com.stratio.meta.common.result.QueryResult;
 import com.stratio.meta2.common.data.ColumnName;
 import com.stratio.meta2.common.metadata.ColumnType;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
 import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
 import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
+import com.stratio.streaming.commons.messages.ColumnNameTypeValue;
 import com.stratio.streaming.commons.messages.StratioStreamingMessage;
 
 import kafka.consumer.KafkaStream;
@@ -38,7 +44,8 @@ public abstract class ConnectorQueryExecutor {
     protected String queryId;
     protected ConnectorQueryData queryData;
     IResultHandler resultHandler;
-    List<ColumnMetadata> columnsMetadata = new ArrayList<ColumnMetadata>();
+    List<ColumnMetadata> columnsMetadata;
+    List<Integer> rowOrder;
 
     public ConnectorQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler) {
         this.queryData = queryData;
@@ -136,4 +143,46 @@ public abstract class ConnectorQueryExecutor {
         return colType;
     }
 
+    protected void sendResultSet(List<Row> copyNotSyncrhonizedList) {
+        ResultSet resultSet = new ResultSet();
+        resultSet.setColumnMetadata(this.columnsMetadata);
+        resultSet.setRows(copyNotSyncrhonizedList);
+        QueryResult result = QueryResult.createQueryResult(resultSet);
+        resultHandler.processResult(result);
+    }
+
+    protected Row getSortRow(List<ColumnNameTypeValue> columns) {
+        Row row = new Row();
+
+        if (rowOrder != null)
+            setRowOrder(columns);
+
+        for (Integer rowElement : rowOrder) {
+            ColumnNameTypeValue column = columns.get(rowElement);
+            row.addCell(column.getColumn(), new Cell(column.getValue()));
+        }
+
+        return row;
+
+    }
+
+    /**
+     * @param columns
+     * 
+     */
+    private void setRowOrder(List<ColumnNameTypeValue> columns) {
+
+        Select select = queryData.getSelect();
+        Collection<String> aliases = select.getColumnMap().values();
+        List<String> columnsReceived = new ArrayList<String>();
+
+        for (ColumnNameTypeValue column : columns) {
+            columnsReceived.add(column.getColumn());
+        }
+
+        for (String alias : aliases) {
+            rowOrder.add(columnsReceived.indexOf(alias));
+        }
+
+    }
 }

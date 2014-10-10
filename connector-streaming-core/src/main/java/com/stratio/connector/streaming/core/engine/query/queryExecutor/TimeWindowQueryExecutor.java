@@ -10,15 +10,11 @@ import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.queryExecutor.timer.SendResultTimer;
 import com.stratio.meta.common.connector.IResultHandler;
-import com.stratio.meta.common.data.Cell;
-import com.stratio.meta.common.data.ResultSet;
 import com.stratio.meta.common.data.Row;
-import com.stratio.meta.common.result.QueryResult;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
 import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
 import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
-import com.stratio.streaming.commons.messages.ColumnNameTypeValue;
 import com.stratio.streaming.commons.messages.StratioStreamingMessage;
 
 /**
@@ -28,7 +24,7 @@ public class TimeWindowQueryExecutor extends ConnectorQueryExecutor {
 
     private Timer timer;
 
-    private List<Row> list = Collections.synchronizedList(new ArrayList());
+    private List<Row> list = Collections.synchronizedList(new ArrayList<Row>());
     boolean isInterrupted = false;
 
     /**
@@ -56,10 +52,7 @@ public class TimeWindowQueryExecutor extends ConnectorQueryExecutor {
     @Override
     protected void processMessage(StratioStreamingMessage theMessage) {
 
-        Row row = new Row();
-        for (ColumnNameTypeValue column : theMessage.getColumns()) {
-            row.addCell(column.getColumn(), new Cell(column.getValue()));
-        }
+        Row row = getSortRow(theMessage.getColumns());
 
         synchronized (list) {
             list.add(row);
@@ -68,16 +61,14 @@ public class TimeWindowQueryExecutor extends ConnectorQueryExecutor {
 
     public void sendMessages() {
         if (!isInterrupted) {
-            ResultSet resultSet = new ResultSet();
-            resultSet.setColumnMetadata(this.columnsMetadata);
-            ArrayList<Row> copyNotSyncrhonizedList;
+
+            List<Row> copyNotSyncrhonizedList;
             synchronized (list) {
                 copyNotSyncrhonizedList = new ArrayList<>(list);
                 list.clear();
             }
-            resultSet.setRows(copyNotSyncrhonizedList);
-            QueryResult result = QueryResult.createQueryResult(resultSet);
-            resultHandler.processResult(result);
+
+            sendResultSet(copyNotSyncrhonizedList);
         }
 
     }
