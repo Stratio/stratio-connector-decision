@@ -32,11 +32,12 @@ import com.stratio.meta.common.exceptions.ExecutionException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.meta.common.logicalplan.LogicalWorkflow;
 import com.stratio.meta.common.logicalplan.Select;
+import com.stratio.meta.common.metadata.structures.ColumnMetadata;
 import com.stratio.meta.common.result.QueryResult;
 import com.stratio.meta2.common.data.ClusterName;
 import com.stratio.meta2.common.data.ColumnName;
 import com.stratio.meta2.common.data.TableName;
-import com.stratio.meta2.common.metadata.ColumnMetadata;
+
 import com.stratio.meta2.common.metadata.ColumnType;
 import com.stratio.meta2.common.metadata.TableMetadata;
 
@@ -88,13 +89,14 @@ public class ThreadTimeWindowFunctionalTest {
         ConnectorClusterConfig config = new ConnectorClusterConfig(clusterName, optionsNode);
         sC.connect(null, config);
         TableName tableName = new TableName(CATALOG_NAME, TABLE_NAME);
-        Map<ColumnName, ColumnMetadata> columns = new LinkedHashMap<>();
+
         ColumnName columnNameString = new ColumnName(tableName, STRING_COLUMN);
-        columns.put(columnNameString, new ColumnMetadata(columnNameString, new Object[] {}, ColumnType.VARCHAR));
+        Map<ColumnName, com.stratio.meta2.common.metadata.ColumnMetadata> columns = new LinkedHashMap();
+        columns.put(columnNameString, new com.stratio.meta2.common.metadata.ColumnMetadata(columnNameString, new Object[] {}, ColumnType.VARCHAR));
         ColumnName columnNameInteger = new ColumnName(tableName, INTEGER_COLUMN);
-        columns.put(columnNameInteger, new ColumnMetadata(columnNameInteger, new Object[] {}, ColumnType.INT));
+        columns.put(columnNameInteger, new com.stratio.meta2.common.metadata.ColumnMetadata(columnNameInteger, new Object[] {}, ColumnType.INT));
         ColumnName columnNameBoolean = new ColumnName(tableName, BOOLEAN_COLUMN);
-        columns.put(columnNameBoolean, new ColumnMetadata(columnNameBoolean, new Object[] {}, ColumnType.BOOLEAN));
+        columns.put(columnNameBoolean, new com.stratio.meta2.common.metadata.ColumnMetadata(columnNameBoolean, new Object[] {}, ColumnType.BOOLEAN));
         tableMetadata = new TableMetadata(tableName, Collections.EMPTY_MAP, columns, Collections.EMPTY_MAP,
                         clusterName, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
 
@@ -131,7 +133,8 @@ public class ThreadTimeWindowFunctionalTest {
 
 
 
-        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
+        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName
+                (INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
                         .getLogicalWorkflow();
 
 
@@ -174,7 +177,8 @@ public class ThreadTimeWindowFunctionalTest {
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN,INTEGER_COLUMN,ColumnType.INT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN,BOOLEAN_COLUMN,ColumnType.BOOLEAN));
 
-        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
+        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName
+                (INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
                         .getLogicalWorkflow();
 
         ResultHandler resultHandler = new ResultHandler((Select)logicalWokflow.getLastStep());
@@ -306,36 +310,50 @@ public class ThreadTimeWindowFunctionalTest {
              if (!mustRead) {
                 correct = false;
             }
-            List<com.stratio.meta.common.metadata.structures.ColumnMetadata> columnMetadataList = result.getResultSet()
+            testTypes(result);
+            for (Row row : result.getResultSet()) {
+                testOrder(row);
+                testElementNumber(row);
+            }
+
+        }
+
+        private void testElementNumber(Row row) {
+            Integer cellValue = ((Double)row.getCell(INTEGER_COLUMN).getValue()).intValue();
+            System.out.println("-><>-"+cellValue);
+            returnSet.add(cellValue); //To remove duplicates
+            Cell cell = row.getCell(STRING_COLUMN);
+            if (cell != null) {
+                Object value = cell.getValue();
+                if (OTHER_TEXT.equals(value)) {
+                    correct = false;
+                }
+            }
+        }
+
+        private void testOrder(Row row) {
+            String[] recoveredColumn = row.getCells().keySet().toArray(new String[0]);
+            for (int i=0;i<recoveredColumn.length;i++){
+                if (!orderendColumnaName[i].getName().equals(recoveredColumn[i])){
+                    System.out.println(orderendColumnaName[i] +"<-->"+recoveredColumn[i]);
+                    correctOrder = false;
+                }
+            }
+        }
+
+        private void testTypes(QueryResult result) {
+            List<ColumnMetadata> columnMetadataList = result.getResultSet()
                     .getColumnMetadata();
             if (columnMetadataList==null){
                 returnTypes = false;
-            }
-            ColumnMetadata[] columnMetadata = columnMetadataList.toArray(new ColumnMetadata[0]);
-            if (!columnMetadata[0].getColumnType().equals(ColumnType.TEXT) ||  ! columnMetadata[1].getColumnType()
-                    .equals(ColumnType.INT) || !columnMetadata[2].getColumnType().equals(ColumnType.BOOLEAN)){
-                correctType = false;
-            };
-            for (Row row : result.getResultSet()) {
-                String[] recoveredColumn = row.getCells().keySet().toArray(new String[0]);
-                for (int i=0;i<recoveredColumn.length;i++){
-                    if (!orderendColumnaName[i].getName().equals(recoveredColumn[i])){
-                        System.out.println(orderendColumnaName[i] +"<-->"+recoveredColumn[i]);
-                        correctOrder = false;
-                    }
-                }
-                Integer cellValue = ((Double)row.getCell(INTEGER_COLUMN).getValue()).intValue();
-                System.out.println(cellValue);
-                returnSet.add(cellValue); //To remove duplicates
-                Cell cell = row.getCell(STRING_COLUMN);
-                if (cell != null) {
-                    Object value = cell.getValue();
-                    if (OTHER_TEXT.equals(value)) {
-                        correct = false;
-                    }
-                }
-            }
+            }else {
+                ColumnMetadata[] columnMetadata = columnMetadataList.toArray(new ColumnMetadata[0]);
 
+                if (!columnMetadata[0].getType().equals(ColumnType.TEXT) ||  ! columnMetadata[1].getType()
+                        .equals(ColumnType.INT) || !columnMetadata[2].getType().equals(ColumnType.BOOLEAN)){
+                    correctType = false;
+                }
+            }
         }
 
     }
