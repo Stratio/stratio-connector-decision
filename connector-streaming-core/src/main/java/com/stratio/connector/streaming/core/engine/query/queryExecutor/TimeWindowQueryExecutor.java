@@ -11,6 +11,7 @@ import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.queryExecutor.timer.SendResultTimer;
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.data.Row;
+import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
 import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
@@ -29,11 +30,14 @@ public class TimeWindowQueryExecutor extends ConnectorQueryExecutor {
 
     /**
      * @param queryData
+     * @throws UnsupportedException
      */
-    public TimeWindowQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler) {
+    public TimeWindowQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler)
+                    throws UnsupportedException {
         super(queryData, resultHandler);
 
         TimerTask timerTask = new SendResultTimer(this);
+
         timer = new Timer("[Timer_"+queryData.getQueryId()+"]",true);
         timer.scheduleAtFixedRate(timerTask, 0, queryData.getWindow().getDurationInMilliseconds());
 

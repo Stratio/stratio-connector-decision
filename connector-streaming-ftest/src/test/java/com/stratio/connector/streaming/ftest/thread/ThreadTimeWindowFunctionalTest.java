@@ -3,15 +3,9 @@ package com.stratio.connector.streaming.ftest.thread;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import  org.slf4j.Logger;
 
@@ -22,11 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.commons.ftest.schema.TableMetadataBuilder;
 import com.stratio.connector.commons.ftest.workFlow.LogicalWorkFlowCreator;
-import com.stratio.connector.streaming.core.StreamingConnector;
 import com.stratio.connector.streaming.ftest.GenericStreamingTest;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
-import com.stratio.meta.common.connector.ConnectorClusterConfig;
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.data.Cell;
 import com.stratio.meta.common.data.Row;
@@ -39,7 +31,7 @@ import com.stratio.meta.common.logicalplan.Select;
 import com.stratio.meta.common.metadata.structures.ColumnMetadata;
 import com.stratio.meta.common.result.QueryResult;
 import com.stratio.meta.common.statements.structures.window.WindowType;
-import com.stratio.meta2.common.data.ClusterName;
+
 import com.stratio.meta2.common.data.ColumnName;
 import com.stratio.meta2.common.data.TableName;
 import com.stratio.meta2.common.metadata.ColumnType;
@@ -122,7 +114,7 @@ public class ThreadTimeWindowFunctionalTest  extends GenericStreamingTest {
         logger.debug("********************** END Quering Test......");
         Thread.sleep(WAIT_TIME);
         logger.debug(" ********************** Change Test Quering......");
-        stramingInserter.changeOtuput(OTHER_TEXT);
+        stramingInserter.changeStingColumn(OTHER_TEXT);
         Thread.sleep(WAIT_TIME);
 
         logger.debug(" ********************** END Insert......");
@@ -188,7 +180,7 @@ public class ThreadTimeWindowFunctionalTest  extends GenericStreamingTest {
         stremingRead.end();
         stramingInserter.end();
 
-        assertEquals("the number of elements read is correct", ELEMENTS_WRITE, returnSet.size());
+        assertEquals("the numberDefaultText of elements read is correct", ELEMENTS_WRITE, returnSet.size());
         assertTrue("all is correct", correct);
         assertTrue("Result is ordered", correctOrder);
         assertTrue("The types are correct", correctType);
@@ -312,7 +304,8 @@ public class ThreadTimeWindowFunctionalTest  extends GenericStreamingTest {
                 ColumnMetadata[] columnMetadata = columnMetadataList.toArray(new ColumnMetadata[0]);
 
                 if (!columnMetadata[0].getType().equals(ColumnType.TEXT)
-                                || !columnMetadata[1].getType().equals(ColumnType.INT)
+                                || !columnMetadata[1].getType().equals(ColumnType.DOUBLE) //All number types are
+                                // returned like double
                                 || !columnMetadata[2].getType().equals(ColumnType.BOOLEAN)) {
                     correctType = false;
                 }

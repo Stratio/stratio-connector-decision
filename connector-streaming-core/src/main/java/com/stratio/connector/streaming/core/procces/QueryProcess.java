@@ -54,7 +54,7 @@ public class QueryProcess implements ConnectorProcess {
                 logger.debug("The streaming query is: [" + query + "]");
 
             }
-
+            System.out.println("The streaming query is: [" + query + "]");
             queryExecutor = QueryExecutorFactory.getQueryExecutor(queryData,resultHandler);
             queryExecutor.executeQuery(query, connection);
 

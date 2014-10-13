@@ -132,7 +132,7 @@ public class ThreadNumberElementWindowFunctionalTest  extends GenericStreamingTe
         stremingRead.end();
         stramingInserter.end();
         Thread.sleep(10000);
-        assertEquals("the number of windows is correct", ELEMENTS_WRITE/WINDOW_ELEMENTS, (Object)windowNumber);
+        assertEquals("the numberDefaultText of windows is correct", ELEMENTS_WRITE/WINDOW_ELEMENTS, (Object)windowNumber);
         assertTrue("the elements in the windows are correct",correctNumberOfElement);
 
 

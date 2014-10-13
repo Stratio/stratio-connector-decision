@@ -18,8 +18,10 @@ package com.stratio.connector.streaming.ftest;
 
 import static org.mockito.Mockito.mock;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import org.junit.After;
@@ -52,13 +54,19 @@ public abstract class GenericStreamingTest {
 
     public static String STRING_COLUMN = "string_column";
     public static String INTEGER_COLUMN = "integer_column";
+    public static String INTEGER_CHANGEABLE_COLUMN = "integer_changeable_column";
     public static String BOOLEAN_COLUMN = "boolean_column";
     public static String FLOAT_COLUMN = "float_column";
     public static String DOUBLE_COLUMN = "double_column";
     public static String LONG_COLUMN = "long_column";
 
     public String CATALOG = "catalog_functional_test";
+
     public final String TABLE = this.getClass().getSimpleName() + UUID.randomUUID().toString().replaceAll("-","_");
+
+    protected Random random;
+
+
 
     protected StreamingConnector sConnector;
     /**
@@ -77,19 +85,17 @@ public abstract class GenericStreamingTest {
         sConnector = new StreamingConnector();
         sConnector.init(getConfiguration());
         sConnector.connect(getICredentials(), getConnectorClusterConfig());
-
+        random = new Random(new Date().getTime());
         try {
             deleteTable(CATALOG, TABLE);
         } catch (ExecutionException e) {
             logger.debug("The table did not exist");
         }
-
         // createTable
 
         logger.debug(CATALOG + "/" + TABLE);
-    }
 
-    // protected createTable
+    }
 
     protected void deleteTable(String catalog, String table) throws UnsupportedException, ExecutionException {
         try {

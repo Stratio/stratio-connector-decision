@@ -9,6 +9,7 @@ import com.stratio.meta.common.exceptions.UnsupportedException;
  */
 public class QueryExecutorFactory {
     public static ConnectorQueryExecutor getQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler)
+
             throws UnsupportedException {
         ConnectorQueryExecutor connectorQueryExecutor = null;
 
@@ -21,8 +22,8 @@ public class QueryExecutorFactory {
             break;
         default:
             throw new UnsupportedException("Window " + queryData.getWindow().getType() + "is not supported");
-        }
 
+        }
         return connectorQueryExecutor;
     }
 }

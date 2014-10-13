@@ -159,8 +159,8 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
     }
 
     @Override
-    protected void dropIndex(IndexMetadata indexMetadata, Connection connection) throws UnsupportedException,
-                    ExecutionException {
+    protected void dropIndex(IndexMetadata indexMetadata, Connection<IStratioStreamingAPI> connection)
+                    throws UnsupportedException, ExecutionException {
         throw new UnsupportedException("Drop Index not supported in Streaming connector");
     }
 

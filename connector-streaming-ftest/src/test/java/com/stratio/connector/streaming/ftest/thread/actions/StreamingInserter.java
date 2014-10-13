@@ -11,8 +11,8 @@ import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.exceptions.ExecutionException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.meta2.common.data.ClusterName;
+import com.stratio.meta2.common.metadata.ColumnType;
 import com.stratio.meta2.common.metadata.TableMetadata;
-import com.stratio.streaming.commons.constants.ColumnType;
 
 public class StreamingInserter extends Thread {
 
@@ -43,9 +43,10 @@ public class StreamingInserter extends Thread {
         return this;
     }
 
-    public void addTypeToInsert(ColumnType type) {
-        typesToInsert = (typesToInsert != null) ? typesToInsert : new ArrayList<ColumnType>();
+    public StreamingInserter addTypeToInsert(ColumnType type) {
+        typesToInsert = (typesToInsert == null) ? new ArrayList<ColumnType>() : typesToInsert;
         typesToInsert.add(type);
+        return this;
     }
 
     @Override
@@ -54,8 +55,8 @@ public class StreamingInserter extends Thread {
         if (typesToInsert == null) {
             typesToInsert = new ArrayList<ColumnType>(3);
             typesToInsert.add(ColumnType.BOOLEAN);
-            typesToInsert.add(ColumnType.INTEGER);
-            typesToInsert.add(ColumnType.STRING);
+            typesToInsert.add(ColumnType.INT);
+            typesToInsert.add(ColumnType.VARCHAR);
         }
 
         try {
@@ -96,26 +97,34 @@ public class StreamingInserter extends Thread {
             case FLOAT:
                 row.addCell(GenericStreamingTest.FLOAT_COLUMN, new Cell(new Float(i + 0.5)));
                 break;
-            case INTEGER:
+            case INT:
                 row.addCell(GenericStreamingTest.INTEGER_COLUMN, new Cell(i));
                 break;
-            case LONG:
-                row.addCell(GenericStreamingTest.LONG_COLUMN, new Cell(new Long(i)));
+            case BIGINT:
+                row.addCell(GenericStreamingTest.LONG_COLUMN, new Cell(i + new Long(Long.MAX_VALUE / 2)));
                 break;
-            case STRING:
-                row.addCell(GenericStreamingTest.STRING_COLUMN, new Cell(TEXT));
+            case VARCHAR:
+            case TEXT:
+                row.addCell(GenericStreamingTest.STRING_COLUMN, new Cell(text));
                 break;
 
             }
+            row.addCell(GenericStreamingTest.INTEGER_CHANGEABLE_COLUMN,new Cell(integerChangeable));
         }
 
         return row;
     }
 
-    private String TEXT = "Text";
+    private String text = "Text";
 
-    public void changeOtuput(String stringOutput) {
-        TEXT = stringOutput;
+    private  int integerChangeable= 10;
+    public void changeStingColumn(String stringOutput) {
+        this.text = stringOutput;
+    }
+
+
+    public void changeIntegerChangeableColumn(int integerChangeable) {
+        this.integerChangeable = integerChangeable;
     }
 
     public void end() {
