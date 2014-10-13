@@ -44,7 +44,7 @@ public class StreamingRead extends Thread {
 
     public void end() {
         try {
-            streamingConnector.getQueryEngine().stop("queryId");
+            streamingConnector.getQueryEngine().stop(queryId);
         } catch (UnsupportedException | ExecutionException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

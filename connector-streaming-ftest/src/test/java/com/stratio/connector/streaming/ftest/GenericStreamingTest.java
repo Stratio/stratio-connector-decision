@@ -18,9 +18,10 @@ package com.stratio.connector.streaming.ftest;
 
 import static org.mockito.Mockito.mock;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Random;
 
 import org.junit.After;
 import org.junit.Before;
@@ -58,7 +59,8 @@ public abstract class GenericStreamingTest {
     public static String LONG_COLUMN = "long_column";
 
     public String CATALOG = "catalog_functional_test";
-    public final String TABLE = this.getClass().getSimpleName() + UUID.randomUUID();
+    protected Random random;
+    public String TABLE = this.getClass().getSimpleName() + Math.abs(new Random(new Date().getTime()).nextLong());
 
     protected StreamingConnector sConnector;
     /**
@@ -77,19 +79,15 @@ public abstract class GenericStreamingTest {
         sConnector = new StreamingConnector();
         sConnector.init(getConfiguration());
         sConnector.connect(getICredentials(), getConnectorClusterConfig());
-
+        random = new Random(new Date().getTime());
         try {
             deleteTable(CATALOG, TABLE);
         } catch (ExecutionException e) {
             logger.debug("The table did not exist");
         }
 
-        // createTable
-
         System.out.println(CATALOG + "/" + TABLE);
     }
-
-    // protected createTable
 
     protected void deleteTable(String catalog, String table) throws UnsupportedException, ExecutionException {
         try {

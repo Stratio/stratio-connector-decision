@@ -7,6 +7,7 @@ import java.util.List;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.data.Row;
+import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.streaming.commons.messages.StratioStreamingMessage;
 
 /**
@@ -24,11 +25,12 @@ public class ElementNumberQueryExecutor extends ConnectorQueryExecutor {
     /**
      * @param queryData
      * @param resultHandler
+     * @throws UnsupportedException
      */
-    public ElementNumberQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler) {
+    public ElementNumberQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler)
+                    throws UnsupportedException {
         super(queryData, resultHandler);
         windowLength = queryData.getWindow().numOfElement;
-
     }
 
     @Override

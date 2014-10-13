@@ -16,6 +16,7 @@
 
 package com.stratio.connector.streaming.ftest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.stratio.meta.common.connector.IResultHandler;
@@ -31,7 +32,7 @@ import com.stratio.meta.common.result.QueryResult;
 
 public class TestResultSet implements IResultHandler {
 
-    List<QueryResult> resultSetList;
+    List<QueryResult> resultSetList = new ArrayList<QueryResult>();
 
     @Override
     public void processException(String queryId, ExecutionException exception) {
@@ -52,11 +53,14 @@ public class TestResultSet implements IResultHandler {
         ResultSet resultSet = new ResultSet();
         for (QueryResult queryRes : resultSetList) {
             if (queryRes.getQueryId() == queryId) {
+                // TODO verify the column metadata is equal
                 for (Row row : queryRes.getResultSet().getRows()) {
                     resultSet.add(row);
                 }
+                resultSet.setColumnMetadata(queryRes.getResultSet().getColumnMetadata());
             }
         }
+
         return resultSet;
     }
 

@@ -47,10 +47,11 @@ public abstract class ConnectorQueryExecutor {
     List<ColumnMetadata> columnsMetadata;
     List<Integer> rowOrder;
 
-    public ConnectorQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler) {
+    public ConnectorQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler)
+                    throws UnsupportedException {
         this.queryData = queryData;
         this.resultHandler = resultHandler;
-        rowOrder = new ArrayList();
+        rowOrder = new ArrayList<Integer>();
         setColumnMetadata();
 
     }
@@ -69,12 +70,11 @@ public abstract class ConnectorQueryExecutor {
         logger.info("Listening stream..." + streamOutgoingName);
         KafkaStream<String, StratioStreamingMessage> streams = stratioStreamingAPI.listenStream(streamOutgoingName);
 
-
-        StreamUtil.insertRandomData(stratioStreamingAPI, streamOutgoingName,queryData.getSelect());
+        StreamUtil.insertRandomData(stratioStreamingAPI, streamOutgoingName, queryData.getSelect());
         logger.info("Waiting a message...");
         for (MessageAndMetadata stream : streams) {
             StratioStreamingMessage theMessage = (StratioStreamingMessage) stream.message();
-           processMessage(theMessage);
+            processMessage(theMessage);
         }
 
     }
@@ -92,9 +92,10 @@ public abstract class ConnectorQueryExecutor {
     protected abstract void processMessage(StratioStreamingMessage theMessage);
 
     /**
+     * @throws UnsupportedException
      * 
      */
-    private void setColumnMetadata() {
+    private void setColumnMetadata() throws UnsupportedException {
         columnsMetadata = new ArrayList<>();
         Select select = queryData.getSelect();
         Project projection = queryData.getProjection();
@@ -108,38 +109,38 @@ public abstract class ConnectorQueryExecutor {
             columnsMetadata.add(columnMetadata);
         }
 
-
     }
 
     /**
      * @param colType
      * @return
+     * @throws UnsupportedException
      */
-    private ColumnType updateColumnType(ColumnType colType) {
-        // switch (colType) {
-        //
-        // case BIGINT:
-        // returnType = com.stratio.streaming.commons.constants.ColumnType.LONG;
-        // break;
-        // case BOOLEAN:
-        // returnType = com.stratio.streaming.commons.constants.ColumnType.BOOLEAN;
-        // break;
-        // case DOUBLE:
-        // returnType = com.stratio.streaming.commons.constants.ColumnType.DOUBLE;
-        // break;
-        // case FLOAT:
-        // returnType = com.stratio.streaming.commons.constants.ColumnType.FLOAT;
-        // break;
-        // case INT:
-        // returnType = com.stratio.streaming.commons.constants.ColumnType.INTEGER;
-        // break;
-        // case TEXT:
-        // case VARCHAR:
-        // returnType = com.stratio.streaming.commons.constants.ColumnType.STRING;
-        // break;
-        // default:
-        // throw new UnsupportedException("Column type " + columnType.name() + " not supported in Streaming");
-        // }
+    private ColumnType updateColumnType(ColumnType colType) throws UnsupportedException {
+        switch (colType) {
+
+        case BIGINT:
+            colType = ColumnType.DOUBLE;
+            break;
+        case BOOLEAN:
+            colType = ColumnType.BOOLEAN;
+            break;
+        case DOUBLE:
+            colType = ColumnType.DOUBLE;
+            break;
+        case FLOAT:
+            colType = ColumnType.DOUBLE;
+            break;
+        case INT:
+            colType = ColumnType.DOUBLE;
+            break;
+        case TEXT:
+        case VARCHAR:
+            colType = ColumnType.VARCHAR;
+            break;
+        default:
+            throw new UnsupportedException("Column type " + colType.name() + " not supported in Streaming");
+        }
         return colType;
     }
 
@@ -148,23 +149,24 @@ public abstract class ConnectorQueryExecutor {
         resultSet.setColumnMetadata(this.columnsMetadata);
         resultSet.setRows(copyNotSyncrhonizedList);
         QueryResult result = QueryResult.createQueryResult(resultSet);
+        result.setQueryId(queryData.getQueryId());
         resultHandler.processResult(result);
     }
 
     protected Row getSortRow(List<ColumnNameTypeValue> columns) {
 
-         Row row = new Row();
-         for( ColumnNameTypeValue column : columns) {
-             row.addCell(column.getColumn(), new Cell(column.getValue()));
-         }
+        Row row = new Row();
+        for (ColumnNameTypeValue column : columns) {
+            row.addCell(column.getColumn(), new Cell(column.getValue()));
+        }
 
-//        if (rowOrder != null)
-//            setRowOrder(columns);
-//
-//        for (Integer rowElement : rowOrder) {
-//            ColumnNameTypeValue column = columns.get(rowElement);
-//
-//        }
+        // if (rowOrder != null)
+        // setRowOrder(columns);
+        //
+        // for (Integer rowElement : rowOrder) {
+        // ColumnNameTypeValue column = columns.get(rowElement);
+        //
+        // }
 
         return row;
 
