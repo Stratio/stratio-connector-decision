@@ -64,7 +64,7 @@ public class ThreadFilterStringFunctionalTest extends GenericStreamingTest{
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN,
                 ColumnType.VARCHAR).addColumn(INTEGER_COLUMN,
-                ColumnType.INT).addColumn(BOOLEAN_COLUMN,ColumnType.BOOLEAN).build();
+                ColumnType.INT).addColumn(BOOLEAN_COLUMN,ColumnType.BOOLEAN).addColumn(INTEGER_CHANGEABLE_COLUMN,ColumnType.INT).build();
         try {
             sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 

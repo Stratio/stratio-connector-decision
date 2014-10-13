@@ -54,7 +54,9 @@ public class StreamingQueryEngine implements IQueryEngine {
         try {
             connectorProcessHandler.strartProcess(queryId,initProcess(queryId, workflow, resultHandler));
 
+        
         } catch (ConnectionProcessException | HandlerConnectionException e) {
+        	
             resultHandler.processException(queryId,new ExecutionException("Fail process creation",e));
             
             //TODO if the query fail must be remove from streaming..., finally 

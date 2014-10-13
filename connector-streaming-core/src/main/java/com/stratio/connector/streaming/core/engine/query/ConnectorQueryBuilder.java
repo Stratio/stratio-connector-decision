@@ -14,9 +14,6 @@ import com.stratio.meta.common.logicalplan.Filter;
 import com.stratio.meta.common.logicalplan.Select;
 import com.stratio.meta.common.statements.structures.relationships.Operator;
 import com.stratio.meta.common.statements.structures.relationships.Relation;
-import com.stratio.meta.common.statements.structures.window.TimeUnit;
-import com.stratio.meta.common.statements.structures.window.Window;
-import com.stratio.meta.common.statements.structures.window.WindowType;
 import com.stratio.meta2.common.data.ColumnName;
 import com.stratio.meta2.common.statements.structures.selectors.ColumnSelector;
 import com.stratio.meta2.common.statements.structures.selectors.Selector;
@@ -39,7 +36,7 @@ public class ConnectorQueryBuilder {
 
     public ConnectorQueryBuilder(ConnectorQueryData queryData) {
         this.queryData = queryData;
-        // TODO String metaQueryId = queryData.getSelect().getQueryID();
+
         String metaQueryId = queryData.getQueryId();
         streamName = StreamUtil.createStreamName(queryData.getProjection());
         outgoing = StreamUtil.createOutgoingName(streamName, metaQueryId);
@@ -47,10 +44,10 @@ public class ConnectorQueryBuilder {
 
     public String createQuery() throws ExecutionException, UnsupportedException {
 
-        // #EXECUTION-QUERY => <input> <output> [<projection>]. See https://docs.wso2.com/display/CEP300/Language+Model
+       
 
         createInputQuery();
-        createProjection();// TODO check select
+        createProjection();
         createOutputQuery();
 
         return querySb.toString();
@@ -88,8 +85,8 @@ public class ConnectorQueryBuilder {
         int i = 0;
         for (ColumnName colName : columnMetadataList) {
 
-            querySb.append(StreamUtil.createStreamName(queryData.getProjection())).append(".")
-                            .append(colName.getName()).append(" as ").append(aliasMapping.get(colName));
+            querySb.append(StreamUtil.createStreamName(queryData.getProjection())).append(".").append(
+                            colName.getName()).append(" as ").append(aliasMapping.get(colName));
             if (++i < numFields)
                 querySb.append(",");
         }
@@ -114,29 +111,10 @@ public class ConnectorQueryBuilder {
     private void createStreamsQuery() throws UnsupportedException {
         // only one logicalWorkflow so always
         createStreamQuery();
-        //createWindowQuery();
+       
     }
 
-    /**
-     * @throws UnsupportedException
-     * 
-     * /
-    private void createWindowQuery() throws UnsupportedException {
-        // TODO test if(queryData.hasWindow()) in createStreamsQuery
-        Window window = new Window(WindowType.TEMPORAL);
-        window.setTimeWindow(20, TimeUnit.SECONDS);
-        if (window != null) {
-            if (window.getType() == WindowType.TEMPORAL) {
-                querySb.append("#window.timeBatch( ").append(window.getDurationInMilliseconds())
-                                .append(" milliseconds)");
-            } else if (window.getType() == WindowType.NUM_ROWS) {
-                // TODO window.getDuration()
-                querySb.append("#window.lengthBatch(").append(String.valueOf(1)).append(")");
-            } else
-                throw new UnsupportedException("Window " + window.getType().toString() + " is not supported");
-        }
-
-    } */
+  
 
     /**
      * @throws UnsupportedException

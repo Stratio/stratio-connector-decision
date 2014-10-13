@@ -8,28 +8,27 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.Before; 
+import kafka.consumer.ConsumerIterator;
+import kafka.consumer.KafkaStream;
+import kafka.message.MessageAndMetadata;
+
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
-
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.connector.Operations;
 import com.stratio.meta.common.logicalplan.Project;
-import com.stratio.meta.common.statements.structures.window.Window;
+import com.stratio.meta.common.logicalplan.Window;
 import com.stratio.meta.common.statements.structures.window.WindowType;
 import com.stratio.meta2.common.data.ClusterName;
 import com.stratio.meta2.common.data.TableName;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.messages.ColumnNameTypeValue;
 import com.stratio.streaming.commons.messages.StratioStreamingMessage;
-
-import kafka.consumer.ConsumerIterator;
-import kafka.consumer.KafkaStream;
-import kafka.message.MessageAndMetadata;
 
 /** 
 * ElementNumberQueryExecutor Tester. 
@@ -104,7 +103,7 @@ public void testProcessMessage() throws Exception {
 
     private ConnectorQueryData createQueryData() {
         ConnectorQueryData queryData = new ConnectorQueryData();
-        Window window = new Window(WindowType.NUM_ROWS);
+        Window window = new Window(Operations.FILTER_INDEXED_EQ,WindowType.NUM_ROWS);
         window.setNumRows(10);
         queryData.setWindow(window);
         Project projection = new Project(Operations.PROJECT, new TableName(CATALOG_NAME, TABLE_NAME),

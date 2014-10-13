@@ -1,6 +1,5 @@
 package com.stratio.connector.streaming.core.engine.query.queryExecutor.timer;
 
-import java.util.Date;
 import java.util.TimerTask;
 
 import com.stratio.connector.streaming.core.engine.query.queryExecutor.TimeWindowQueryExecutor;

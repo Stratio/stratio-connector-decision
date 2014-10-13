@@ -148,7 +148,7 @@ public class ThreadFilterIntegerFunctionalTest extends GenericStreamingTest{
         stramingInserter.start();
 
         StreamingInserter oherStreamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
-        oherStreamingInserter.changeIntegerChangeableColumn(OTHER_INT_VALUE);
+        oherStreamingInserter.changeIntegerChangeableColumn(incorrectValue);
 
         oherStreamingInserter.start();
 
@@ -182,7 +182,7 @@ public class ThreadFilterIntegerFunctionalTest extends GenericStreamingTest{
         int correctValue = DEFAULT_INT_VALUE;
         int incorrectValue = DEFAULT_INT_VALUE -1;
         StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata,
-                createGreatLogicalWorkFlow(),
+        		createGreatEqualLogicalWorkFlow(),
                 new ResultNumberHandler(correctValue, incorrectValue));
 
         stremingRead.start();
@@ -289,7 +289,7 @@ public class ThreadFilterIntegerFunctionalTest extends GenericStreamingTest{
     }
 
 
-    private LogicalWorkflow createGreatLogicalWorkFlow() throws UnsupportedException {
+    private LogicalWorkflow createGreatEqualLogicalWorkFlow() throws UnsupportedException {
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE,
                 getClusterName());
 
@@ -303,10 +303,28 @@ public class ThreadFilterIntegerFunctionalTest extends GenericStreamingTest{
                 (INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addColumnName(INTEGER_CHANGEABLE_COLUMN).addSelect
                 (selectColumns).addGreaterEqualFilter(
                 INTEGER_CHANGEABLE_COLUMN,
-                DEFAULT_INT_VALUE, false).addWindow(WindowType.TEMPORAL, 5)
+                OTHER_INT_VALUE, false).addWindow(WindowType.TEMPORAL, 5)
                 .getLogicalWorkflow();
     }
 
+    
+    private LogicalWorkflow createGreatLogicalWorkFlow() throws UnsupportedException {
+        LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE,
+                getClusterName());
+
+        LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN,STRING_COLUMN, ColumnType.TEXT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN,INTEGER_COLUMN,ColumnType.INT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN,BOOLEAN_COLUMN,ColumnType.BOOLEAN));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_CHANGEABLE_COLUMN,INTEGER_CHANGEABLE_COLUMN,ColumnType.INT));
+
+        return logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName
+                (INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addColumnName(INTEGER_CHANGEABLE_COLUMN).addSelect
+                (selectColumns).addGreaterFilter(
+                INTEGER_CHANGEABLE_COLUMN,
+                OTHER_INT_VALUE, false).addWindow(WindowType.TEMPORAL, 5)
+                .getLogicalWorkflow();
+    }
 
 
     private LogicalWorkflow createLowerEqualsLogicalWorkFlow() throws UnsupportedException {
