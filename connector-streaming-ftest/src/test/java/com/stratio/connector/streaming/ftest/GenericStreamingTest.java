@@ -78,10 +78,18 @@ public abstract class GenericStreamingTest {
         sConnector.init(getConfiguration());
         sConnector.connect(getICredentials(), getConnectorClusterConfig());
 
-        deleteTable(CATALOG, TABLE);
+        try {
+            deleteTable(CATALOG, TABLE);
+        } catch (ExecutionException e) {
+            logger.debug("The table did not exist");
+        }
+
+        // createTable
 
         logger.debug(CATALOG + "/" + TABLE);
     }
+
+    // protected createTable
 
     protected void deleteTable(String catalog, String table) throws UnsupportedException, ExecutionException {
         try {
@@ -111,7 +119,7 @@ public abstract class GenericStreamingTest {
         optionsNode.put(StreamingConnection.KAFKA_SERVER, SERVER_KAFKA);
         optionsNode.put(StreamingConnection.KAFKA_PORT, PORT_KAFKA);
         optionsNode.put(StreamingConnection.ZOOKEEPER_SERVER, SERVER_ZOOKEEPER);
-        optionsNode.put(StreamingConnection.ZOOKEEPER_PORT, PORT_KAFKA);
+        optionsNode.put(StreamingConnection.ZOOKEEPER_PORT, PORT_ZOOKEEPER);
         return new ConnectorClusterConfig(getClusterName(), optionsNode);
     }
 
