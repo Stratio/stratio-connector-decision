@@ -27,7 +27,8 @@ public class ElementNumberQueryExecutor extends ConnectorQueryExecutor {
      */
     public ElementNumberQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler) {
         super(queryData, resultHandler);
-        windowLength = queryData.getWindow().numOfElement;
+        windowLength = queryData.getWindow().getNumRows();
+
 
     }
 

@@ -15,10 +15,12 @@ import org.mockito.Mock;
 
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
-import com.stratio.connector.temp.Window;
+
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.connector.Operations;
 import com.stratio.meta.common.logicalplan.Project;
+import com.stratio.meta.common.statements.structures.window.Window;
+import com.stratio.meta.common.statements.structures.window.WindowType;
 import com.stratio.meta2.common.data.ClusterName;
 import com.stratio.meta2.common.data.TableName;
 import com.stratio.streaming.api.IStratioStreamingAPI;
@@ -102,8 +104,8 @@ public void testProcessMessage() throws Exception {
 
     private ConnectorQueryData createQueryData() {
         ConnectorQueryData queryData = new ConnectorQueryData();
-        Window window = new Window();
-        window.numOfElement = 10;
+        Window window = new Window(WindowType.NUM_ROWS);
+        window.setNumRows(10);
         queryData.setWindow(window);
         Project projection = new Project(Operations.PROJECT, new TableName(CATALOG_NAME, TABLE_NAME),
                 new ClusterName(CLUSTER_NAME));

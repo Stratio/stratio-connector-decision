@@ -20,8 +20,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
+import com.stratio.connector.commons.ftest.schema.TableMetadataBuilder;
 import com.stratio.connector.commons.ftest.workFlow.LogicalWorkFlowCreator;
 import com.stratio.connector.streaming.core.StreamingConnector;
+import com.stratio.connector.streaming.ftest.GenericStreamingTest;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
 import com.stratio.meta.common.connector.ConnectorClusterConfig;
@@ -30,18 +32,20 @@ import com.stratio.meta.common.data.Cell;
 import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.exceptions.ConnectionException;
 import com.stratio.meta.common.exceptions.ExecutionException;
+import com.stratio.meta.common.exceptions.InitializationException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.meta.common.logicalplan.LogicalWorkflow;
 import com.stratio.meta.common.logicalplan.Select;
 import com.stratio.meta.common.metadata.structures.ColumnMetadata;
 import com.stratio.meta.common.result.QueryResult;
+import com.stratio.meta.common.statements.structures.window.WindowType;
 import com.stratio.meta2.common.data.ClusterName;
 import com.stratio.meta2.common.data.ColumnName;
 import com.stratio.meta2.common.data.TableName;
 import com.stratio.meta2.common.metadata.ColumnType;
 import com.stratio.meta2.common.metadata.TableMetadata;
 
-public class ThreadTimeWindowFunctionalTest {
+public class ThreadTimeWindowFunctionalTest  extends GenericStreamingTest {
 
     /**
      * The Log.
@@ -49,17 +53,12 @@ public class ThreadTimeWindowFunctionalTest {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     public static final int ELEMENTS_WRITE = 500;
 
-    private static Random random = new Random(new Date().getTime());
+
 
     private static final String OTHER_TEXT = "OTHER...... ";
     private static final int WAIT_TIME = 20000;
-    private static final String CATALOG_NAME = "catalog_name_" + Math.abs(random.nextLong());
-    private static final String TABLE_NAME = "table_name";
-    String ZOOKEEPER_SERVER = "10.200.0.58";;// "192.168.0.2";
-    String KAFKA_SERVER = "10.200.0.58";// "192.168.0.2";
 
-    String KAFKA_PORT = "9092";
-    String ZOOKEEPER_PORT = "2181";
+
 
     public static String STRING_COLUMN = "string_column";
     public static String INTEGER_COLUMN = "integer_column";
@@ -68,48 +67,27 @@ public class ThreadTimeWindowFunctionalTest {
     boolean correctOrder = true;
     Set<Integer> returnSet = new HashSet<>();
 
-    StreamingConnector sC;
+
     TableMetadata tableMetadata;
 
-    ClusterName clusterName = new ClusterName("CLUSTERNAME");
+
 
     Boolean correct = true;
     Boolean correctType = true;
     Boolean returnTypes = true;
 
     @Before
-    public void setUp() throws ConnectionException, UnsupportedException, ExecutionException {
+    public void setUp() throws ConnectionException, UnsupportedException, ExecutionException, InitializationException {
+        super.setUp();
+
         returnSet = new HashSet<>();
-        sC = new StreamingConnector();
 
-        sC.init(null);
-
-        Map<String, String> optionsNode = new HashMap<>();
-
-        optionsNode.put("KafkaServer", KAFKA_SERVER);
-        optionsNode.put("KafkaPort", KAFKA_PORT);
-        optionsNode.put("zooKeeperServer", ZOOKEEPER_SERVER);
-        optionsNode.put("zooKeeperPort", ZOOKEEPER_PORT);
-
-        ConnectorClusterConfig config = new ConnectorClusterConfig(clusterName, optionsNode);
-        sC.connect(null, config);
-        TableName tableName = new TableName(CATALOG_NAME, TABLE_NAME);
-
-        ColumnName columnNameString = new ColumnName(tableName, STRING_COLUMN);
-        Map<ColumnName, com.stratio.meta2.common.metadata.ColumnMetadata> columns = new LinkedHashMap();
-        columns.put(columnNameString, new com.stratio.meta2.common.metadata.ColumnMetadata(columnNameString,
-                        new Object[] {}, ColumnType.VARCHAR));
-        ColumnName columnNameInteger = new ColumnName(tableName, INTEGER_COLUMN);
-        columns.put(columnNameInteger, new com.stratio.meta2.common.metadata.ColumnMetadata(columnNameInteger,
-                        new Object[] {}, ColumnType.INT));
-        ColumnName columnNameBoolean = new ColumnName(tableName, BOOLEAN_COLUMN);
-        columns.put(columnNameBoolean, new com.stratio.meta2.common.metadata.ColumnMetadata(columnNameBoolean,
-                        new Object[] {}, ColumnType.BOOLEAN));
-        tableMetadata = new TableMetadata(tableName, Collections.EMPTY_MAP, columns, Collections.EMPTY_MAP,
-                        clusterName, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
-
+        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
+        tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN,
+                ColumnType.VARCHAR).addColumn(INTEGER_COLUMN,
+                ColumnType.INT).addColumn(BOOLEAN_COLUMN,ColumnType.BOOLEAN).build();
         try {
-            sC.getMetadataEngine().createTable(clusterName, tableMetadata);
+            sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
         } catch (ExecutionException t) {
 
@@ -119,33 +97,21 @@ public class ThreadTimeWindowFunctionalTest {
 
     @After
     public void tearDown() throws UnsupportedException, ExecutionException {
-        sC.getMetadataEngine().dropTable(clusterName, new TableName(CATALOG_NAME, TABLE_NAME));
-        sC.close(clusterName);
+        sConnector.getMetadataEngine().dropTable(getClusterName(), new TableName(CATALOG, TABLE));
+        sConnector.close(getClusterName());
     }
 
     @Test
-    public void testStopReadBeforeStopWrite() throws InterruptedException {
+    public void testStopReadBeforeStopWrite() throws InterruptedException, UnsupportedException {
 
 
         logger.debug("********************** Inserting ......");
-        StreamingInserter stramingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
+        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
         stramingInserter.start();
 
-        LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME,
-                        clusterName);
+        LogicalWorkflow logicalWokflow = createLogicalWorkFlow();
 
-        LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
-
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
-                        ColumnType.BOOLEAN));
-
-        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN)
-                        .addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
-                        .getLogicalWorkflow();
-
-        StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, logicalWokflow,
+        StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata, logicalWokflow,
                         new ResultHandler((Select) logicalWokflow.getLastStep()));
 
         stremingRead.start();
@@ -171,26 +137,15 @@ public class ThreadTimeWindowFunctionalTest {
     }
 
     @Test
-    public void testStopWriteBeforeStopRead() throws InterruptedException {
+    public void testStopWriteBeforeStopRead() throws InterruptedException, UnsupportedException {
 
-        StreamingInserter stramingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
+        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
         stramingInserter.start();
 
-        LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME,
-                        clusterName);
-
-        LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
-                        ColumnType.BOOLEAN));
-
-        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN)
-                        .addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
-                        .getLogicalWorkflow();
+        LogicalWorkflow logicalWokflow = createLogicalWorkFlow();
 
         ResultHandler resultHandler = new ResultHandler((Select) logicalWokflow.getLastStep());
-        StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, logicalWokflow, resultHandler);
+        StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata, logicalWokflow, resultHandler);
 
         stremingRead.start();
         logger.debug("********************** Quering......");
@@ -215,28 +170,18 @@ public class ThreadTimeWindowFunctionalTest {
     }
 
     @Test
-    public void testInsertConcreteNumber() throws InterruptedException {
+    public void testInsertConcreteNumber() throws InterruptedException, UnsupportedException {
 
-        LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME,
-                        clusterName);
+        LogicalWorkflow logicalWokflow = createLogicalWorkFlow();
 
-        LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
-                        ColumnType.BOOLEAN));
-        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN)
-                        .addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
-                        .getLogicalWorkflow();
-
-        StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, logicalWokflow,
+        StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata, logicalWokflow,
                         new ResultHandler((Select) logicalWokflow.getLastStep()));
 
         stremingRead.start();
         logger.debug("********************** Quering......");
         Thread.sleep(20000);
 
-        StreamingInserter stramingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
+        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
         stramingInserter.numOfElement(ELEMENTS_WRITE).elementPerSecond(ELEMENTS_WRITE);
         stramingInserter.start();
         Thread.sleep(50000);
@@ -251,37 +196,53 @@ public class ThreadTimeWindowFunctionalTest {
 
     }
 
+    private LogicalWorkflow createLogicalWorkFlow() throws UnsupportedException {
+        LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE,
+                        getClusterName());
+
+        LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
+                        ColumnType.BOOLEAN));
+        return logicalWorkFlowCreator.addColumnName(STRING_COLUMN)
+                        .addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
+                .addWindow(WindowType.TEMPORAL, 5)
+                        .getLogicalWorkflow();
+    }
+
     @Test
     public void testManyThread() throws UnsupportedException, ExecutionException, InterruptedException {
-        LogicalWorkflow logicalWokflow = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME, clusterName)
+        LogicalWorkflow logicalWokflow = new LogicalWorkFlowCreator(CATALOG, TABLE, getClusterName())
                         .addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
+                .addWindow(WindowType.TEMPORAL, 20)
                         .getLogicalWorkflow();
-        sC.getQueryEngine().asyncExecute("query1", logicalWokflow,
+        sConnector.getQueryEngine().asyncExecute("query1", logicalWokflow,
                         new ResultHandler((Select) logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
-        sC.getQueryEngine().asyncExecute("query2", logicalWokflow,
+        sConnector.getQueryEngine().asyncExecute("query2", logicalWokflow,
                         new ResultHandler((Select) logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
-        sC.getQueryEngine().asyncExecute("query3", logicalWokflow,
+        sConnector.getQueryEngine().asyncExecute("query3", logicalWokflow,
                         new ResultHandler((Select) logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
-        sC.getQueryEngine().stop("query3");
-        sC.getQueryEngine().asyncExecute("query4", logicalWokflow,
+        sConnector.getQueryEngine().stop("query3");
+        sConnector.getQueryEngine().asyncExecute("query4", logicalWokflow,
                         new ResultHandler((Select) logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
-        sC.getQueryEngine().stop("query2");
-        sC.getQueryEngine().asyncExecute("query5", logicalWokflow,
+        sConnector.getQueryEngine().stop("query2");
+        sConnector.getQueryEngine().asyncExecute("query5", logicalWokflow,
                         new ResultHandler((Select) logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
-        sC.getQueryEngine().stop("query1");
-        sC.getQueryEngine().asyncExecute("query6", logicalWokflow,
+        sConnector.getQueryEngine().stop("query1");
+        sConnector.getQueryEngine().asyncExecute("query6", logicalWokflow,
                         new ResultHandler((Select) logicalWokflow.getLastStep()));
-        sC.getQueryEngine().stop("query4");
+        sConnector.getQueryEngine().stop("query4");
 
         Thread.sleep(WAIT_TIME);
 
-        sC.getQueryEngine().stop("query5");
-        sC.getQueryEngine().stop("query6");
+        sConnector.getQueryEngine().stop("query5");
+        sConnector.getQueryEngine().stop("query6");
 
     }
 

@@ -35,7 +35,7 @@ public class TimeWindowQueryExecutor extends ConnectorQueryExecutor {
 
         TimerTask timerTask = new SendResultTimer(this);
         timer = new Timer("[Timer_"+queryData.getQueryId()+"]",true);
-        timer.scheduleAtFixedRate(timerTask, 0, queryData.getWindow().windowTime);
+        timer.scheduleAtFixedRate(timerTask, 0, queryData.getWindow().getDurationInMilliseconds());
 
     }
 

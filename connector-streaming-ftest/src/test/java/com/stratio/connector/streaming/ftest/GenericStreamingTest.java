@@ -58,7 +58,7 @@ public abstract class GenericStreamingTest {
     public static String LONG_COLUMN = "long_column";
 
     public String CATALOG = "catalog_functional_test";
-    public final String TABLE = this.getClass().getSimpleName() + UUID.randomUUID();
+    public final String TABLE = this.getClass().getSimpleName() + UUID.randomUUID().toString().replaceAll("-","_");
 
     protected StreamingConnector sConnector;
     /**
@@ -69,7 +69,7 @@ public abstract class GenericStreamingTest {
     protected boolean deleteBeteweenTest = true;
 
     protected ClusterName getClusterName() {
-        return new ClusterName(CATALOG + "-" + TABLE);
+        return new ClusterName(CATALOG + "_" + TABLE);
     }
 
     @Before

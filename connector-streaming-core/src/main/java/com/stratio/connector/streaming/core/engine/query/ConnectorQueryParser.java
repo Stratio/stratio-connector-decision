@@ -23,6 +23,7 @@ import com.stratio.meta.common.logicalplan.LogicalStep;
 import com.stratio.meta.common.logicalplan.Project;
 import com.stratio.meta.common.logicalplan.Select;
 import com.stratio.meta.common.statements.structures.relationships.Operator;
+import com.stratio.meta.common.statements.structures.window.Window;
 
 /**
  * Created by jmgomez on 15/09/14.
@@ -54,10 +55,12 @@ public class ConnectorQueryParser {
             } else if (lStep instanceof Select) {
                 queryData.setSelect((Select) lStep);
 
-            } else if (lStep instanceof Limit) {
+            } else  if (lStep instanceof Window) {
+                queryData.setWindow((Window) lStep);
+            }else if (lStep instanceof Limit) {
                 throw new UnsupportedException("LogicalStep [" + lStep.getClass().getCanonicalName()
-                                + " not yet supported");
-            } else {
+                        + " not yet supported");
+            } else{
                 throw new UnsupportedException("LogicalStep [" + lStep.getClass().getCanonicalName() + " not supported");
             }
 

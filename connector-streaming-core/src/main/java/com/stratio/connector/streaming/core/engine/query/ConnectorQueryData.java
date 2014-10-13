@@ -19,11 +19,13 @@ package com.stratio.connector.streaming.core.engine.query;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.stratio.connector.temp.Window;
+
 import com.stratio.meta.common.logicalplan.Filter;
 import com.stratio.meta.common.logicalplan.Limit;
 import com.stratio.meta.common.logicalplan.Project;
 import com.stratio.meta.common.logicalplan.Select;
+import com.stratio.meta.common.statements.structures.window.Window;
+import com.stratio.meta.common.statements.structures.window.WindowType;
 
 /**
  * This class is a representation of a ElasticSearch query. Created by jmgomez on 15/09/14.
@@ -46,7 +48,7 @@ public class ConnectorQueryData {
     private Select select;
     private Limit limit;
     private String queryId;
-    private Window window = new Window(); //TODO
+    private Window window = new Window(WindowType.NUM_ROWS); //TODO
 
     /**
      * Add a filter.

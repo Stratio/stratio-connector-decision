@@ -36,6 +36,7 @@ import com.stratio.meta.common.logicalplan.LogicalWorkflow;
 import com.stratio.meta.common.logicalplan.Select;
 import com.stratio.meta.common.metadata.structures.ColumnMetadata;
 import com.stratio.meta.common.result.QueryResult;
+import com.stratio.meta.common.statements.structures.window.WindowType;
 import com.stratio.meta2.common.data.ClusterName;
 import com.stratio.meta2.common.data.ColumnName;
 import com.stratio.meta2.common.data.TableName;
@@ -54,10 +55,10 @@ public class ThreadFilterFunctionalTest extends GenericStreamingTest{
 
     Set<Integer> returnSet = new HashSet<>();
 
-    StreamingConnector sC;
+
     TableMetadata tableMetadata;
 
-    ClusterName clusterName = new ClusterName("CLUSTERNAME");
+
 
     Boolean filterCorrect = true;
     int number = 0;
@@ -67,13 +68,13 @@ public class ThreadFilterFunctionalTest extends GenericStreamingTest{
          super.setUp();
 
         returnSet = new HashSet<>();
-        sC = new StreamingConnector();
+
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
-        TableMetadata tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN,
+        tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN,
                 ColumnType.VARCHAR).addColumn(INTEGER_COLUMN,
                 ColumnType.INT).addColumn(BOOLEAN_COLUMN,ColumnType.BOOLEAN).build();
         try {
-            sC.getMetadataEngine().createTable(clusterName, tableMetadata);
+            sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
         } catch (ExecutionException t) {
 
@@ -83,34 +84,35 @@ public class ThreadFilterFunctionalTest extends GenericStreamingTest{
 
 
     @Test
-    public void testEqualFilter() throws InterruptedException {
+    public void testEqualFilter() throws InterruptedException, UnsupportedException {
 
 
 
 
-        StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, createEqualLogicalWorkFlow(),
+        StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata,
+                createEqualLogicalWorkFlow(),
                         new ResultHandler());
 
         stremingRead.start();
-        System.out.println("TEST ********************** Quering......");
+        System.out.println("TEST ********************** Querying......");
         waitSeconds(WAIT_TIME);
 
         System.out.println("TEST ********************** Inserting ......");
-        StreamingInserter stramingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
+        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
         stramingInserter.numOfElement(CORRECT_ELMENT_TO_FIND);
         stramingInserter.start();
 
-        StreamingInserter oherStreamingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
+        StreamingInserter oherStreamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
         oherStreamingInserter.changeOtuput(OTHER_TEXT);
         oherStreamingInserter.start();
 
         waitSeconds(WAIT_TIME);
 
         stremingRead.end();
-        System.out.println("TEST ********************** END Quering Test......");
+        System.out.println("TEST ********************** END Querying Test......");
         waitSeconds(WAIT_TIME);
 
-        System.out.println("TEST ********************** Change Test Quering......");
+        System.out.println("TEST ********************** Change Test Querying......");
         waitSeconds(WAIT_TIME);
 
         System.out.println("TEST ********************** END Insert......");
@@ -125,9 +127,9 @@ public class ThreadFilterFunctionalTest extends GenericStreamingTest{
 
     }
 
-    private LogicalWorkflow createEqualLogicalWorkFlow() {
+    private LogicalWorkflow createEqualLogicalWorkFlow() throws UnsupportedException {
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE,
-                clusterName);
+                getClusterName());
 
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN,STRING_COLUMN, ColumnType.TEXT));
@@ -136,7 +138,7 @@ public class ThreadFilterFunctionalTest extends GenericStreamingTest{
 
         return logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName
                 (INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns).addEqualFilter(STRING_COLUMN,
-                TEXT,false,false)
+                TEXT,false,false).addWindow(WindowType.TEMPORAL,10)
                         .getLogicalWorkflow();
     }
 
