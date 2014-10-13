@@ -1,7 +1,6 @@
 package com.stratio.connector.streaming.ftest.thread;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
@@ -44,21 +43,22 @@ public class ThreadTimeWindowFunctionalTest {
 
     public static final int ELEMENTS_WRITE = 500;
 
-
     private static Random random = new Random(new Date().getTime());
 
     private static final String OTHER_TEXT = "OTHER...... ";
     private static final int WAIT_TIME = 20000;
-    private static final String CATALOG_NAME = "catalog_name_"+ Math.abs(random.nextLong());
+    private static final String CATALOG_NAME = "catalog_name_" + Math.abs(random.nextLong());
     private static final String TABLE_NAME = "table_name";
     String ZOOKEEPER_SERVER = "10.200.0.58";;// "192.168.0.2";
     String KAFKA_SERVER = "10.200.0.58";// "192.168.0.2";
 
     String KAFKA_PORT = "9092";
     String ZOOKEEPER_PORT = "2181";
+
     public static String STRING_COLUMN = "string_column";
     public static String INTEGER_COLUMN = "integer_column";
     public static String BOOLEAN_COLUMN = "boolean_column";
+
     boolean correctOrder = true;
     Set<Integer> returnSet = new HashSet<>();
 
@@ -68,7 +68,7 @@ public class ThreadTimeWindowFunctionalTest {
     ClusterName clusterName = new ClusterName("CLUSTERNAME");
 
     Boolean correct = true;
-      Boolean correctType = true;
+    Boolean correctType = true;
     Boolean returnTypes = true;
 
     @Before
@@ -109,7 +109,7 @@ public class ThreadTimeWindowFunctionalTest {
 
     @After
     public void tearDown() throws UnsupportedException, ExecutionException {
-        sC.getMetadataEngine().dropTable(clusterName,new TableName(CATALOG_NAME,TABLE_NAME));
+        sC.getMetadataEngine().dropTable(clusterName, new TableName(CATALOG_NAME, TABLE_NAME));
         sC.close(clusterName);
     }
 
@@ -122,21 +122,19 @@ public class ThreadTimeWindowFunctionalTest {
         stramingInserter.start();
 
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME,
-                clusterName);
+                        clusterName);
 
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN,STRING_COLUMN,ColumnType.TEXT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN,INTEGER_COLUMN,ColumnType.INT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN,BOOLEAN_COLUMN,ColumnType.BOOLEAN));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
+                        ColumnType.BOOLEAN));
 
-
-
-        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
-                        .getLogicalWorkflow();
-
+        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN)
+                        .addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).getLogicalWorkflow();
 
         StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, logicalWokflow,
-                        new ResultHandler((Select)logicalWokflow.getLastStep()));
+                        new ResultHandler((Select) logicalWokflow.getLastStep()));
 
         stremingRead.start();
         System.out.println("TEST ********************** Quering......");
@@ -154,9 +152,9 @@ public class ThreadTimeWindowFunctionalTest {
         Thread.sleep(WAIT_TIME);
 
         assertTrue("all is correct", correct);
-        assertTrue("Result is ordered",correctOrder);
-        assertTrue("The types are correct",correctType);
-        assertTrue("Return types",returnTypes);
+        assertTrue("Result is ordered", correctOrder);
+        assertTrue("The types are correct", correctType);
+        assertTrue("Return types", returnTypes);
 
     }
 
@@ -167,17 +165,18 @@ public class ThreadTimeWindowFunctionalTest {
         stramingInserter.start();
 
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME,
-                clusterName);
+                        clusterName);
 
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN,STRING_COLUMN,ColumnType.TEXT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN,INTEGER_COLUMN,ColumnType.INT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN,BOOLEAN_COLUMN,ColumnType.BOOLEAN));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
+                        ColumnType.BOOLEAN));
 
-        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
-                        .getLogicalWorkflow();
+        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN)
+                        .addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).getLogicalWorkflow();
 
-        ResultHandler resultHandler = new ResultHandler((Select)logicalWokflow.getLastStep());
+        ResultHandler resultHandler = new ResultHandler((Select) logicalWokflow.getLastStep());
         StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, logicalWokflow, resultHandler);
 
         stremingRead.start();
@@ -196,10 +195,9 @@ public class ThreadTimeWindowFunctionalTest {
         Thread.sleep(WAIT_TIME);
 
         assertTrue("all is correct", correct);
-        assertTrue("Result is ordered",correctOrder);
-        assertTrue("The types are correct",correctType);
-        assertTrue("Return types",returnTypes);
-
+        assertTrue("Result is ordered", correctOrder);
+        assertTrue("The types are correct", correctType);
+        assertTrue("Return types", returnTypes);
 
     }
 
@@ -207,24 +205,23 @@ public class ThreadTimeWindowFunctionalTest {
     public void testInsertConcreteNumber() throws InterruptedException {
 
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME,
-                clusterName);
+                        clusterName);
 
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN,STRING_COLUMN,ColumnType.TEXT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN,INTEGER_COLUMN,ColumnType.INT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN,BOOLEAN_COLUMN,ColumnType.BOOLEAN));
-        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator
-                .addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect
-                        (selectColumns)
-                .getLogicalWorkflow();
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
+                        ColumnType.BOOLEAN));
+        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN)
+                        .addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
+                        .getLogicalWorkflow();
 
         StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, logicalWokflow,
-                new ResultHandler((Select)logicalWokflow.getLastStep()));
+                        new ResultHandler((Select) logicalWokflow.getLastStep()));
 
         stremingRead.start();
         System.out.println("TEST ********************** Quering......");
         Thread.sleep(20000);
-
 
         StreamingInserter stramingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
         stramingInserter.numOfElement(ELEMENTS_WRITE).elementPerSecond(ELEMENTS_WRITE);
@@ -233,37 +230,39 @@ public class ThreadTimeWindowFunctionalTest {
         stremingRead.end();
         stramingInserter.end();
 
-        assertEquals("the number of elements read is correct",ELEMENTS_WRITE, returnSet.size());
+        assertEquals("the number of elements read is correct", ELEMENTS_WRITE, returnSet.size());
         assertTrue("all is correct", correct);
-        assertTrue("Result is ordered",correctOrder);
-        assertTrue("The types are correct",correctType);
-        assertTrue("Return types",returnTypes);
-
-
-
+        assertTrue("Result is ordered", correctOrder);
+        assertTrue("The types are correct", correctType);
+        assertTrue("Return types", returnTypes);
 
     }
 
     @Test
     public void testManyThread() throws UnsupportedException, ExecutionException, InterruptedException {
         LogicalWorkflow logicalWokflow = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME, clusterName)
-                .addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
-                .getLogicalWorkflow();
-        sC.getQueryEngine().asyncExecute("query1",logicalWokflow,new ResultHandler((Select)logicalWokflow.getLastStep()));
+                        .addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
+                        .getLogicalWorkflow();
+        sC.getQueryEngine().asyncExecute("query1", logicalWokflow,
+                        new ResultHandler((Select) logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
-        sC.getQueryEngine().asyncExecute("query2", logicalWokflow, new ResultHandler((Select) logicalWokflow.getLastStep
-                ()));
+        sC.getQueryEngine().asyncExecute("query2", logicalWokflow,
+                        new ResultHandler((Select) logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
-        sC.getQueryEngine().asyncExecute("query3",logicalWokflow,new ResultHandler((Select)logicalWokflow.getLastStep()));
+        sC.getQueryEngine().asyncExecute("query3", logicalWokflow,
+                        new ResultHandler((Select) logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
         sC.getQueryEngine().stop("query3");
-        sC.getQueryEngine().asyncExecute("query4",logicalWokflow,new ResultHandler((Select)logicalWokflow.getLastStep()));
+        sC.getQueryEngine().asyncExecute("query4", logicalWokflow,
+                        new ResultHandler((Select) logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
         sC.getQueryEngine().stop("query2");
-        sC.getQueryEngine().asyncExecute("query5",logicalWokflow,new ResultHandler((Select)logicalWokflow.getLastStep()));
+        sC.getQueryEngine().asyncExecute("query5", logicalWokflow,
+                        new ResultHandler((Select) logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
         sC.getQueryEngine().stop("query1");
-        sC.getQueryEngine().asyncExecute("query6",logicalWokflow,new ResultHandler((Select)logicalWokflow.getLastStep()));
+        sC.getQueryEngine().asyncExecute("query6", logicalWokflow,
+                        new ResultHandler((Select) logicalWokflow.getLastStep()));
         sC.getQueryEngine().stop("query4");
 
         Thread.sleep(WAIT_TIME);
@@ -271,19 +270,15 @@ public class ThreadTimeWindowFunctionalTest {
         sC.getQueryEngine().stop("query5");
         sC.getQueryEngine().stop("query6");
 
-
-
     }
+
     private class ResultHandler implements IResultHandler {
 
         boolean mustRead = true;
 
-
         private ColumnName[] orderendColumnaName;
 
-
-        public ResultHandler(Select select){
-
+        public ResultHandler(Select select) {
 
             orderendColumnaName = select.getColumnMap().keySet().toArray(new ColumnName[0]);
 
@@ -296,37 +291,38 @@ public class ThreadTimeWindowFunctionalTest {
         }
 
         public void mustNotReadMore() {
-       boolean     mustRead = false;
+            boolean mustRead = false;
 
         }
 
-
         @Override
         public void processResult(QueryResult result) {
-             if (!mustRead) {
+            if (!mustRead) {
                 correct = false;
             }
             List<com.stratio.meta.common.metadata.structures.ColumnMetadata> columnMetadataList = result.getResultSet()
-                    .getColumnMetadata();
-            if (columnMetadataList==null){
+                            .getColumnMetadata();
+            if (columnMetadataList == null) {
                 returnTypes = false;
             }
             ColumnMetadata[] columnMetadata = columnMetadataList.toArray(new ColumnMetadata[0]);
-            if (!columnMetadata[0].getColumnType().equals(ColumnType.TEXT) ||  ! columnMetadata[1].getColumnType()
-                    .equals(ColumnType.INT) || !columnMetadata[2].getColumnType().equals(ColumnType.BOOLEAN)){
+            if (!columnMetadata[0].getColumnType().equals(ColumnType.TEXT)
+                            || !columnMetadata[1].getColumnType().equals(ColumnType.INT)
+                            || !columnMetadata[2].getColumnType().equals(ColumnType.BOOLEAN)) {
                 correctType = false;
-            };
+            }
+            ;
             for (Row row : result.getResultSet()) {
                 String[] recoveredColumn = row.getCells().keySet().toArray(new String[0]);
-                for (int i=0;i<recoveredColumn.length;i++){
-                    if (!orderendColumnaName[i].getName().equals(recoveredColumn[i])){
-                        System.out.println(orderendColumnaName[i] +"<-->"+recoveredColumn[i]);
+                for (int i = 0; i < recoveredColumn.length; i++) {
+                    if (!orderendColumnaName[i].getName().equals(recoveredColumn[i])) {
+                        System.out.println(orderendColumnaName[i] + "<-->" + recoveredColumn[i]);
                         correctOrder = false;
                     }
                 }
-                Integer cellValue = ((Double)row.getCell(INTEGER_COLUMN).getValue()).intValue();
+                Integer cellValue = ((Double) row.getCell(INTEGER_COLUMN).getValue()).intValue();
                 System.out.println(cellValue);
-                returnSet.add(cellValue); //To remove duplicates
+                returnSet.add(cellValue); // To remove duplicates
                 Cell cell = row.getCell(STRING_COLUMN);
                 if (cell != null) {
                     Object value = cell.getValue();

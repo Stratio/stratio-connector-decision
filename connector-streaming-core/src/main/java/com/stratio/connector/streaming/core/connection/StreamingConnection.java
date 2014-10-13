@@ -23,7 +23,6 @@ import com.stratio.connector.commons.connection.Connection;
 import com.stratio.meta.common.connector.ConnectorClusterConfig;
 import com.stratio.meta.common.security.ICredentials;
 import com.stratio.streaming.api.IStratioStreamingAPI;
-import com.stratio.streaming.api.StratioStreamingAPI;
 import com.stratio.streaming.api.StratioStreamingAPIFactory;
 import com.stratio.streaming.commons.exceptions.StratioEngineConnectionException;
 
@@ -31,6 +30,11 @@ import com.stratio.streaming.commons.exceptions.StratioEngineConnectionException
  * This class represents a logic connection. Created by jmgomez on 28/08/14.
  */
 public class StreamingConnection extends Connection<IStratioStreamingAPI> {
+
+    public static final String KAFKA_SERVER = "KafkaServer";
+    public static final String KAFKA_PORT = "KafkaPort";
+    public static final String ZOOKEEPER_SERVER = "zooKeeperServer";
+    public static final String ZOOKEEPER_PORT = "zooKeeperPort";
 
     /**
      * The Log.
@@ -59,11 +63,11 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
     public StreamingConnection(ICredentials credentiasl, ConnectorClusterConfig config)
                     throws StratioEngineConnectionException {
 
-        String kafkaServer = config.getOptions().get("KafkaServer");
-        int kafkaPort = Integer.parseInt(config.getOptions().get("KafkaPort"));
+        String kafkaServer = config.getOptions().get(KAFKA_SERVER);
+        int kafkaPort = Integer.parseInt(config.getOptions().get(KAFKA_PORT));
 
-        String zooKeeperServer = config.getOptions().get("zooKeeperServer");
-        int zooKeeperPort = Integer.parseInt(config.getOptions().get("zooKeeperPort"));
+        String zooKeeperServer = config.getOptions().get(ZOOKEEPER_SERVER);
+        int zooKeeperPort = Integer.parseInt(config.getOptions().get(ZOOKEEPER_PORT));
 
         stratioStreamingAPI = StratioStreamingAPIFactory.create().initializeWithServerConfig(kafkaServer, kafkaPort,
                         zooKeeperServer, zooKeeperPort);

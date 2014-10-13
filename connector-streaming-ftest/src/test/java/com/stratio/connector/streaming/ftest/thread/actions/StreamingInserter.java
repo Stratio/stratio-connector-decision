@@ -1,7 +1,10 @@
 package com.stratio.connector.streaming.ftest.thread.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.stratio.connector.streaming.core.StreamingConnector;
-import com.stratio.connector.streaming.ftest.thread.ThreadTimeWindowFunctionalTest;
+import com.stratio.connector.streaming.ftest.GenericStreamingTest;
 import com.stratio.meta.common.connector.IStorageEngine;
 import com.stratio.meta.common.data.Cell;
 import com.stratio.meta.common.data.Row;
@@ -9,74 +12,113 @@ import com.stratio.meta.common.exceptions.ExecutionException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.meta2.common.data.ClusterName;
 import com.stratio.meta2.common.metadata.TableMetadata;
+import com.stratio.streaming.commons.constants.ColumnType;
 
 public class StreamingInserter extends Thread {
-
 
     StreamingConnector streamingConnector;
 
     private ClusterName clusterName;
     private TableMetadata stream;
     private boolean finishThread = false;
+    private List<ColumnType> typesToInsert = null;
 
     public StreamingInserter(StreamingConnector sC, ClusterName clusterName, TableMetadata stream) {
-        super ("[StreamingInserter]");
+        super("[StreamingInserter]");
         this.streamingConnector = sC;
         this.clusterName = clusterName;
         this.stream = stream;
     }
-    private long elementPerSecond=10;
-    private long numOfElement=0;
 
+    private long elementPerSecond = 10;
+    private long numOfElement = 0;
 
-    public StreamingInserter elementPerSecond(long elements){
+    public StreamingInserter elementPerSecond(long elements) {
         this.elementPerSecond = elements;
         return this;
     }
 
-    public StreamingInserter numOfElement(long elements){
+    public StreamingInserter numOfElement(long elements) {
         this.numOfElement = elements;
         return this;
     }
 
-
+    public void addTypeToInsert(ColumnType type) {
+        typesToInsert = (typesToInsert != null) ? typesToInsert : new ArrayList<ColumnType>();
+        typesToInsert.add(type);
+    }
 
     @Override
     public void run() {
+
+        if (typesToInsert == null) {
+            typesToInsert = new ArrayList<ColumnType>(3);
+            typesToInsert.add(ColumnType.BOOLEAN);
+            typesToInsert.add(ColumnType.INTEGER);
+            typesToInsert.add(ColumnType.STRING);
+        }
+
         try {
             System.out.println("****************************** STARTING StreamingInserter **********************");
             IStorageEngine storageEngine = streamingConnector.getStorageEngine();
             for (int i = 0; !finishThread; i++) {
-                if (numOfElement!=0 && numOfElement-1==i) finishThread=true;
-                Row row = new Row();
+                if (numOfElement != 0 && numOfElement - 1 == i)
+                    finishThread = true;
 
-                row.addCell(ThreadTimeWindowFunctionalTest.BOOLEAN_COLUMN, new Cell(true));
-                row.addCell(ThreadTimeWindowFunctionalTest.INTEGER_COLUMN, new Cell(i));
-                row.addCell(ThreadTimeWindowFunctionalTest.STRING_COLUMN, new Cell(TEXT));
+                Row row = getRowToInsert(i);
+
                 storageEngine.insert(clusterName, stream, row);
 
-
-
-                if ((i%elementPerSecond)==0) Thread.sleep(1000);
-
+                if ((i % elementPerSecond) == 0)
+                    Thread.sleep(1000);
 
             }
-        } catch (UnsupportedException | ExecutionException   | InterruptedException e) {
+        } catch (UnsupportedException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
         System.out.println("****************************** ENDING StreamingInserter **********************");
     }
 
+    /**
+     * @param i
+     * @return
+     */
+    private Row getRowToInsert(int i) {
+        Row row = new Row();
+        for (ColumnType colType : typesToInsert) {
+            switch (colType) {
+            case BOOLEAN:
+                row.addCell(GenericStreamingTest.BOOLEAN_COLUMN, new Cell(true));
+                break;
+            case DOUBLE:
+                row.addCell(GenericStreamingTest.DOUBLE_COLUMN, new Cell(new Double(i + 0.5)));
+                break;
+            case FLOAT:
+                row.addCell(GenericStreamingTest.FLOAT_COLUMN, new Cell(new Float(i + 0.5)));
+                break;
+            case INTEGER:
+                row.addCell(GenericStreamingTest.INTEGER_COLUMN, new Cell(i));
+                break;
+            case LONG:
+                row.addCell(GenericStreamingTest.LONG_COLUMN, new Cell(new Long(i)));
+                break;
+            case STRING:
+                row.addCell(GenericStreamingTest.STRING_COLUMN, new Cell(TEXT));
+                break;
 
-	private static String TEXT = "Text ";
+            }
+        }
 
+        return row;
+    }
+
+    private static String TEXT = "Text ";
 
     public void changeOtuput(String stringOutput) {
         TEXT = stringOutput;
     }
 
-
-    public void end(){
+    public void end() {
         finishThread = true;
     }
 
