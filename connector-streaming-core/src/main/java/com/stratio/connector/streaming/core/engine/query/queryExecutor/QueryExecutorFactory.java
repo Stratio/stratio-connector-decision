@@ -9,7 +9,7 @@ import com.stratio.meta.common.connector.IResultHandler;
 public class QueryExecutorFactory {
     public static ConnectorQueryExecutor getQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler) {
         ConnectorQueryExecutor connectorQueryExecutor = null;
-        boolean timeWindow = false;
+        boolean timeWindow = true;
         if (timeWindow) {
             connectorQueryExecutor = new TimeWindowQueryExecutor(queryData,resultHandler);
         } else {
