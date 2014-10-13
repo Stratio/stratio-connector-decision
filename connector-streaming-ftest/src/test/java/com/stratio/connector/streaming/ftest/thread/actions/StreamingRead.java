@@ -10,27 +10,32 @@ import com.stratio.meta2.common.metadata.TableMetadata;
 
 public class StreamingRead extends Thread {
 
-
     private StreamingConnector streamingConnector;
     private ClusterName clusterName;
     private TableMetadata tableMetadata;
     private LogicalWorkflow logicalWorkFlow;
     private IResultHandler resultHandler;
+    private String queryId;
 
     public StreamingRead(StreamingConnector sC, ClusterName clusterName, TableMetadata tableMetadata,
                     LogicalWorkflow logicalWorkFlow, IResultHandler resultHandler) {
-        super ("[StreamingRead]");
+        super("[StreamingRead]");
         this.streamingConnector = sC;
         this.clusterName = clusterName;
         this.tableMetadata = tableMetadata;
         this.logicalWorkFlow = logicalWorkFlow;
         this.resultHandler = resultHandler;
+        queryId = "queryId";
+    }
+
+    public void setQueryId(String queryId) {
+        this.queryId = queryId;
     }
 
     public void run() {
         try {
             System.out.println("****************************** STARTING StreamingInserter **********************");
-            streamingConnector.getQueryEngine().asyncExecute("queryId", logicalWorkFlow, resultHandler);
+            streamingConnector.getQueryEngine().asyncExecute(queryId, logicalWorkFlow, resultHandler);
         } catch (UnsupportedException | ExecutionException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

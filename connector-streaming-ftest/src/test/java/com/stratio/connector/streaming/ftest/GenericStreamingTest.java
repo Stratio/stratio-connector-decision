@@ -60,7 +60,7 @@ public abstract class GenericStreamingTest {
     public String CATALOG = "catalog_functional_test";
     public final String TABLE = this.getClass().getSimpleName() + UUID.randomUUID();
 
-    protected StreamingConnector connector;
+    protected StreamingConnector sConnector;
     /**
      * The Log.
      */
@@ -74,9 +74,9 @@ public abstract class GenericStreamingTest {
 
     @Before
     public void setUp() throws InitializationException, ConnectionException, UnsupportedException, ExecutionException {
-        connector = new StreamingConnector();
-        connector.init(getConfiguration());
-        connector.connect(getICredentials(), getConnectorClusterConfig());
+        sConnector = new StreamingConnector();
+        sConnector.init(getConfiguration());
+        sConnector.connect(getICredentials(), getConnectorClusterConfig());
 
         deleteTable(CATALOG, TABLE);
 
@@ -86,10 +86,19 @@ public abstract class GenericStreamingTest {
     protected void deleteTable(String catalog, String table) throws UnsupportedException, ExecutionException {
         try {
             if (deleteBeteweenTest) {
-                connector.getMetadataEngine().dropTable(getClusterName(), new TableName(catalog, table));
+                sConnector.getMetadataEngine().dropTable(getClusterName(), new TableName(catalog, table));
             }
         } catch (Throwable t) {
             logger.debug("Table does not exist");
+        }
+    }
+
+    protected void waitSeconds(int sec) {
+        try {
+            Thread.sleep(sec * 1000);
+        } catch (InterruptedException e) {
+            logger.error("A thread has been interrupted unexpectedly");
+            e.printStackTrace();
         }
     }
 
@@ -117,7 +126,7 @@ public abstract class GenericStreamingTest {
             deleteTable(CATALOG, TABLE);
             if (logger.isDebugEnabled()) {
                 logger.debug("Delete Catalog: " + CATALOG);
-                connector.close(getClusterName());
+                sConnector.close(getClusterName());
             }
 
         }

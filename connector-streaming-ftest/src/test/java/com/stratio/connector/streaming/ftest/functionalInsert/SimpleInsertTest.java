@@ -15,12 +15,24 @@
  */
 package com.stratio.connector.streaming.ftest.functionalInsert;
 
+import java.util.LinkedList;
+import java.util.UUID;
+
 import org.junit.Test;
 
+import com.stratio.connector.commons.ftest.schema.TableMetadataBuilder;
+import com.stratio.connector.commons.ftest.workFlow.LogicalWorkFlowCreator;
 import com.stratio.connector.streaming.ftest.GenericStreamingTest;
+import com.stratio.connector.streaming.ftest.TestResultSet;
+import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
+import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
+import com.stratio.meta.common.data.ResultSet;
 import com.stratio.meta.common.exceptions.ExecutionException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
+import com.stratio.meta.common.logicalplan.LogicalWorkflow;
 import com.stratio.meta2.common.data.ClusterName;
+import com.stratio.meta2.common.metadata.ColumnType;
+import com.stratio.meta2.common.metadata.TableMetadata;
 
 /**
  * Created by jmgomez on 16/07/14.
@@ -32,18 +44,33 @@ public class SimpleInsertTest extends GenericStreamingTest {
         ClusterName clusterName = getClusterName();
         System.out.println("*********************************** INIT FUNCTIONAL TEST testInsertInt "
                         + clusterName.getName() + " ***********************************");
-        /*
-         * Object value = new Integer(25); insertRow(clusterName, value4, ColumnType.FLOAT, VALUE_1, true);
-         * 
-         * ResultSet resultIterator = createResultSetTyped(clusterName, ColumnType.FLOAT);
-         * assertEquals("It has only one result", 1, resultIterator.size()); for (Row recoveredRow : resultIterator) {
-         * 
-         * boolean typeCorrect = Float.class.getCanonicalName().equals(
-         * recoveredRow.getCell(COLUMN_4).getValue().getClass().getCanonicalName()) ||
-         * Double.class.getCanonicalName().equals( resultIterator.getColumnMetadata().get(3).getType().getDbClass()
-         * .getCanonicalName()); assertTrue("The type is correct ", typeCorrect); assertEquals("The value is correct ",
-         * new Double((float) value4), recoveredRow.getCell(COLUMN_4).getValue()); }
-         */
+
+        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
+        TableMetadata tableMetadata = tableMetadataBuilder.addColumn(INTEGER_COLUMN, ColumnType.INT).build();
+
+        LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, clusterName);
+        LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
+        LogicalWorkflow logicalWorkFlow = logicalWorkFlowCreator.addColumnName(INTEGER_COLUMN).addSelect(selectColumns)
+                        .getLogicalWorkflow();
+
+        TestResultSet resultSet = new TestResultSet();
+        StreamingRead reader = new StreamingRead(sConnector, clusterName, tableMetadata, logicalWorkFlow, resultSet);
+        String queryId = UUID.randomUUID().toString();
+        reader.setQueryId(queryId);
+        reader.start();
+        waitSeconds(5);
+
+        StreamingInserter streamingInserter = new StreamingInserter(sConnector, clusterName, tableMetadata);
+        streamingInserter.start();
+        waitSeconds(5);
+
+        streamingInserter.end();
+        waitSeconds(5);
+        reader.end();
+
+        ResultSet resSet = resultSet.getResultSet(queryId);
+
     }
 
 }
