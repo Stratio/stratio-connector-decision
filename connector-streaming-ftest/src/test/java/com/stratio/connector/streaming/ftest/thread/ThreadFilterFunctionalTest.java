@@ -18,8 +18,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.stratio.connector.commons.ftest.schema.TableMetadataBuilder;
 import com.stratio.connector.commons.ftest.workFlow.LogicalWorkFlowCreator;
 import com.stratio.connector.streaming.core.StreamingConnector;
+import com.stratio.connector.streaming.ftest.GenericStreamingTest;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
 import com.stratio.meta.common.connector.ConnectorClusterConfig;
@@ -28,6 +30,7 @@ import com.stratio.meta.common.data.Cell;
 import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.exceptions.ConnectionException;
 import com.stratio.meta.common.exceptions.ExecutionException;
+import com.stratio.meta.common.exceptions.InitializationException;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.meta.common.logicalplan.LogicalWorkflow;
 import com.stratio.meta.common.logicalplan.Select;
@@ -39,25 +42,15 @@ import com.stratio.meta2.common.data.TableName;
 import com.stratio.meta2.common.metadata.ColumnType;
 import com.stratio.meta2.common.metadata.TableMetadata;
 
-public class ThreadFilterFunctionalTest {
+public class ThreadFilterFunctionalTest extends GenericStreamingTest{
 
     private static final String TEXT = "Text";
     public static final int CORRECT_ELMENT_TO_FIND = 90; //Must be a time window
 
-    private static Random random = new Random(new Date().getTime());
-
     private static final String OTHER_TEXT = "OTHER...... ";
-    private static final int WAIT_TIME = 20000;
-    private static final String CATALOG_NAME = "catalog_name_"+ Math.abs(random.nextLong());
-    private static final String TABLE_NAME = "table_name";
-    String ZOOKEEPER_SERVER = "10.200.0.58";;// "192.168.0.2";
-    String KAFKA_SERVER = "10.200.0.58";// "192.168.0.2";
+    private static final int WAIT_TIME = 20;
 
-    String KAFKA_PORT = "9092";
-    String ZOOKEEPER_PORT = "2181";
-    public static String STRING_COLUMN = "string_column";
-    public static String INTEGER_COLUMN = "integer_column";
-    public static String BOOLEAN_COLUMN = "boolean_column";
+
 
     Set<Integer> returnSet = new HashSet<>();
 
@@ -70,33 +63,15 @@ public class ThreadFilterFunctionalTest {
     int number = 0;
 
     @Before
-    public void setUp() throws ConnectionException, UnsupportedException, ExecutionException {
+    public void setUp() throws ConnectionException, UnsupportedException, ExecutionException, InitializationException {
+         super.setUp();
+
         returnSet = new HashSet<>();
         sC = new StreamingConnector();
-
-        sC.init(null);
-
-        Map<String, String> optionsNode = new HashMap<>();
-
-        optionsNode.put("KafkaServer", KAFKA_SERVER);
-        optionsNode.put("KafkaPort", KAFKA_PORT);
-        optionsNode.put("zooKeeperServer", ZOOKEEPER_SERVER);
-        optionsNode.put("zooKeeperPort", ZOOKEEPER_PORT);
-
-        ConnectorClusterConfig config = new ConnectorClusterConfig(clusterName, optionsNode);
-        sC.connect(null, config);
-        TableName tableName = new TableName(CATALOG_NAME, TABLE_NAME);
-
-        ColumnName columnNameString = new ColumnName(tableName, STRING_COLUMN);
-        Map<ColumnName, com.stratio.meta2.common.metadata.ColumnMetadata> columns = new LinkedHashMap();
-        columns.put(columnNameString, new com.stratio.meta2.common.metadata.ColumnMetadata(columnNameString, new Object[] {}, ColumnType.VARCHAR));
-        ColumnName columnNameInteger = new ColumnName(tableName, INTEGER_COLUMN);
-        columns.put(columnNameInteger, new com.stratio.meta2.common.metadata.ColumnMetadata(columnNameInteger, new Object[] {}, ColumnType.INT));
-        ColumnName columnNameBoolean = new ColumnName(tableName, BOOLEAN_COLUMN);
-        columns.put(columnNameBoolean, new com.stratio.meta2.common.metadata.ColumnMetadata(columnNameBoolean, new Object[] {}, ColumnType.BOOLEAN));
-        tableMetadata = new TableMetadata(tableName, Collections.EMPTY_MAP, columns, Collections.EMPTY_MAP,
-                        clusterName, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
-
+        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
+        TableMetadata tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN,
+                ColumnType.VARCHAR).addColumn(INTEGER_COLUMN,
+                ColumnType.INT).addColumn(BOOLEAN_COLUMN,ColumnType.BOOLEAN).build();
         try {
             sC.getMetadataEngine().createTable(clusterName, tableMetadata);
 
@@ -106,11 +81,6 @@ public class ThreadFilterFunctionalTest {
 
     }
 
-    @After
-    public void tearDown() throws UnsupportedException, ExecutionException {
-        sC.getMetadataEngine().dropTable(clusterName,new TableName(CATALOG_NAME,TABLE_NAME));
-        sC.close(clusterName);
-    }
 
     @Test
     public void testEqualFilter() throws InterruptedException {
@@ -118,28 +88,12 @@ public class ThreadFilterFunctionalTest {
 
 
 
-        LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME,
-                clusterName);
-
-        LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN,STRING_COLUMN,ColumnType.TEXT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN,INTEGER_COLUMN,ColumnType.INT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN,BOOLEAN_COLUMN,ColumnType.BOOLEAN));
-
-
-
-        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName
-                (INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns).addEqualFilter(STRING_COLUMN,
-                TEXT,false,false)
-                        .getLogicalWorkflow();
-
-
-        StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, logicalWokflow,
+        StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, createEqualLogicalWorkFlow(),
                         new ResultHandler());
 
         stremingRead.start();
         System.out.println("TEST ********************** Quering......");
-        Thread.sleep(WAIT_TIME);
+        waitSeconds(WAIT_TIME);
 
         System.out.println("TEST ********************** Inserting ......");
         StreamingInserter stramingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
@@ -150,30 +104,41 @@ public class ThreadFilterFunctionalTest {
         oherStreamingInserter.changeOtuput(OTHER_TEXT);
         oherStreamingInserter.start();
 
-        Thread.sleep(WAIT_TIME);
-
-
-
-
+        waitSeconds(WAIT_TIME);
 
         stremingRead.end();
         System.out.println("TEST ********************** END Quering Test......");
-        Thread.sleep(WAIT_TIME);
+        waitSeconds(WAIT_TIME);
+
         System.out.println("TEST ********************** Change Test Quering......");
-        Thread.sleep(WAIT_TIME);
+        waitSeconds(WAIT_TIME);
 
         System.out.println("TEST ********************** END Insert......");
         oherStreamingInserter.end();
         stramingInserter.end();
-        Thread.sleep(WAIT_TIME);
+        waitSeconds(WAIT_TIME);
 
 
         assertTrue("The filter works",filterCorrect);
-        assertEquals("All correct elements have been found",CORRECT_ELMENT_TO_FIND,number);
+        assertEquals("All correct elements have been found", CORRECT_ELMENT_TO_FIND, number);
 
 
     }
 
+    private LogicalWorkflow createEqualLogicalWorkFlow() {
+        LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE,
+                clusterName);
+
+        LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN,STRING_COLUMN, ColumnType.TEXT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN,INTEGER_COLUMN,ColumnType.INT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN,BOOLEAN_COLUMN,ColumnType.BOOLEAN));
+
+        return logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName
+                (INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns).addEqualFilter(STRING_COLUMN,
+                TEXT,false,false)
+                        .getLogicalWorkflow();
+    }
 
     private class ResultHandler implements IResultHandler {
 

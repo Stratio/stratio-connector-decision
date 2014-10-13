@@ -13,10 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import  org.slf4j.Logger;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.commons.ftest.workFlow.LogicalWorkFlowCreator;
 import com.stratio.connector.streaming.core.StreamingConnector;
@@ -41,6 +43,10 @@ import com.stratio.meta2.common.metadata.TableMetadata;
 
 public class ThreadTimeWindowFunctionalTest {
 
+    /**
+     * The Log.
+     */
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
     public static final int ELEMENTS_WRITE = 500;
 
     private static Random random = new Random(new Date().getTime());
@@ -120,8 +126,8 @@ public class ThreadTimeWindowFunctionalTest {
     @Test
     public void testStopReadBeforeStopWrite() throws InterruptedException {
 
-        System.out.println("Thread Query ID " + Thread.currentThread().getId());
-        System.out.println("TEST ********************** Inserting ......");
+
+        logger.debug("********************** Inserting ......");
         StreamingInserter stramingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
         stramingInserter.start();
 
@@ -143,17 +149,17 @@ public class ThreadTimeWindowFunctionalTest {
                         new ResultHandler((Select) logicalWokflow.getLastStep()));
 
         stremingRead.start();
-        System.out.println("TEST ********************** Quering......");
+        logger.debug("********************** Quering......");
         Thread.sleep(WAIT_TIME);
 
         stremingRead.end();
-        System.out.println("TEST ********************** END Quering Test......");
+        logger.debug("********************** END Quering Test......");
         Thread.sleep(WAIT_TIME);
-        System.out.println("TEST ********************** Change Test Quering......");
+        logger.debug(" ********************** Change Test Quering......");
         stramingInserter.changeOtuput(OTHER_TEXT);
         Thread.sleep(WAIT_TIME);
 
-        System.out.println("TEST ********************** END Insert......");
+        logger.debug(" ********************** END Insert......");
         stramingInserter.end();
         Thread.sleep(WAIT_TIME);
 
@@ -187,18 +193,18 @@ public class ThreadTimeWindowFunctionalTest {
         StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, logicalWokflow, resultHandler);
 
         stremingRead.start();
-        System.out.println("TEST ********************** Quering......");
+        logger.debug("********************** Quering......");
         Thread.sleep(WAIT_TIME);
 
-        System.out.println("TEST ********************** END Insert......");
+        logger.debug("********************** END Insert......");
         stramingInserter.end();
         Thread.sleep(10000); // it must be at least bigger than the windows time
         resultHandler.mustNotReadMore();
-        System.out.println("TEST ********************** Wait for stoped read......");
+        logger.debug("TEST ********************** Wait for stoped read......");
         Thread.sleep(2 * WAIT_TIME);
 
         stremingRead.end();
-        System.out.println("TEST ********************** END Quering......");
+        logger.debug("TEST ********************** END Quering......");
         Thread.sleep(WAIT_TIME);
 
         assertTrue("all is correct", correct);
@@ -227,7 +233,7 @@ public class ThreadTimeWindowFunctionalTest {
                         new ResultHandler((Select) logicalWokflow.getLastStep()));
 
         stremingRead.start();
-        System.out.println("TEST ********************** Quering......");
+        logger.debug("********************** Quering......");
         Thread.sleep(20000);
 
         StreamingInserter stramingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
@@ -293,7 +299,7 @@ public class ThreadTimeWindowFunctionalTest {
 
         @Override
         public void processException(String queryId, ExecutionException exception) {
-            System.out.println(queryId + " " + exception.getMessage());
+            logger.error(queryId + " " + exception.getMessage());
             exception.printStackTrace();
         }
 
@@ -318,7 +324,6 @@ public class ThreadTimeWindowFunctionalTest {
 
         private void testElementNumber(Row row) {
             Integer cellValue = ((Double) row.getCell(INTEGER_COLUMN).getValue()).intValue();
-            System.out.println("-><>-" + cellValue);
             returnSet.add(cellValue); // To remove duplicates
             Cell cell = row.getCell(STRING_COLUMN);
             if (cell != null) {
@@ -333,7 +338,6 @@ public class ThreadTimeWindowFunctionalTest {
             String[] recoveredColumn = row.getCells().keySet().toArray(new String[0]);
             for (int i = 0; i < recoveredColumn.length; i++) {
                 if (!orderendColumnaName[i].getName().equals(recoveredColumn[i])) {
-                    System.out.println(orderendColumnaName[i] + "<-->" + recoveredColumn[i]);
                     correctOrder = false;
                 }
             }

@@ -80,7 +80,7 @@ public abstract class GenericStreamingTest {
 
         deleteTable(CATALOG, TABLE);
 
-        System.out.println(CATALOG + "/" + TABLE);
+        logger.debug(CATALOG + "/" + TABLE);
     }
 
     protected void deleteTable(String catalog, String table) throws UnsupportedException, ExecutionException {
@@ -89,7 +89,7 @@ public abstract class GenericStreamingTest {
                 sConnector.getMetadataEngine().dropTable(getClusterName(), new TableName(catalog, table));
             }
         } catch (Throwable t) {
-            logger.debug("Table does not exist");
+            logger.error("Table does not exist");
         }
     }
 

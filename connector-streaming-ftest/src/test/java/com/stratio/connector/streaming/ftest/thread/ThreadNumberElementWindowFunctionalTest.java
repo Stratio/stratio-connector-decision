@@ -17,6 +17,8 @@ import java.util.Set;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.commons.ftest.workFlow.LogicalWorkFlowCreator;
 import com.stratio.connector.streaming.core.StreamingConnector;
@@ -41,13 +43,17 @@ import com.stratio.meta2.common.metadata.TableMetadata;
 
 public class ThreadNumberElementWindowFunctionalTest {
 
+    /**
+     * The Log.
+     */
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
     public static final int ELEMENTS_WRITE = 500;
     private static final int WINDOW_ELEMENTS = 10;
 
     private static Random random = new Random(new Date().getTime());
 
     
-    private static final int WAIT_TIME = 20000;
+
     private static final String CATALOG_NAME = "catalog_name_"+ Math.abs(random.nextLong());
     private static final String TABLE_NAME = "table_name";
     String ZOOKEEPER_SERVER = "10.200.0.58";;// "192.168.0.2";
@@ -135,7 +141,7 @@ public class ThreadNumberElementWindowFunctionalTest {
                 new ResultHandler());
 
         stremingRead.start();
-        System.out.println("TEST ********************** Quering......");
+        logger.debug(" ********************** Quering......");
         Thread.sleep(20000);
 
 
