@@ -112,7 +112,7 @@ public class StreamingInserter extends Thread {
         return row;
     }
 
-    private static String TEXT = "Text ";
+    private String TEXT = "Text";
 
     public void changeOtuput(String stringOutput) {
         TEXT = stringOutput;

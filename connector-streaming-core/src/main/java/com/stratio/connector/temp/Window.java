@@ -5,7 +5,7 @@ package com.stratio.connector.temp;
  */
 public class Window {
 
-    public int numOfElement = 100;
+    public int numOfElement = 10;
 
     public long windowTime = 5000;
 }
