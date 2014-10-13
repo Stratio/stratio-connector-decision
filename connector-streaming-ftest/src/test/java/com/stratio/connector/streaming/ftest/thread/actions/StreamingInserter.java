@@ -68,7 +68,7 @@ public class StreamingInserter extends Thread {
     }
 
 
-	private static String TEXT = "Text ";
+private String TEXT = "Text";
 
 
     public void changeOtuput(String stringOutput) {

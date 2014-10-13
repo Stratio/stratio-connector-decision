@@ -39,14 +39,14 @@ import com.stratio.meta2.common.data.TableName;
 import com.stratio.meta2.common.metadata.ColumnType;
 import com.stratio.meta2.common.metadata.TableMetadata;
 
-public class ThreadNumberElementWindowFunctionalTest {
+public class ThreadFilterFunctionalTest {
 
-    public static final int ELEMENTS_WRITE = 500;
-    private static final int WINDOW_ELEMENTS = 10;
+    private static final String TEXT = "Text";
+    public static final int CORRECT_ELMENT_TO_FIND = 90; //Must be a time window
 
     private static Random random = new Random(new Date().getTime());
 
-    
+    private static final String OTHER_TEXT = "OTHER...... ";
     private static final int WAIT_TIME = 20000;
     private static final String CATALOG_NAME = "catalog_name_"+ Math.abs(random.nextLong());
     private static final String TABLE_NAME = "table_name";
@@ -58,7 +58,7 @@ public class ThreadNumberElementWindowFunctionalTest {
     public static String STRING_COLUMN = "string_column";
     public static String INTEGER_COLUMN = "integer_column";
     public static String BOOLEAN_COLUMN = "boolean_column";
-    boolean correctOrder = true;
+
     Set<Integer> returnSet = new HashSet<>();
 
     StreamingConnector sC;
@@ -66,14 +66,12 @@ public class ThreadNumberElementWindowFunctionalTest {
 
     ClusterName clusterName = new ClusterName("CLUSTERNAME");
 
-    Integer  windowNumber = 0 ;
-    Boolean correctNumberOfElement = true;
-
+    Boolean filterCorrect = true;
+    int number = 0;
 
     @Before
     public void setUp() throws ConnectionException, UnsupportedException, ExecutionException {
         returnSet = new HashSet<>();
-        windowNumber = 0;
         sC = new StreamingConnector();
 
         sC.init(null);
@@ -114,10 +112,11 @@ public class ThreadNumberElementWindowFunctionalTest {
         sC.close(clusterName);
     }
 
-
-
     @Test
-    public void tesElmentWindow() throws InterruptedException {
+    public void testEqualFilter() throws InterruptedException {
+
+
+
 
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG_NAME, TABLE_NAME,
                 clusterName);
@@ -126,30 +125,51 @@ public class ThreadNumberElementWindowFunctionalTest {
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN,STRING_COLUMN,ColumnType.TEXT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN,INTEGER_COLUMN,ColumnType.INT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN,BOOLEAN_COLUMN,ColumnType.BOOLEAN));
-        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator
-                .addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect
-                        (selectColumns)
-                .getLogicalWorkflow();
+
+
+
+        LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName
+                (INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns).addEqualFilter(STRING_COLUMN,
+                TEXT,false,false)
+                        .getLogicalWorkflow();
+
 
         StreamingRead stremingRead = new StreamingRead(sC, clusterName, tableMetadata, logicalWokflow,
-                new ResultHandler());
+                        new ResultHandler());
 
         stremingRead.start();
         System.out.println("TEST ********************** Quering......");
-        Thread.sleep(20000);
+        Thread.sleep(WAIT_TIME);
 
-
+        System.out.println("TEST ********************** Inserting ......");
         StreamingInserter stramingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
-        stramingInserter.numOfElement(ELEMENTS_WRITE+8).elementPerSecond(500);
+        stramingInserter.numOfElement(CORRECT_ELMENT_TO_FIND);
         stramingInserter.start();
-        Thread.sleep(30000);
+
+        StreamingInserter oherStreamingInserter = new StreamingInserter(sC, clusterName, tableMetadata);
+        oherStreamingInserter.changeOtuput(OTHER_TEXT);
+        oherStreamingInserter.start();
+
+        Thread.sleep(WAIT_TIME);
+
+
+
+
+
         stremingRead.end();
+        System.out.println("TEST ********************** END Quering Test......");
+        Thread.sleep(WAIT_TIME);
+        System.out.println("TEST ********************** Change Test Quering......");
+        Thread.sleep(WAIT_TIME);
+
+        System.out.println("TEST ********************** END Insert......");
+        oherStreamingInserter.end();
         stramingInserter.end();
-        Thread.sleep(10000);
-        assertEquals("the number of windows is correct", ELEMENTS_WRITE/WINDOW_ELEMENTS, (Object)windowNumber);
-        assertTrue("the elements in the windows are correct",correctNumberOfElement);
+        Thread.sleep(WAIT_TIME);
 
 
+        assertTrue("The filter works",filterCorrect);
+        assertEquals("All correct elements have been found",CORRECT_ELMENT_TO_FIND,number);
 
 
     }
@@ -171,9 +191,15 @@ public class ThreadNumberElementWindowFunctionalTest {
 
         @Override
         public void processResult(QueryResult result) {
-            windowNumber++;
-            if (result.getResultSet().size() != WINDOW_ELEMENTS){
-                correctNumberOfElement = false;
+
+
+            for (Row row : result.getResultSet()) {
+                System.out.println("********************>>"+row.getCell(STRING_COLUMN).getValue());
+                if (!TEXT.equals(row.getCell(STRING_COLUMN).getValue())){
+                    filterCorrect = false;
+                }else{
+                    number++;
+                }
 
             }
 
