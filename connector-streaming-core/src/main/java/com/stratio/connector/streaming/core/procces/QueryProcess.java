@@ -85,7 +85,7 @@ public class QueryProcess implements ConnectorProcess {
 
     @Override
     public Project getProject() {
-        // TODO Auto-generated method stub
+
         return project;
     }
 

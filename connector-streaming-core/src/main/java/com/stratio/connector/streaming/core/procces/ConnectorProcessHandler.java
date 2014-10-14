@@ -21,6 +21,9 @@ public class ConnectorProcessHandler {
     private HashMap<String, ThreadProcess> processMap = new HashMap<>();
 
 
+    public boolean existProcess(String queryId){
+        return processMap.containsKey(queryId);
+    }
 
     public void strartProcess(String queryId, ConnectorProcess connectorProcess) throws ConnectionProcessException {
     if (processMap.containsKey(queryId)) {

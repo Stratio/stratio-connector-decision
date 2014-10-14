@@ -47,9 +47,9 @@ import com.stratio.meta2.common.data.TableName;
  */
 public abstract class GenericStreamingTest {
 
-    protected String SERVER_KAFKA =  "192.168.0.2";//"10.200.0.58";
+    protected String SERVER_KAFKA = "10.200.0.58";// "192.168.0.2";
     protected String PORT_KAFKA = "9092";
-    protected String SERVER_ZOOKEEPER =  "192.168.0.2";//"10.200.0.58";
+    protected String SERVER_ZOOKEEPER =  "10.200.0.58"; //"192.168.0.2";
     protected String PORT_ZOOKEEPER = "2181";
 
     public static String STRING_COLUMN = "string_column";
