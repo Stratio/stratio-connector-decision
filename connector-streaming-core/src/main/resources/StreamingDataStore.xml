@@ -19,22 +19,25 @@
     <Name>ElasticSearch</Name>
     <Version>1.0.0</Version>
     <RequiredProperties>
-        <cluster>
-            <name>ElasticSearchCluster</name>
-            <hosts>
-                <host>127.0.0.1</host>
-                <port>9042</port>
-            </hosts>
-        </cluster>
+        <Property>
+            <Name>KafkaServer</Name>
+            <Description>The kafka server port</Description>
+        </Property>
+        <Property>
+            <Name>KafkaPort</Name>
+            <Description>The zookeeper server port</Description>
+        </Property>
+        <Property>
+            <Name>zooKeeperServer</Name>
+            <Description>The zookeeper server port</Description>
+        </Property>
+        <Property>
+            <Name>zooKeeperPort</Name>
+            <Description>The zookeeper server ip</Description>
+        </Property>
     </RequiredProperties>
-    <OptionalProperties>
-        <Property>
-            <Name></Name>
-        </Property>
-        <Property>
-            <Name></Name>
-        </Property>
-    </OptionalProperties>
+    <OptionalProperties/>
+    <Behaviors/>
 </DataStore>
 
 

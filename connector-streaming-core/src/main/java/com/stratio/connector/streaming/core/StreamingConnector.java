@@ -25,10 +25,12 @@ import com.stratio.connector.streaming.core.engine.StreamingMetadataEngine;
 import com.stratio.connector.streaming.core.engine.StreamingQueryEngine;
 import com.stratio.connector.streaming.core.engine.StreamingStorageEngine;
 import com.stratio.connector.streaming.core.procces.ConnectorProcessHandler;
+import com.stratio.connectors.ConnectorApp;
 import com.stratio.meta.common.connector.IConfiguration;
 import com.stratio.meta.common.connector.IMetadataEngine;
 import com.stratio.meta.common.connector.IQueryEngine;
 import com.stratio.meta.common.connector.IStorageEngine;
+import com.stratio.meta.common.exceptions.ExecutionException;
 
 /**
  * This class implements the connector for Streaming.
@@ -107,6 +109,24 @@ public class StreamingConnector extends CommonsConnector {
         return new StreamingMetadataEngine(connectionHandler);
     }
 
+    public static void main(String[] args) {
+        StreamingConnector cassandraConnector = new StreamingConnector();
+        ConnectorApp connectorApp = new ConnectorApp();
+        connectorApp.startup(cassandraConnector);
+        cassandraConnector.attachShutDownHook();
+    }
+    public void attachShutDownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                try {
+                    shutdown();
+                } catch (ExecutionException e) {
+                    logger.error("Fail ShutDown");
+                }
+            }
+        });
+    }
 
 
 }

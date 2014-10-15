@@ -51,6 +51,14 @@
 
 
         <dependency>
+            <groupId>com.stratio.meta</groupId>
+            <artifactId>meta-connector</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+        </dependency>
+
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>

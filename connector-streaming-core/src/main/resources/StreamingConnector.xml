@@ -21,20 +21,7 @@
         <Datastore>Streaming</Datastore>
      </DataStoresName>
     <Version>0.1.0</Version>
-    <RequiredProperties>
-        <Property>
-            <Name>KafkaServer</Name>
-        </Property>
-        <Property>
-            <Name>KafkaPort</Name>
-        </Property>
-        <Property>
-            <Name>zooKeeperServer</Name>
-        </Property>
-        <Property>
-            <Name>zooKeeperPort</Name>
-        </Property>
-    </RequiredProperties>
+    <RequiredProperties/>
     <OptionalProperties/>
     <SupportedOperations>
         <operation>CREATE_TABLE</operation>
