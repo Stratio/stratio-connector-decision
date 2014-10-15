@@ -20,11 +20,11 @@
     <parent>
         <groupId>com.stratio.connector</groupId>
         <artifactId>stratio-connector-streaming</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.4.0</version>
     </parent>
     <artifactId>connector-streaming-core</artifactId>
     <packaging>jar</packaging>
-    <description>The Srtratio Streaming's connector core</description>
+    <description>The Stratio Streaming's connector core</description>
     <dependencies>
 
         <dependency>
@@ -32,16 +32,11 @@
             <artifactId>streaming-api</artifactId>
             <version>0.4.0</version>
         </dependency>
-      
-        <dependency>
-            <artifactId>meta-common</artifactId>
-            <groupId>com.stratio.meta</groupId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
+
         <dependency>
             <groupId>com.stratio.connector</groupId>
             <artifactId>connector-commons-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -79,4 +74,22 @@
         </dependency>
 
     </dependencies>
+
+
+
+<build>
+<plugins>
+    <plugin>
+        <artifactId>meta-connector-maven-plugin</artifactId>
+        <groupId>com.stratio.meta</groupId>
+        <version>0.1.0-SNAPSHOT</version>
+        <configuration>
+            <mainClass>com.stratio.connector.streaming.core.StreamingConnector</mainClass>
+            <jmxPort>7188</jmxPort>
+        </configuration>
+    </plugin>
+
+</plugins>
+</build>
+
 </project>

@@ -21,10 +21,6 @@ public class ConnectorProcessHandler {
     private HashMap<String, ThreadProcess> processMap = new HashMap<>();
 
 
-    public boolean existProcess(String queryId){
-        return processMap.containsKey(queryId);
-    }
-
     public void strartProcess(String queryId, ConnectorProcess connectorProcess) throws ConnectionProcessException {
     if (processMap.containsKey(queryId)) {
         String msg = "The processMap with id " + queryId + " already exists ";
@@ -46,9 +42,12 @@ public class ConnectorProcessHandler {
     }
 
 	public void stopProcess(String queryId) throws ConnectionProcessException, ExecutionException {
-        getProcess(queryId).endQuery();
-        processMap.get(queryId).thread.interrupt();
-		processMap.remove(queryId);
+        ThreadProcess threadProcess = processMap.get(queryId);
+
+            threadProcess.process.endQuery();
+            threadProcess.thread.interrupt();
+            processMap.remove(queryId);
+
 
 		
 	}

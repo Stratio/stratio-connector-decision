@@ -60,6 +60,7 @@ public class ThreadFilterIntegerFunctionalTest extends GenericStreamingTest{
          incorrectValueCount = 0;
 
 
+
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN,
                 ColumnType.VARCHAR).addColumn(INTEGER_COLUMN,
@@ -303,7 +304,7 @@ public class ThreadFilterIntegerFunctionalTest extends GenericStreamingTest{
                 (INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addColumnName(INTEGER_CHANGEABLE_COLUMN).addSelect
                 (selectColumns).addGreaterEqualFilter(
                 INTEGER_CHANGEABLE_COLUMN,
-                OTHER_INT_VALUE, false).addWindow(WindowType.TEMPORAL, 5)
+                OTHER_INT_VALUE, false,false).addWindow(WindowType.TEMPORAL, 5)
                 .getLogicalWorkflow();
     }
 

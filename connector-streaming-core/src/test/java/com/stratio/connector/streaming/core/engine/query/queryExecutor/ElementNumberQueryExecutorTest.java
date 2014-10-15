@@ -36,7 +36,8 @@ import com.stratio.streaming.commons.messages.StratioStreamingMessage;
 * @author <Authors name> 
 * @since <pre>oct 9, 2014</pre> 
 * @version 1.0 
-*/ 
+*/
+
 public class ElementNumberQueryExecutorTest {
 
     private static final String CATALOG_NAME = "CATALOG_NAME";
@@ -64,7 +65,8 @@ public void after() throws Exception {
 * 
 * Method: processMessage(StratioStreamingMessage theMessage, IResultHandler resultHandler) 
 * 
-*/ 
+*/
+
 @Test
 public void testProcessMessage() throws Exception {
     ConnectorQueryData queryData = createQueryData();
@@ -96,6 +98,8 @@ public void testProcessMessage() throws Exception {
     verify( stratioStreamingAPI.addQuery(CLUSTER_NAME+"_"+TABLE_NAME+"_"+QUERY_ID,QUERY), times(1));
 
     IResultHandler resultHandler = mock(IResultHandler.class);
+
+
     elementNumberQueryExecutor.executeQuery(QUERY, connection);
 }
 

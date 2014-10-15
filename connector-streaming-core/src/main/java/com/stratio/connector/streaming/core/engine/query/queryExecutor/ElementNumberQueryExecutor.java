@@ -8,7 +8,6 @@ import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.exceptions.UnsupportedException;
-import com.stratio.streaming.commons.messages.StratioStreamingMessage;
 
 /**
  * Created by jmgomez on 7/10/14.
@@ -38,9 +37,9 @@ public class ElementNumberQueryExecutor extends ConnectorQueryExecutor {
     }
 
     @Override
-    protected void processMessage(StratioStreamingMessage theMessage) {
+    protected void processMessage(Row row) {
 
-        Row row = getSortRow(theMessage.getColumns());
+
 
         boolean isWindowReady = false;
         ArrayList<Row> copyNotSyncrhonizedList = null;

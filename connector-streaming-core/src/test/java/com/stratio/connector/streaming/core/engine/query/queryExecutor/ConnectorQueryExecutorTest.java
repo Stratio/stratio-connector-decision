@@ -28,6 +28,7 @@ import org.junit.Test;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.connector.Operations;
+import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.logicalplan.Project;
 import com.stratio.meta.common.logicalplan.Select;
 import com.stratio.meta.common.metadata.structures.ColumnMetadata;
@@ -36,7 +37,6 @@ import com.stratio.meta2.common.data.ColumnName;
 import com.stratio.meta2.common.data.QualifiedNames;
 import com.stratio.meta2.common.data.TableName;
 import com.stratio.meta2.common.metadata.ColumnType;
-import com.stratio.streaming.commons.messages.StratioStreamingMessage;
 
 /**
  * @author david
@@ -58,7 +58,7 @@ public class ConnectorQueryExecutorTest {
 
         ConnectorQueryExecutor queryExecutor = new ConnectorQueryExecutor(createQueryData(), mock(IResultHandler.class)) {
             @Override
-            protected void processMessage(StratioStreamingMessage theMessage) {
+            protected void processMessage(Row row) {
             }
         };
 

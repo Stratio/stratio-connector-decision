@@ -16,7 +16,6 @@ import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
 import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
 import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
-import com.stratio.streaming.commons.messages.StratioStreamingMessage;
 
 /**
  * Created by jmgomez on 7/10/14.
@@ -54,9 +53,8 @@ public class TimeWindowQueryExecutor extends ConnectorQueryExecutor {
     }
 
     @Override
-    protected void processMessage(StratioStreamingMessage theMessage) {
+    protected void processMessage(Row row) {
 
-        Row row = getSortRow(theMessage.getColumns());
 
         synchronized (list) {
             list.add(row);

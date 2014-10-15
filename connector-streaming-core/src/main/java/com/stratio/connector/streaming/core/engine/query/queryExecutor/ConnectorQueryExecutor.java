@@ -61,23 +61,36 @@ public abstract class ConnectorQueryExecutor {
                     InterruptedException, UnsupportedException {
 
         IStratioStreamingAPI stratioStreamingAPI = connection.getNativeConnection();
-        String streamName = StreamUtil.createStreamName(queryData.getProjection());
-        String streamOutgoingName = StreamUtil.createOutgoingName(streamName, queryData.getQueryId());
-        logger.info("add query...");
-        logger.debug(query);
-        queryId = stratioStreamingAPI.addQuery(streamName, query);
+        StreamingQuery streamingQuery = new StreamingQuery(queryData);
+        String streamOutgoingName =streamingQuery.createQuery(query, stratioStreamingAPI);
 
-        logger.info("Listening stream..." + streamOutgoingName);
-        KafkaStream<String, StratioStreamingMessage> streams = stratioStreamingAPI.listenStream(streamOutgoingName);
+       KafkaStream<String, StratioStreamingMessage> stream =  streamingQuery.listenQurey(stratioStreamingAPI,
+               streamOutgoingName);
 
-        StreamUtil.insertRandomData(stratioStreamingAPI, streamOutgoingName, queryData.getSelect());
+
+        readMessages(stream);
+
+    }
+
+    private void readMessages(KafkaStream<String, StratioStreamingMessage> streams) {
         logger.info("Waiting a message...");
         for (MessageAndMetadata stream : streams) {
             StratioStreamingMessage theMessage = (StratioStreamingMessage) stream.message();
-            processMessage(theMessage);
+            processMessage(getSortRow(theMessage.getColumns()));
         }
-
     }
+
+    private KafkaStream<String, StratioStreamingMessage> listenOutputStream(IStratioStreamingAPI stratioStreamingAPI,
+            String streamOutgoingName) throws  StratioEngineOperationException, StratioEngineStatusException, StratioAPISecurityException,
+            UnsupportedException{
+        logger.info("Listening stream..." + streamOutgoingName);
+        KafkaStream<String, StratioStreamingMessage> messageAndMetadatas = stratioStreamingAPI
+                .listenStream(streamOutgoingName);
+        StreamUtil.insertRandomData(stratioStreamingAPI, streamOutgoingName, queryData.getSelect());
+        return messageAndMetadatas;
+    }
+
+
 
     public void endQuery(String streamName, Connection<IStratioStreamingAPI> connection)
                     throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
@@ -89,7 +102,7 @@ public abstract class ConnectorQueryExecutor {
 
     }
 
-    protected abstract void processMessage(StratioStreamingMessage theMessage);
+    protected abstract void processMessage(Row row);
 
     /**
      * @throws UnsupportedException
@@ -159,37 +172,10 @@ public abstract class ConnectorQueryExecutor {
         for (ColumnNameTypeValue column : columns) {
             row.addCell(column.getColumn(), new Cell(column.getValue()));
         }
-
-        // if (rowOrder != null)
-        // setRowOrder(columns);
-        //
-        // for (Integer rowElement : rowOrder) {
-        // ColumnNameTypeValue column = columns.get(rowElement);
-        //
-        // }
-
         return row;
 
     }
 
-    /**
-     * @param columns
-     * 
-     */
-    private void setRowOrder(List<ColumnNameTypeValue> columns) {
-
-        Select select = queryData.getSelect();
-        Collection<String> aliases = select.getColumnMap().values();
-        List<String> columnsReceived = new ArrayList<String>();
-
-        for (ColumnNameTypeValue column : columns) {
-            columnsReceived.add(column.getColumn());
-        }
-
-        for (String alias : aliases) {
-            rowOrder.add(columnsReceived.indexOf(alias));
-        }
-    }
 
 
 }

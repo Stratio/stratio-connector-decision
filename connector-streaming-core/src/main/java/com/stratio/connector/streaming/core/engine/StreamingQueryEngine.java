@@ -58,14 +58,16 @@ public class StreamingQueryEngine implements IQueryEngine {
         } catch (ConnectionProcessException | HandlerConnectionException e) {
 
             resultHandler.processException(queryId,new ExecutionException("Fail process creation",e));
+        }finally {
+//TODO ensure to end all threads.
 
-            //TODO if the query fail must be remove from streaming..., finally
         }
     }
 
 
 
-    @Override public void stop(String queryId) throws UnsupportedException, ExecutionException {
+
+    @Override public synchronized void stop(String queryId) throws UnsupportedException, ExecutionException {
         try {
             ConnectorProcess process = connectorProcessHandler.getProcess(queryId);
             connectionHandler.endWork(process.getProject().getClusterName().getName());
