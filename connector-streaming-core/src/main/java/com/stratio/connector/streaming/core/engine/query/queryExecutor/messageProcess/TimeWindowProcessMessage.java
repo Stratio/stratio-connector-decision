@@ -58,7 +58,7 @@ public class TimeWindowProcessMessage implements ProcessMessage {
 
         this.resultsetCreator = resultsetCreator;
         timer = new Timer("[Timer_" + queryData.getQueryId() + "]", true);
-        timer.scheduleAtFixedRate(timerTask, 0, queryData.getWindow().getDurationInMilliseconds());
+        timer.scheduleAtFixedRate(timerTask, queryData.getWindow().getDurationInMilliseconds(), queryData.getWindow().getDurationInMilliseconds());
 
     }
 
@@ -70,6 +70,7 @@ public class TimeWindowProcessMessage implements ProcessMessage {
         synchronized (list) {
             list.add(row);
         }
+
     }
 
     @Override public void end() {

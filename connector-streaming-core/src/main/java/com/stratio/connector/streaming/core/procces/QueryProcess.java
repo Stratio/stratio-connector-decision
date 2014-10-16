@@ -26,7 +26,7 @@ import com.stratio.connector.streaming.core.engine.query.ConnectorQueryBuilder;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryParser;
 import com.stratio.connector.streaming.core.engine.query.queryExecutor.ConnectorQueryExecutor;
-import com.stratio.connector.streaming.core.engine.query.queryExecutor.QueryExecutorFactory;
+
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.exceptions.ExecutionException;

@@ -29,18 +29,10 @@ import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess.ProccesMessageFactory;
 import com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess.ProcessMessage;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
-import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.data.Cell;
-import com.stratio.meta.common.data.ResultSet;
 import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.exceptions.UnsupportedException;
-import com.stratio.meta.common.logicalplan.Project;
-import com.stratio.meta.common.logicalplan.Select;
-import com.stratio.meta.common.metadata.structures.ColumnMetadata;
-import com.stratio.meta.common.result.QueryResult;
-import com.stratio.meta2.common.data.ColumnName;
-import com.stratio.meta2.common.metadata.ColumnType;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
 import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
@@ -64,16 +56,17 @@ public class ConnectorQueryExecutor {
     protected String queryId;
     protected ConnectorQueryData queryData;
     IResultHandler resultHandler;
-    List<ColumnMetadata> columnsMetadata;
+
     List<Integer> rowOrder;
     ProcessMessage proccesMesage;
+    StreamingQuery streamingQuery;
 
     public ConnectorQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler)
             throws UnsupportedException {
         this.queryData = queryData;
         this.resultHandler = resultHandler;
         rowOrder = new ArrayList<Integer>();
-        //setColumnMetadata();
+
 
     }
 
@@ -83,20 +76,25 @@ public class ConnectorQueryExecutor {
 
 
         IStratioStreamingAPI stratioStreamingAPI = connection.getNativeConnection();
+        ResultsetCreator resultSetCreator = new ResultsetCreator(queryData);
+        resultSetCreator.setResultHandler(resultHandler);
+        proccesMesage = ProccesMessageFactory.getProccesMessage(queryData, resultSetCreator);
 
-        StreamingQuery streamingQuery = new StreamingQuery(queryData);
+        streamingQuery = new StreamingQuery(queryData, proccesMesage);
         String streamOutgoingName = streamingQuery.createQuery(query, stratioStreamingAPI);
 
         KafkaStream<String, StratioStreamingMessage> stream = streamingQuery.listenQuery(stratioStreamingAPI,
                 streamOutgoingName);
 
-        readMessages(stream);
+        //readMessages(stream);
+
+        streamingQuery.readMessages(stream);
 
     }
 
     private void readMessages(KafkaStream<String, StratioStreamingMessage> streams) throws UnsupportedException {
         logger.info("Waiting a message...");
-        ResultsetCreator resultsetCreator = new ResultsetCreator(queryData,resultHandler);
+        ResultsetCreator resultsetCreator = new ResultsetCreator(queryData);
         proccesMesage = ProccesMessageFactory.getProccesMessage(queryData, resultsetCreator);
         for (MessageAndMetadata stream : streams) {
             StratioStreamingMessage theMessage = (StratioStreamingMessage) stream.message();
@@ -110,31 +108,11 @@ public class ConnectorQueryExecutor {
 
     public void endQuery(String streamName, Connection<IStratioStreamingAPI> connection)
             throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
-        IStratioStreamingAPI streamConection = connection.getNativeConnection();
-        streamConection.stopListenStream(streamName);
-        if (queryId != null) {
-            streamConection.removeQuery(streamName, queryId);
-        }
-        if (proccesMesage!=null){
-            proccesMesage.end();
-        }
+        streamingQuery.endQuery(streamName,connection);
 
     }
 
-    public  void processMessage(Row row){}
 
-
-
-
-
-    protected void sendResultSet(List<Row> copyNotSyncrhonizedList) {
-        ResultSet resultSet = new ResultSet();
-        resultSet.setColumnMetadata(this.columnsMetadata);
-        resultSet.setRows(copyNotSyncrhonizedList);
-        QueryResult result = QueryResult.createQueryResult(resultSet);
-        result.setQueryId(queryData.getQueryId());
-        resultHandler.processResult(result);
-    }
 
     protected Row getSortRow(List<ColumnNameTypeValue> columns) {
 

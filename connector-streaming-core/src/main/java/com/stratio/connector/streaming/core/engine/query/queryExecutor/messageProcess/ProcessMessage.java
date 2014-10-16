@@ -18,6 +18,7 @@
 
 package com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess;
 
+
 import com.stratio.meta.common.data.Row;
 
 /**
@@ -28,4 +29,6 @@ public interface ProcessMessage {
     public void processMessage(Row row);
 
     public void end();
+
+
 }

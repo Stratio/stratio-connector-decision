@@ -20,7 +20,6 @@ import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.connector.Operations;
 import com.stratio.meta.common.data.Cell;
-import com.stratio.meta.common.data.ResultSet;
 import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.logicalplan.Project;
 import com.stratio.meta.common.logicalplan.Select;
@@ -68,7 +67,7 @@ public void before() throws Exception {
 
 
 
-    resultsetCreator = new ResultsetCreator(createQueryData(),iResultHandler);
+    resultsetCreator = new ResultsetCreator(createQueryData());
     List<ColumnMetadata> columnMetadata = (List<ColumnMetadata>) Whitebox.getInternalState(resultsetCreator,"columnsMetadata");
 
     valiateMetadata(columnMetadata);

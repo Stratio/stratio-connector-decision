@@ -20,7 +20,6 @@ package com.stratio.connector.streaming.core.engine.query.queryExecutor.timer;
 
 import java.util.TimerTask;
 
-import com.stratio.connector.streaming.core.engine.query.queryExecutor.TimeWindowQueryExecutor;
 import com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess.TimeWindowProcessMessage;
 
 /**

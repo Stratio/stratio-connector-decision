@@ -41,14 +41,17 @@ public class ResultsetCreator {
 
     private List<ColumnMetadata> columnsMetadata;
     private ConnectorQueryData queryData;
-    IResultHandler resultHandler;
-    QueryResult queryResult;
+    private IResultHandler resultHandler;
+    private QueryResult queryResult;
 
 
-    public ResultsetCreator(ConnectorQueryData queryData,IResultHandler resultHandler) throws UnsupportedException {
+    public ResultsetCreator(ConnectorQueryData queryData) throws UnsupportedException {
         this.queryData = queryData;
-        this.resultHandler = resultHandler;
         createColumnMetadata();
+    }
+
+    public void setResultHandler(IResultHandler resultHandler) {
+        this.resultHandler = resultHandler;
     }
 
 
@@ -119,7 +122,6 @@ public class ResultsetCreator {
         }
         return colType;
     }
-
 
 
 }

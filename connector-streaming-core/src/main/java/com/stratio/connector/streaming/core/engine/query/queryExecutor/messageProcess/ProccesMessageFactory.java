@@ -19,11 +19,7 @@
 package com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
-import com.stratio.connector.streaming.core.engine.query.queryExecutor.ConnectorQueryExecutor;
-import com.stratio.connector.streaming.core.engine.query.queryExecutor.ElementNumberQueryExecutor;
-import com.stratio.connector.streaming.core.engine.query.queryExecutor.TimeWindowQueryExecutor;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
-import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 
 /**

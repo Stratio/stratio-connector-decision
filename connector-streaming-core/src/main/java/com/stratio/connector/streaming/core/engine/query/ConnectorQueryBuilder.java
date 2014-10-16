@@ -52,6 +52,7 @@ public class ConnectorQueryBuilder {
     private String streamName;
     private String outgoing;
 
+
     public ConnectorQueryBuilder(ConnectorQueryData queryData) {
         this.queryData = queryData;
 
@@ -78,28 +79,21 @@ public class ConnectorQueryBuilder {
         String siddhiOperator;
         switch (operator) {
 
-        case BETWEEN:
-            throw new UnsupportedException("Not yet supported");
-        case DISTINCT:
-            siddhiOperator = "!=";
-            break;
-        case EQ:
-            siddhiOperator = "==";
-            break;
-        case GET:
-        case GT:
-        case LET:
-        case LT:
-            siddhiOperator = operator.toString();
-            break;
-
-        default:
+        case DISTINCT: siddhiOperator = "!=";  break;
+        case EQ: siddhiOperator = "=="; break;
+        case GET:  siddhiOperator =  ">=";break;
+        case GT:  siddhiOperator = ">";break;
+        case LET:   siddhiOperator = "<="; break;
+        case LT:  siddhiOperator = "<"; break;
+       default:
             throw new UnsupportedException("Operator " + operator.toString() + "is not supported");
 
         }
 
         return siddhiOperator;
     }
+
+
 
     public String createQuery() throws ExecutionException, UnsupportedException {
 
