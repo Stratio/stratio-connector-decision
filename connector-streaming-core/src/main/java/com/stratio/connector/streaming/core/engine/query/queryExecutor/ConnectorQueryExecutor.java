@@ -1,17 +1,34 @@
+/*
+ * Licensed to STRATIO (C) under one or more contributor license agreements.
+ *  See the NOTICE file distributed with this work for additional information
+ *  regarding copyright ownership. The STRATIO (C) licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License. You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied. See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
 package com.stratio.connector.streaming.core.engine.query.queryExecutor;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
-import kafka.consumer.KafkaStream;
-import kafka.message.MessageAndMetadata;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
+import com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess.ProccesMessageFactory;
+import com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess.ProcessMessage;
+import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.data.Cell;
@@ -31,10 +48,13 @@ import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
 import com.stratio.streaming.commons.messages.ColumnNameTypeValue;
 import com.stratio.streaming.commons.messages.StratioStreamingMessage;
 
+import kafka.consumer.KafkaStream;
+import kafka.message.MessageAndMetadata;
+
 /**
  * Created by jmgomez on 30/09/14.
  */
-public abstract class ConnectorQueryExecutor {
+public class ConnectorQueryExecutor {
 
     /**
      * The Log.
@@ -46,116 +66,66 @@ public abstract class ConnectorQueryExecutor {
     IResultHandler resultHandler;
     List<ColumnMetadata> columnsMetadata;
     List<Integer> rowOrder;
+    ProcessMessage proccesMesage;
 
     public ConnectorQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler)
-                    throws UnsupportedException {
+            throws UnsupportedException {
         this.queryData = queryData;
         this.resultHandler = resultHandler;
         rowOrder = new ArrayList<Integer>();
-        setColumnMetadata();
+        //setColumnMetadata();
 
     }
 
     public void executeQuery(String query, Connection<IStratioStreamingAPI> connection)
-                    throws StratioEngineOperationException, StratioAPISecurityException, StratioEngineStatusException,
-                    InterruptedException, UnsupportedException {
+            throws StratioEngineOperationException, StratioAPISecurityException, StratioEngineStatusException,
+            InterruptedException, UnsupportedException {
+
 
         IStratioStreamingAPI stratioStreamingAPI = connection.getNativeConnection();
+
         StreamingQuery streamingQuery = new StreamingQuery(queryData);
-        String streamOutgoingName =streamingQuery.createQuery(query, stratioStreamingAPI);
+        String streamOutgoingName = streamingQuery.createQuery(query, stratioStreamingAPI);
 
-       KafkaStream<String, StratioStreamingMessage> stream =  streamingQuery.listenQurey(stratioStreamingAPI,
-               streamOutgoingName);
-
+        KafkaStream<String, StratioStreamingMessage> stream = streamingQuery.listenQuery(stratioStreamingAPI,
+                streamOutgoingName);
 
         readMessages(stream);
 
     }
 
-    private void readMessages(KafkaStream<String, StratioStreamingMessage> streams) {
+    private void readMessages(KafkaStream<String, StratioStreamingMessage> streams) throws UnsupportedException {
         logger.info("Waiting a message...");
+        ResultsetCreator resultsetCreator = new ResultsetCreator(queryData,resultHandler);
+        proccesMesage = ProccesMessageFactory.getProccesMessage(queryData, resultsetCreator);
         for (MessageAndMetadata stream : streams) {
             StratioStreamingMessage theMessage = (StratioStreamingMessage) stream.message();
-            processMessage(getSortRow(theMessage.getColumns()));
-        }
-    }
 
-    private KafkaStream<String, StratioStreamingMessage> listenOutputStream(IStratioStreamingAPI stratioStreamingAPI,
-            String streamOutgoingName) throws  StratioEngineOperationException, StratioEngineStatusException, StratioAPISecurityException,
-            UnsupportedException{
-        logger.info("Listening stream..." + streamOutgoingName);
-        KafkaStream<String, StratioStreamingMessage> messageAndMetadatas = stratioStreamingAPI
-                .listenStream(streamOutgoingName);
-        StreamUtil.insertRandomData(stratioStreamingAPI, streamOutgoingName, queryData.getSelect());
-        return messageAndMetadatas;
+            proccesMesage.processMessage(getSortRow(theMessage.getColumns()));
+
+        }
     }
 
 
 
     public void endQuery(String streamName, Connection<IStratioStreamingAPI> connection)
-                    throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
+            throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
         IStratioStreamingAPI streamConection = connection.getNativeConnection();
         streamConection.stopListenStream(streamName);
         if (queryId != null) {
             streamConection.removeQuery(streamName, queryId);
         }
-
-    }
-
-    protected abstract void processMessage(Row row);
-
-    /**
-     * @throws UnsupportedException
-     * 
-     */
-    private void setColumnMetadata() throws UnsupportedException {
-        columnsMetadata = new ArrayList<>();
-        Select select = queryData.getSelect();
-        Project projection = queryData.getProjection();
-
-        for (ColumnName colName : select.getColumnMap().keySet()) {
-            String field = colName.getName();
-            ColumnType colType = select.getTypeMap().get(colName.getQualifiedName());
-            colType = updateColumnType(colType);
-            ColumnMetadata columnMetadata = new ColumnMetadata(projection.getTableName().getName(), field, colType);
-            columnMetadata.setColumnAlias(select.getColumnMap().get(colName));
-            columnsMetadata.add(columnMetadata);
+        if (proccesMesage!=null){
+            proccesMesage.end();
         }
 
     }
 
-    /**
-     * @param colType
-     * @return
-     * @throws UnsupportedException
-     */
-    private ColumnType updateColumnType(ColumnType colType) throws UnsupportedException {
-        switch (colType) {
+    public  void processMessage(Row row){}
 
-        case BIGINT:
-            colType = ColumnType.DOUBLE;
-            break;
-        case BOOLEAN:
-            colType = ColumnType.BOOLEAN;
-            break;
-        case DOUBLE:
-            colType = ColumnType.DOUBLE;
-            break;
-        case FLOAT:
-            colType = ColumnType.DOUBLE;
-            break;
-        case INT:
-            colType = ColumnType.DOUBLE;
-            break;
-        case TEXT:
-        case VARCHAR:
-            colType = ColumnType.VARCHAR;
-            break;
-        default:
-            throw new UnsupportedException("Column type " + colType.name() + " not supported in Streaming");
-        }
-        return colType;
-    }
+
+
+
 
     protected void sendResultSet(List<Row> copyNotSyncrhonizedList) {
         ResultSet resultSet = new ResultSet();
@@ -175,7 +145,5 @@ public abstract class ConnectorQueryExecutor {
         return row;
 
     }
-
-
 
 }

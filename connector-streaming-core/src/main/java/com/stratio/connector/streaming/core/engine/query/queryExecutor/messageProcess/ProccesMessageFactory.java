@@ -16,27 +16,30 @@
  *  under the License.
  */
 
-package com.stratio.connector.streaming.core.engine.query.queryExecutor;
+package com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
+import com.stratio.connector.streaming.core.engine.query.queryExecutor.ConnectorQueryExecutor;
+import com.stratio.connector.streaming.core.engine.query.queryExecutor.ElementNumberQueryExecutor;
+import com.stratio.connector.streaming.core.engine.query.queryExecutor.TimeWindowQueryExecutor;
+import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 
 /**
- * Created by jmgomez on 7/10/14.
+ * Created by jmgomez on 16/10/14.
  */
-public class QueryExecutorFactory {
-    public static ConnectorQueryExecutor getQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler)
-
+public class ProccesMessageFactory {
+    public static ProcessMessage getProccesMessage(ConnectorQueryData queryData, ResultsetCreator resultSetCreator)
             throws UnsupportedException {
-        ConnectorQueryExecutor connectorQueryExecutor = null;
+        ProcessMessage connectorQueryExecutor = null;
 
         switch (queryData.getWindow().getType()) {
         case TEMPORAL:
-            connectorQueryExecutor = new ConnectorQueryExecutor(queryData, resultHandler);
+            connectorQueryExecutor = new TimeWindowProcessMessage(queryData, resultSetCreator);
             break;
         case NUM_ROWS:
-            connectorQueryExecutor = new ConnectorQueryExecutor(queryData, resultHandler);
+            connectorQueryExecutor = new ElementNumberProcessMessage(queryData, resultSetCreator);
             break;
         default:
             throw new UnsupportedException("Window " + queryData.getWindow().getType() + "is not supported");

@@ -16,17 +16,16 @@
  *  under the License.
  */
 
-package com.stratio.connector.streaming.core.procces;
+package com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess;
 
-import com.stratio.meta.common.exceptions.ExecutionException;
-import com.stratio.meta.common.logicalplan.Project;
+import com.stratio.meta.common.data.Row;
 
 /**
- * Created by jmgomez on 3/10/14.
+ * Created by jmgomez on 16/10/14.
  */
-public interface ConnectorProcess extends Runnable {
+public interface ProcessMessage {
 
-    public void endQuery() throws ExecutionException;
+    public void processMessage(Row row);
 
-    public Project getProject();
+    public void end();
 }

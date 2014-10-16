@@ -1,3 +1,21 @@
+/*
+ * Licensed to STRATIO (C) under one or more contributor license agreements.
+ *  See the NOTICE file distributed with this work for additional information
+ *  regarding copyright ownership. The STRATIO (C) licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License. You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied. See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
 package com.stratio.connector.streaming.core.engine.query;
 
 import java.util.Iterator;
@@ -42,141 +60,16 @@ public class ConnectorQueryBuilder {
         outgoing = StreamUtil.createOutgoingName(streamName, metaQueryId);
     }
 
-    public String createQuery() throws ExecutionException, UnsupportedException {
-
-       
-
-        createInputQuery();
-        createProjection();
-        createOutputQuery();
-
-        return querySb.toString();
-    }
-
-    /**
-     * 
-     */
-    private void createOutputQuery() {
-        querySb.append(" insert into ");
-        querySb.append(outgoing);
-    }
-
-    /**
-     * @throws UnsupportedException
-     * 
-     */
-    private void createProjection() throws UnsupportedException {
-
-        Select selectionClause = queryData.getSelect();
-        Map<ColumnName, String> aliasMapping = selectionClause.getColumnMap();
-        Set<ColumnName> columnMetadataList = aliasMapping.keySet();
-
-        // Retrieving the fields
-        if (columnMetadataList == null || columnMetadataList.isEmpty()) {
-            String message = "The query has to retrieve data";
-            logger.error(message);
-            throw new UnsupportedException(message);
-        }
-
-        querySb.append(" select ");
-
-        // Retrieving the alias
-        int numFields = columnMetadataList.size();
-        int i = 0;
-        for (ColumnName colName : columnMetadataList) {
-
-            querySb.append(StreamUtil.createStreamName(queryData.getProjection())).append(".").append(
-                            colName.getName()).append(" as ").append(aliasMapping.get(colName));
-            if (++i < numFields)
-                querySb.append(",");
-        }
-
-    }
-
-    /**
-     *
-     * @return
-     * @throws UnsupportedException
-     */
-    private void createInputQuery() throws UnsupportedException {
-        querySb.append("from ");
-        createStreamsQuery();
-    }
-
-    /**
-     *
-     * @return
-     * @throws UnsupportedException
-     */
-    private void createStreamsQuery() throws UnsupportedException {
-        // only one logicalWorkflow so always
-        createStreamQuery();
-       
-    }
-
-  
-
-    /**
-     * @throws UnsupportedException
-     * 
-     */
-    private void createStreamQuery() throws UnsupportedException {
-        querySb.append(streamName);
-        if (queryData.hasFilterList()) {
-            createConditionList();
-        }
-
-    }
-
-    /**
-     * @throws UnsupportedException
-     * 
-     */
-    private void createConditionList() throws UnsupportedException {
-
-        querySb.append("[");
-        Iterator<Filter> filterIter = queryData.getFilter().iterator();
-        while (filterIter.hasNext()) {
-            Relation rel = filterIter.next().getRelation();
-
-            querySb.append(getFieldName(rel.getLeftTerm())).append(" ").append(getSiddhiOperator(rel.getOperator()))
-                            .append(" ");
-            if (rel.getRightTerm() instanceof StringSelector) {
-                querySb.append("'").append(((StringSelector) rel.getRightTerm()).getValue()).append("'");
-            } else {
-                switch (rel.getRightTerm().getType()) {
-                case BOOLEAN:
-                case INTEGER:
-                case FLOATING_POINT:
-                    querySb.append(rel.getRightTerm().toString());
-                    break;
-                case COLUMN:
-                    querySb.append(getFieldName(rel.getRightTerm()));
-                    break;
-                case FUNCTION:
-                case RELATION:
-                case ASTERISK:
-                default:
-                    throw new UnsupportedException("Type " + rel.getRightTerm().getType() + "unsupported");
-                }
-            }
-
-            if (filterIter.hasNext()) {
-                querySb.append(" and ");
-            }
-        }
-        querySb.append("]");
-
-    }
-
     private static String getFieldName(Selector selector) throws UnsupportedException {
         String field = null;
         if (selector instanceof ColumnSelector) {
             ColumnSelector columnSelector = (ColumnSelector) selector;
             field = columnSelector.getName().getName();
         } else
-            // TODO support right column selector
+        // TODO support right column selector
+        {
             throw new UnsupportedException("Left selector must be a columnSelector in filters");
+        }
         return field;
     }
 
@@ -206,6 +99,125 @@ public class ConnectorQueryBuilder {
         }
 
         return siddhiOperator;
+    }
+
+    public String createQuery() throws ExecutionException, UnsupportedException {
+
+        createInputQuery();
+        createProjection();
+        createOutputQuery();
+
+        return querySb.toString();
+    }
+
+    /**
+     *
+     */
+    private void createOutputQuery() {
+        querySb.append(" insert into ");
+        querySb.append(outgoing);
+    }
+
+    /**
+     * @throws UnsupportedException
+     */
+    private void createProjection() throws UnsupportedException {
+
+        Select selectionClause = queryData.getSelect();
+        Map<ColumnName, String> aliasMapping = selectionClause.getColumnMap();
+        Set<ColumnName> columnMetadataList = aliasMapping.keySet();
+
+        // Retrieving the fields
+        if (columnMetadataList == null || columnMetadataList.isEmpty()) {
+            String message = "The query has to retrieve data";
+            logger.error(message);
+            throw new UnsupportedException(message);
+        }
+
+        querySb.append(" select ");
+
+        // Retrieving the alias
+        int numFields = columnMetadataList.size();
+        int i = 0;
+        for (ColumnName colName : columnMetadataList) {
+
+            querySb.append(StreamUtil.createStreamName(queryData.getProjection())).append(".").append(
+                    colName.getName()).append(" as ").append(aliasMapping.get(colName));
+            if (++i < numFields) {
+                querySb.append(",");
+            }
+        }
+
+    }
+
+    /**
+     * @return
+     * @throws UnsupportedException
+     */
+    private void createInputQuery() throws UnsupportedException {
+        querySb.append("from ");
+        createStreamsQuery();
+    }
+
+    /**
+     * @return
+     * @throws UnsupportedException
+     */
+    private void createStreamsQuery() throws UnsupportedException {
+        // only one logicalWorkflow so always
+        createStreamQuery();
+
+    }
+
+    /**
+     * @throws UnsupportedException
+     */
+    private void createStreamQuery() throws UnsupportedException {
+        querySb.append(streamName);
+        if (queryData.hasFilterList()) {
+            createConditionList();
+        }
+
+    }
+
+    /**
+     * @throws UnsupportedException
+     */
+    private void createConditionList() throws UnsupportedException {
+
+        querySb.append("[");
+        Iterator<Filter> filterIter = queryData.getFilter().iterator();
+        while (filterIter.hasNext()) {
+            Relation rel = filterIter.next().getRelation();
+
+            querySb.append(getFieldName(rel.getLeftTerm())).append(" ").append(getSiddhiOperator(rel.getOperator()))
+                    .append(" ");
+            if (rel.getRightTerm() instanceof StringSelector) {
+                querySb.append("'").append(((StringSelector) rel.getRightTerm()).getValue()).append("'");
+            } else {
+                switch (rel.getRightTerm().getType()) {
+                case BOOLEAN:
+                case INTEGER:
+                case FLOATING_POINT:
+                    querySb.append(rel.getRightTerm().toString());
+                    break;
+                case COLUMN:
+                    querySb.append(getFieldName(rel.getRightTerm()));
+                    break;
+                case FUNCTION:
+                case RELATION:
+                case ASTERISK:
+                default:
+                    throw new UnsupportedException("Type " + rel.getRightTerm().getType() + "unsupported");
+                }
+            }
+
+            if (filterIter.hasNext()) {
+                querySb.append(" and ");
+            }
+        }
+        querySb.append("]");
+
     }
 
 }

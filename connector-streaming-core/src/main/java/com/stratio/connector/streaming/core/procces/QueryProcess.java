@@ -1,3 +1,21 @@
+/*
+ * Licensed to STRATIO (C) under one or more contributor license agreements.
+ *  See the NOTICE file distributed with this work for additional information
+ *  regarding copyright ownership. The STRATIO (C) licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License. You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied. See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
 package com.stratio.connector.streaming.core.procces;
 
 import org.slf4j.Logger;
@@ -35,7 +53,7 @@ public class QueryProcess implements ConnectorProcess {
     private ConnectorQueryExecutor queryExecutor;
 
     public QueryProcess(String queryId, Project project, IResultHandler resultHandler,
-                    Connection<IStratioStreamingAPI> connection) {
+            Connection<IStratioStreamingAPI> connection) {
         this.project = project;
         this.resultHandler = resultHandler;
         this.connection = connection;
@@ -47,18 +65,18 @@ public class QueryProcess implements ConnectorProcess {
 
             ConnectorQueryParser queryParser = new ConnectorQueryParser();
             ConnectorQueryData queryData = queryParser.transformLogicalWorkFlow(project, queryId);
-            ConnectorQueryBuilder queryBuilder =new ConnectorQueryBuilder(queryData);
+            ConnectorQueryBuilder queryBuilder = new ConnectorQueryBuilder(queryData);
             String query = queryBuilder.createQuery();
             if (logger.isDebugEnabled()) {
                 logger.debug("The streaming query is: [" + query + "]");
 
             }
-            
-            queryExecutor = QueryExecutorFactory.getQueryExecutor(queryData,resultHandler);
+
+            queryExecutor = new ConnectorQueryExecutor(queryData, resultHandler);
             queryExecutor.executeQuery(query, connection);
 
         } catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException
-                        | UnsupportedException | ExecutionException e) {
+                | UnsupportedException | ExecutionException e) {
             String msg = "Streaming query execution fail." + e.getMessage();
             logger.error(msg);
             resultHandler.processException(queryId, new ExecutionException(msg, e));
@@ -78,7 +96,7 @@ public class QueryProcess implements ConnectorProcess {
         } catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException e) {
             String msg = "Streaming query stop fail." + e.getMessage();
             logger.error(msg);
-            throw new ExecutionException(msg,e);
+            throw new ExecutionException(msg, e);
 
         }
     }

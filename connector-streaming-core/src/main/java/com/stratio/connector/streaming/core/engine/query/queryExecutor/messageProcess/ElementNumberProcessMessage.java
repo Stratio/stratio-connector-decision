@@ -16,13 +16,15 @@
  *  under the License.
  */
 
-package com.stratio.connector.streaming.core.engine.query.queryExecutor;
+package com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
+import com.stratio.connector.streaming.core.engine.query.queryExecutor.StreamingQuery;
+import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.exceptions.UnsupportedException;
@@ -30,7 +32,9 @@ import com.stratio.meta.common.exceptions.UnsupportedException;
 /**
  * Created by jmgomez on 7/10/14.
  */
-public class ElementNumberQueryExecutor extends ConnectorQueryExecutor {
+public class ElementNumberProcessMessage implements ProcessMessage {
+
+
 
     /**
      * The window length
@@ -39,15 +43,20 @@ public class ElementNumberQueryExecutor extends ConnectorQueryExecutor {
 
     private List<Row> list = Collections.synchronizedList(new ArrayList());
 
+    private  ResultsetCreator resultsetCreator;
+
+
     /**
      * @param queryData
-     * @param resultHandler
-     * @throws UnsupportedException
-     */
-    public ElementNumberQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler)
-            throws UnsupportedException {
-        super(queryData, resultHandler);
 
+     * @throws com.stratio.meta.common.exceptions.UnsupportedException
+     */
+    public ElementNumberProcessMessage(ConnectorQueryData queryData,
+            ResultsetCreator resultsetCreator)
+            throws UnsupportedException {
+
+
+        this.resultsetCreator = resultsetCreator;
         windowLength = queryData.getWindow().getNumRows();
 
     }
@@ -67,8 +76,12 @@ public class ElementNumberQueryExecutor extends ConnectorQueryExecutor {
         }
 
         if (isWindowReady) {
-            sendResultSet(copyNotSyncrhonizedList);
+            resultsetCreator.createResultSet(copyNotSyncrhonizedList).send();
         }
+    }
+
+    @Override public void end() {
+
     }
 
 }
