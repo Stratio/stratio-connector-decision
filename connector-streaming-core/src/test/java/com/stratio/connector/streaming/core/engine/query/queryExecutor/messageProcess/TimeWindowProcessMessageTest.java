@@ -38,7 +38,7 @@ import com.stratio.meta.common.statements.structures.window.WindowType;
 public class TimeWindowProcessMessageTest {
 
     public static final int NUM_TIME_UNITS = 10;
-    private static final int EJECUTION_TIME = 50;
+    private static final int EJECUTION_TIME = 30;
 
     TimeWindowProcessMessage timeWindowProcessMessage;
     @Mock ResultsetCreator resultSetCreator;
@@ -53,9 +53,9 @@ public void before() throws Exception {
     window.setTimeWindow(NUM_TIME_UNITS, TimeUnit.SECONDS);
     queryData.setWindow(window);
     when(resultSetCreator.createResultSet(any(List.class))).thenReturn(resultSetCreator);
-        time = System.currentTimeMillis();
 
     timeWindowProcessMessage = new TimeWindowProcessMessage(queryData,resultSetCreator);
+
 } 
 
 @After
@@ -71,7 +71,7 @@ public void after() throws Exception {
 @Test
 public void testProcessMessage() throws Exception {
 
-
+    time = System.currentTimeMillis();
     while(System.currentTimeMillis() - time<EJECUTION_TIME*1000){
         Row row = mock(Row.class);
         timeWindowProcessMessage.processMessage(row);

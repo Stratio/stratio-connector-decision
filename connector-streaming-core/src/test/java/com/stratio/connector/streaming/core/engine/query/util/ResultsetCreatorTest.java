@@ -92,7 +92,7 @@ public void after() throws Exception {
 * 
 * Method: createResultSet(List<Row> rows) 
 * 
-*/ 
+*/
 @Test
 public void testCreateResultSet() throws Exception {
 
