@@ -47,75 +47,34 @@ public class ConnectorQueryBuilder {
      */
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private ConnectorQueryData queryData;
+
     private StringBuilder querySb = new StringBuilder();
-    private String streamName;
-    private String outgoing;
+
+    public String createQuery(ConnectorQueryData queryData) throws ExecutionException, UnsupportedException {
 
 
-    public ConnectorQueryBuilder(ConnectorQueryData queryData) {
-        this.queryData = queryData;
-
-        String metaQueryId = queryData.getQueryId();
-        streamName = StreamUtil.createStreamName(queryData.getProjection());
-        outgoing = StreamUtil.createOutgoingName(streamName, metaQueryId);
-    }
-
-    private static String getFieldName(Selector selector) throws UnsupportedException {
-        String field = null;
-        if (selector instanceof ColumnSelector) {
-            ColumnSelector columnSelector = (ColumnSelector) selector;
-            field = columnSelector.getName().getName();
-        } else
-        // TODO support right column selector
-        {
-            throw new UnsupportedException("Left selector must be a columnSelector in filters");
-        }
-        return field;
-    }
-
-    private static String getSiddhiOperator(Operator operator) throws UnsupportedException {
-
-        String siddhiOperator;
-        switch (operator) {
-
-        case DISTINCT: siddhiOperator = "!=";  break;
-        case EQ: siddhiOperator = "=="; break;
-        case GET:  siddhiOperator =  ">=";break;
-        case GT:  siddhiOperator = ">";break;
-        case LET:   siddhiOperator = "<="; break;
-        case LT:  siddhiOperator = "<"; break;
-       default:
-            throw new UnsupportedException("Operator " + operator.toString() + "is not supported");
-
-        }
-
-        return siddhiOperator;
-    }
-
-
-
-    public String createQuery() throws ExecutionException, UnsupportedException {
-
-        createInputQuery();
-        createProjection();
-        createOutputQuery();
+        createInputQuery(queryData);
+        createProjection(queryData);
+        createOutputQuery(queryData);
 
         return querySb.toString();
     }
 
     /**
      *
+     * @param queryData
      */
-    private void createOutputQuery() {
+    private void createOutputQuery(ConnectorQueryData queryData) {
+        String outgoing = StreamUtil.createOutgoingName(StreamUtil.createStreamName(queryData.getProjection()), queryData.getQueryId());
         querySb.append(" insert into ");
         querySb.append(outgoing);
     }
 
     /**
      * @throws UnsupportedException
+     * @param queryData
      */
-    private void createProjection() throws UnsupportedException {
+    private void createProjection(ConnectorQueryData queryData) throws UnsupportedException {
 
         Select selectionClause = queryData.getSelect();
         Map<ColumnName, String> aliasMapping = selectionClause.getColumnMap();
@@ -147,37 +106,36 @@ public class ConnectorQueryBuilder {
     /**
      * @return
      * @throws UnsupportedException
+     * @param queryData
      */
-    private void createInputQuery() throws UnsupportedException {
+    private void createInputQuery(ConnectorQueryData queryData) throws UnsupportedException {
         querySb.append("from ");
-        createStreamsQuery();
+        createStreamQuery(queryData);
     }
 
-    /**
-     * @return
-     * @throws UnsupportedException
-     */
-    private void createStreamsQuery() throws UnsupportedException {
-        // only one logicalWorkflow so always
-        createStreamQuery();
-
-    }
 
     /**
      * @throws UnsupportedException
+     * @param queryData
      */
-    private void createStreamQuery() throws UnsupportedException {
+    private void createStreamQuery(ConnectorQueryData queryData) throws UnsupportedException {
+
+        String streamName = StreamUtil.createStreamName(queryData.getProjection());
+
+
+
         querySb.append(streamName);
         if (queryData.hasFilterList()) {
-            createConditionList();
+            createConditionList(queryData);
         }
 
     }
 
     /**
      * @throws UnsupportedException
+     * @param queryData
      */
-    private void createConditionList() throws UnsupportedException {
+    private void createConditionList(ConnectorQueryData queryData) throws UnsupportedException {
 
         querySb.append("[");
         Iterator<Filter> filterIter = queryData.getFilter().iterator();
@@ -212,6 +170,36 @@ public class ConnectorQueryBuilder {
         }
         querySb.append("]");
 
+    }
+
+    private  String getFieldName(Selector selector) throws UnsupportedException {
+        String field = null;
+        if (selector instanceof ColumnSelector) {
+            ColumnSelector columnSelector = (ColumnSelector) selector;
+            field = columnSelector.getName().getName();
+        } else{
+            throw new UnsupportedException("Left selector must be a columnSelector in filters");
+        }
+        return field;
+    }
+
+    private  String getSiddhiOperator(Operator operator) throws UnsupportedException {
+
+        String siddhiOperator;
+        switch (operator) {
+
+        case DISTINCT: siddhiOperator = "!=";  break;
+        case EQ: siddhiOperator = "=="; break;
+        case GET:  siddhiOperator =  ">=";break;
+        case GT:  siddhiOperator = ">";break;
+        case LET:   siddhiOperator = "<="; break;
+        case LT:  siddhiOperator = "<"; break;
+        default:
+            throw new UnsupportedException("Operator " + operator.toString() + "is not supported");
+
+        }
+
+        return siddhiOperator;
     }
 
 }

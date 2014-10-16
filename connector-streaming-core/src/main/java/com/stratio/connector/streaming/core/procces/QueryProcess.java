@@ -65,8 +65,8 @@ public class QueryProcess implements ConnectorProcess {
 
             ConnectorQueryParser queryParser = new ConnectorQueryParser();
             ConnectorQueryData queryData = queryParser.transformLogicalWorkFlow(project, queryId);
-            ConnectorQueryBuilder queryBuilder = new ConnectorQueryBuilder(queryData);
-            String query = queryBuilder.createQuery();
+            ConnectorQueryBuilder queryBuilder = new ConnectorQueryBuilder();
+            String query = queryBuilder.createQuery(queryData);
             if (logger.isDebugEnabled()) {
                 logger.debug("The streaming query is: [" + query + "]");
 
