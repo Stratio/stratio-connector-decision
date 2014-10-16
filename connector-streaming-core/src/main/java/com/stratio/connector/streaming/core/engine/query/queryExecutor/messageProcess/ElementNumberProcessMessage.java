@@ -23,9 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
-import com.stratio.connector.streaming.core.engine.query.queryExecutor.StreamingQuery;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
-import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 
@@ -34,8 +32,6 @@ import com.stratio.meta.common.exceptions.UnsupportedException;
  */
 public class ElementNumberProcessMessage implements ProcessMessage {
 
-
-
     /**
      * The window length
      */
@@ -43,24 +39,20 @@ public class ElementNumberProcessMessage implements ProcessMessage {
 
     private List<Row> list = Collections.synchronizedList(new ArrayList());
 
-    private  ResultsetCreator resultsetCreator;
-
+    private ResultsetCreator resultsetCreator;
 
     /**
      * @param queryData
-
      * @throws com.stratio.meta.common.exceptions.UnsupportedException
      */
     public ElementNumberProcessMessage(ConnectorQueryData queryData,
             ResultsetCreator resultsetCreator)
             throws UnsupportedException {
 
-
         this.resultsetCreator = resultsetCreator;
         windowLength = queryData.getWindow().getNumRows();
 
     }
-
 
     @Override
     public void processMessage(Row row) {

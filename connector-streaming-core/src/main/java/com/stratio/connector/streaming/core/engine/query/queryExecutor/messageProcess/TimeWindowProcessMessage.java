@@ -24,17 +24,11 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.queryExecutor.timer.SendResultTimer;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
-import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.exceptions.UnsupportedException;
-import com.stratio.streaming.api.IStratioStreamingAPI;
-import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
-import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
-import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
 
 /**
  * Created by jmgomez on 7/10/14.
@@ -53,16 +47,14 @@ public class TimeWindowProcessMessage implements ProcessMessage {
     public TimeWindowProcessMessage(ConnectorQueryData queryData, ResultsetCreator resultsetCreator)
             throws UnsupportedException {
 
-
         TimerTask timerTask = new SendResultTimer(this);
 
         this.resultsetCreator = resultsetCreator;
         timer = new Timer("[Timer_" + queryData.getQueryId() + "]", true);
-        timer.scheduleAtFixedRate(timerTask, queryData.getWindow().getDurationInMilliseconds(), queryData.getWindow().getDurationInMilliseconds());
+        timer.scheduleAtFixedRate(timerTask, queryData.getWindow().getDurationInMilliseconds(),
+                queryData.getWindow().getDurationInMilliseconds());
 
     }
-
-
 
     @Override
     public void processMessage(Row row) {

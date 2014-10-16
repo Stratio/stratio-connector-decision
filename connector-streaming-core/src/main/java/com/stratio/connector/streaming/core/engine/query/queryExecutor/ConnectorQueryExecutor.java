@@ -67,13 +67,11 @@ public class ConnectorQueryExecutor {
         this.resultHandler = resultHandler;
         rowOrder = new ArrayList<Integer>();
 
-
     }
 
     public void executeQuery(String query, Connection<IStratioStreamingAPI> connection)
             throws StratioEngineOperationException, StratioAPISecurityException, StratioEngineStatusException,
             InterruptedException, UnsupportedException {
-
 
         IStratioStreamingAPI stratioStreamingAPI = connection.getNativeConnection();
         ResultsetCreator resultSetCreator = new ResultsetCreator(queryData);
@@ -85,8 +83,6 @@ public class ConnectorQueryExecutor {
 
         KafkaStream<String, StratioStreamingMessage> stream = streamingQuery.listenQuery(stratioStreamingAPI,
                 streamOutgoingName);
-
-        //readMessages(stream);
 
         streamingQuery.readMessages(stream);
 
@@ -104,15 +100,11 @@ public class ConnectorQueryExecutor {
         }
     }
 
-
-
     public void endQuery(String streamName, Connection<IStratioStreamingAPI> connection)
             throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
-        streamingQuery.endQuery(streamName,connection);
+        streamingQuery.endQuery(streamName, connection);
 
     }
-
-
 
     protected Row getSortRow(List<ColumnNameTypeValue> columns) {
 

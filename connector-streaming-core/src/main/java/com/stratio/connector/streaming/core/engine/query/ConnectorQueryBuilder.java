@@ -47,11 +47,9 @@ public class ConnectorQueryBuilder {
      */
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
     private StringBuilder querySb = new StringBuilder();
 
     public String createQuery(ConnectorQueryData queryData) throws ExecutionException, UnsupportedException {
-
 
         createInputQuery(queryData);
         createProjection(queryData);
@@ -61,18 +59,18 @@ public class ConnectorQueryBuilder {
     }
 
     /**
-     *
      * @param queryData
      */
     private void createOutputQuery(ConnectorQueryData queryData) {
-        String outgoing = StreamUtil.createOutgoingName(StreamUtil.createStreamName(queryData.getProjection()), queryData.getQueryId());
+        String outgoing = StreamUtil
+                .createOutgoingName(StreamUtil.createStreamName(queryData.getProjection()), queryData.getQueryId());
         querySb.append(" insert into ");
         querySb.append(outgoing);
     }
 
     /**
-     * @throws UnsupportedException
      * @param queryData
+     * @throws UnsupportedException
      */
     private void createProjection(ConnectorQueryData queryData) throws UnsupportedException {
 
@@ -104,25 +102,22 @@ public class ConnectorQueryBuilder {
     }
 
     /**
+     * @param queryData
      * @return
      * @throws UnsupportedException
-     * @param queryData
      */
     private void createInputQuery(ConnectorQueryData queryData) throws UnsupportedException {
         querySb.append("from ");
         createStreamQuery(queryData);
     }
 
-
     /**
-     * @throws UnsupportedException
      * @param queryData
+     * @throws UnsupportedException
      */
     private void createStreamQuery(ConnectorQueryData queryData) throws UnsupportedException {
 
         String streamName = StreamUtil.createStreamName(queryData.getProjection());
-
-
 
         querySb.append(streamName);
         if (queryData.hasFilterList()) {
@@ -132,8 +127,8 @@ public class ConnectorQueryBuilder {
     }
 
     /**
-     * @throws UnsupportedException
      * @param queryData
+     * @throws UnsupportedException
      */
     private void createConditionList(ConnectorQueryData queryData) throws UnsupportedException {
 
@@ -172,28 +167,40 @@ public class ConnectorQueryBuilder {
 
     }
 
-    private  String getFieldName(Selector selector) throws UnsupportedException {
+    private String getFieldName(Selector selector) throws UnsupportedException {
         String field = null;
         if (selector instanceof ColumnSelector) {
             ColumnSelector columnSelector = (ColumnSelector) selector;
             field = columnSelector.getName().getName();
-        } else{
+        } else {
             throw new UnsupportedException("Left selector must be a columnSelector in filters");
         }
         return field;
     }
 
-    private  String getSiddhiOperator(Operator operator) throws UnsupportedException {
+    private String getSiddhiOperator(Operator operator) throws UnsupportedException {
 
         String siddhiOperator;
         switch (operator) {
 
-        case DISTINCT: siddhiOperator = "!=";  break;
-        case EQ: siddhiOperator = "=="; break;
-        case GET:  siddhiOperator =  ">=";break;
-        case GT:  siddhiOperator = ">";break;
-        case LET:   siddhiOperator = "<="; break;
-        case LT:  siddhiOperator = "<"; break;
+        case DISTINCT:
+            siddhiOperator = "!=";
+            break;
+        case EQ:
+            siddhiOperator = "==";
+            break;
+        case GET:
+            siddhiOperator = ">=";
+            break;
+        case GT:
+            siddhiOperator = ">";
+            break;
+        case LET:
+            siddhiOperator = "<=";
+            break;
+        case LT:
+            siddhiOperator = "<";
+            break;
         default:
             throw new UnsupportedException("Operator " + operator.toString() + "is not supported");
 

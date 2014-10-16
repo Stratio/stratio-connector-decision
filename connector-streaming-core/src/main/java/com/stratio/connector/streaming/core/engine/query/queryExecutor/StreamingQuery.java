@@ -53,8 +53,7 @@ public class StreamingQuery {
     private String queryId;
     private ProcessMessage processMessage;
 
-
-    public StreamingQuery(ConnectorQueryData queryData,ProcessMessage processMessage) {
+    public StreamingQuery(ConnectorQueryData queryData, ProcessMessage processMessage) {
         this.processMessage = processMessage;
         this.queryData = queryData;
 
@@ -84,7 +83,6 @@ public class StreamingQuery {
         return messageAndMetadatas;
     }
 
-
     public void readMessages(KafkaStream<String, StratioStreamingMessage> streams) throws UnsupportedException {
         logger.info("Waiting a message...");
         for (MessageAndMetadata stream : streams) {
@@ -103,7 +101,7 @@ public class StreamingQuery {
         if (queryId != null) {
             streamConection.removeQuery(streamName, queryId);
         }
-        if (processMessage !=null){
+        if (processMessage != null) {
             processMessage.end();
         }
 

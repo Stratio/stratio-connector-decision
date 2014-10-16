@@ -38,12 +38,10 @@ import com.stratio.meta2.common.metadata.ColumnType;
  */
 public class ResultsetCreator {
 
-
     private List<ColumnMetadata> columnsMetadata;
     private ConnectorQueryData queryData;
     private IResultHandler resultHandler;
     private QueryResult queryResult;
-
 
     public ResultsetCreator(ConnectorQueryData queryData) throws UnsupportedException {
         this.queryData = queryData;
@@ -54,13 +52,9 @@ public class ResultsetCreator {
         this.resultHandler = resultHandler;
     }
 
-
-
-    public void send(){
+    public void send() {
         resultHandler.processResult(queryResult);
     }
-
-
 
     public ResultsetCreator createResultSet(List<Row> rows) {
         ResultSet resultSet = new ResultSet();
@@ -71,9 +65,7 @@ public class ResultsetCreator {
 
         return this;
 
-
     }
-
 
     /**
      * @throws com.stratio.meta.common.exceptions.UnsupportedException
@@ -93,7 +85,6 @@ public class ResultsetCreator {
         }
 
     }
-
 
     private ColumnType updateColumnType(ColumnType colType) throws UnsupportedException {
         switch (colType) {
@@ -122,6 +113,5 @@ public class ResultsetCreator {
         }
         return colType;
     }
-
 
 }
