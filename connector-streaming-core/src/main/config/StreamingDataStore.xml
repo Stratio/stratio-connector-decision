@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<DataStore>
+    <Name>ElasticSearch</Name>
+    <Version>1.0.0</Version>
+    <RequiredProperties>
+        <PropertyName>
+            <Name>KafkaServer</Name>
+            <Description>The kafka server port</Description>
+        </PropertyName>
+        <PropertyName>
+            <Name>KafkaPort</Name>
+            <Description>The zookeeper server port</Description>
+        </PropertyName>
+        <PropertyName>
+            <Name>zooKeeperServer</Name>
+            <Description>The zookeeper server port</Description>
+        </PropertyName>
+        <PropertyName>
+            <Name>zooKeeperPort</Name>
+            <Description>The zookeeper server ip</Description>
+        </PropertyName>
+    </RequiredProperties>
+
+</DataStore>
+
+
+
