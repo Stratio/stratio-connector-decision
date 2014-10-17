@@ -50,6 +50,8 @@ public class QueryProcess implements ConnectorProcess {
     private IResultHandler resultHandler;
     private Connection<IStratioStreamingAPI> connection;
     private ConnectorQueryExecutor queryExecutor;
+    private ConnectorQueryParser queryParser = new ConnectorQueryParser();
+    private ConnectorQueryBuilder queryBuilder = new ConnectorQueryBuilder();
 
     public QueryProcess(String queryId, Project project, IResultHandler resultHandler,
             Connection<IStratioStreamingAPI> connection) {
@@ -62,9 +64,8 @@ public class QueryProcess implements ConnectorProcess {
     public void run() {
         try {
 
-            ConnectorQueryParser queryParser = new ConnectorQueryParser();
             ConnectorQueryData queryData = queryParser.transformLogicalWorkFlow(project, queryId);
-            ConnectorQueryBuilder queryBuilder = new ConnectorQueryBuilder();
+
             String query = queryBuilder.createQuery(queryData);
             if (logger.isDebugEnabled()) {
                 logger.debug("The streaming query is: [" + query + "]");
@@ -81,17 +82,18 @@ public class QueryProcess implements ConnectorProcess {
             resultHandler.processException(queryId, new ExecutionException(msg, e));
 
         } catch (InterruptedException e) {
-            logger.info("The query is stop");
+            logger.info("The query is stopped");
 
         }
     }
+
 
     @Override
     public void endQuery() throws ExecutionException {
 
         try {
-            String streamName = StreamUtil.createStreamName(project.getTableName());
-            queryExecutor.endQuery(streamName, connection);
+
+            queryExecutor.endQuery(StreamUtil.createStreamName(project.getTableName()), connection);
         } catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException e) {
             String msg = "Streaming query stop fail." + e.getMessage();
             logger.error(msg);
@@ -100,7 +102,7 @@ public class QueryProcess implements ConnectorProcess {
         }
     }
 
-    @Override
+     @Override
     public Project getProject() {
 
         return project;

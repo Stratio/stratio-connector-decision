@@ -18,9 +18,6 @@
 
 package com.stratio.connector.streaming.core.engine.query.queryExecutor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,18 +27,14 @@ import com.stratio.connector.streaming.core.engine.query.queryExecutor.messagePr
 import com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess.ProcessMessage;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
 import com.stratio.meta.common.connector.IResultHandler;
-import com.stratio.meta.common.data.Cell;
-import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
 import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
 import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
-import com.stratio.streaming.commons.messages.ColumnNameTypeValue;
 import com.stratio.streaming.commons.messages.StratioStreamingMessage;
 
 import kafka.consumer.KafkaStream;
-import kafka.message.MessageAndMetadata;
 
 /**
  * Created by jmgomez on 30/09/14.
@@ -57,7 +50,6 @@ public class ConnectorQueryExecutor {
     protected ConnectorQueryData queryData;
     IResultHandler resultHandler;
 
-    List<Integer> rowOrder;
     ProcessMessage proccesMesage;
     StreamingQuery streamingQuery;
 
@@ -65,7 +57,6 @@ public class ConnectorQueryExecutor {
             throws UnsupportedException {
         this.queryData = queryData;
         this.resultHandler = resultHandler;
-        rowOrder = new ArrayList<Integer>();
 
     }
 
@@ -88,31 +79,9 @@ public class ConnectorQueryExecutor {
 
     }
 
-    private void readMessages(KafkaStream<String, StratioStreamingMessage> streams) throws UnsupportedException {
-        logger.info("Waiting a message...");
-        ResultsetCreator resultsetCreator = new ResultsetCreator(queryData);
-        proccesMesage = ProccesMessageFactory.getProccesMessage(queryData, resultsetCreator);
-        for (MessageAndMetadata stream : streams) {
-            StratioStreamingMessage theMessage = (StratioStreamingMessage) stream.message();
-
-            proccesMesage.processMessage(getSortRow(theMessage.getColumns()));
-
-        }
-    }
-
     public void endQuery(String streamName, Connection<IStratioStreamingAPI> connection)
             throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
         streamingQuery.endQuery(streamName, connection);
-
-    }
-
-    protected Row getSortRow(List<ColumnNameTypeValue> columns) {
-
-        Row row = new Row();
-        for (ColumnNameTypeValue column : columns) {
-            row.addCell(column.getColumn(), new Cell(column.getValue()));
-        }
-        return row;
 
     }
 

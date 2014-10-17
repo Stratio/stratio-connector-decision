@@ -57,7 +57,7 @@ public class StreamUtil {
         return createStreamName(project.getCatalogName(), project.getTableName().getName());
     }
 
-    public static String  createStreamName(TableName tableName) {
+    public static String createStreamName(TableName tableName) {
         return createStreamName(tableName.getCatalogName().getName(), tableName.getName());
     }
 
