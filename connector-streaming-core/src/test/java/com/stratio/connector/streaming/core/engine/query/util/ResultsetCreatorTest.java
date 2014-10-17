@@ -69,7 +69,7 @@ public class ResultsetCreatorTest {
         int i = 0;
         for (ColumnMetadata metadata : columnMetadata) {
             assertEquals("the alias is correct", ALIAS[i], metadata.getColumnAlias());
-            assertEquals("the name is correct", NAME[i], metadata.getColumnName());
+            assertEquals("the name is correct", CATALOG+"."+TABLE+"."+NAME[i], metadata.getColumnName());
             assertEquals("the type is correct", TYPE[i], metadata.getType());
             i++;
 
