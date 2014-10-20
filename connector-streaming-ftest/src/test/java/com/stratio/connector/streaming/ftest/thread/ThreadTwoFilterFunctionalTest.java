@@ -20,6 +20,7 @@ package com.stratio.connector.streaming.ftest.thread;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import org.junit.Before;
@@ -122,11 +123,12 @@ public class ThreadTwoFilterFunctionalTest extends GenericStreamingTest{
 
         otherStreamingInserter.start();
 
-        
+
+        //This is the correct inserter.
         StreamingInserter correctStreamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
         correctStreamingInserter.changeStingColumn(TEXT_FIND);
         correctStreamingInserter.changeIntegerChangeableColumn(OTHER_INT_VALUE-1);
-        correctStreamingInserter.numOfElement(CORRECT_ELMENT_TO_FIND);
+        correctStreamingInserter.numOfElement(CORRECT_ELMENT_TO_FIND); //Desiere element number
         correctStreamingInserter.start();
         
         
@@ -134,25 +136,31 @@ public class ThreadTwoFilterFunctionalTest extends GenericStreamingTest{
         waitSeconds(WAIT_TIME);
 
         stremingRead.end();
+
+        waitSeconds(WAIT_TIME);
         System.out.println("TEST ********************** END Querying Test......");
-        waitSeconds(WAIT_TIME);
 
-        System.out.println("TEST ********************** Change Test Querying......");
-        waitSeconds(WAIT_TIME);
 
-        System.out.println("TEST ********************** END Insert......");
+
+
         otherStreamingInserter.end();
+
         stramingInserter.end();
 
+        System.out.println("TEST ********************** END Insert......");
 
 
         
-        assertEquals("All correct elements have been found", CORRECT_ELMENT_TO_FIND,recoveredRecord );
+        assertEquals("All correct elements have been found", CORRECT_ELMENT_TO_FIND, recoveredRecord);
+
+        for (String recover: recovered){
+            System.out.println(recover);
+        }
 
 
     }
 
-
+private ArrayList<String> recovered =  new ArrayList<>();
     
   
 
@@ -203,8 +211,10 @@ public class ThreadTwoFilterFunctionalTest extends GenericStreamingTest{
 
 
             for (Row row : result.getResultSet()) {
-               // int value = ((Double)row.getCell(INTEGER_CHANGEABLE_COLUMN).getValue()).intValue();
-               
+                recovered.add(INTEGER_CHANGEABLE_COLUMN +"="+((Double)row.getCell(INTEGER_CHANGEABLE_COLUMN).getValue())
+                        .intValue()
+                        +","+STRING_COLUMN+"="+row.getCell(STRING_COLUMN).getValue());
+
                     recoveredRecord ++;
 
                
