@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.commons.connection.Connection;
+import com.stratio.connector.commons.util.ConnectorParser;
 import com.stratio.meta.common.connector.ConnectorClusterConfig;
 import com.stratio.meta.common.security.ICredentials;
 import com.stratio.streaming.api.IStratioStreamingAPI;
@@ -63,11 +64,11 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
     public StreamingConnection(ICredentials credentiasl, ConnectorClusterConfig config)
             throws StratioEngineConnectionException {
 
-        String kafkaServer = config.getOptions().get(KAFKA_SERVER);
-        int kafkaPort = Integer.parseInt(config.getOptions().get(KAFKA_PORT));
+        String kafkaServer = ConnectorParser.hosts(config.getOptions().get(KAFKA_SERVER))[0];
+        int kafkaPort = Integer.parseInt(ConnectorParser.ports(config.getOptions().get(KAFKA_PORT))[0]);
 
-        String zooKeeperServer = config.getOptions().get(ZOOKEEPER_SERVER);
-        int zooKeeperPort = Integer.parseInt(config.getOptions().get(ZOOKEEPER_PORT));
+        String zooKeeperServer = ConnectorParser.hosts(config.getOptions().get(ZOOKEEPER_SERVER))[0];
+        int zooKeeperPort = Integer.parseInt(ConnectorParser.ports(config.getOptions().get(ZOOKEEPER_PORT))[0]);
 
         stratioStreamingAPI = StratioStreamingAPIFactory.create().initializeWithServerConfig(kafkaServer, kafkaPort,
                 zooKeeperServer, zooKeeperPort);
