@@ -46,9 +46,9 @@ import com.stratio.meta2.common.metadata.TableMetadata;
 public class ThreadTwoFilterFunctionalTest extends GenericStreamingTest{
 
 
-    public static final int CORRECT_ELMENT_TO_FIND = 90; //Must be a time window
+    public static final int CORRECT_ELMENT_TO_FIND = 90;
 
-    private   int DEFAULT_INT_VALUE = 10;
+
     public   int OTHER_INT_VALUE = 5;
 
 

@@ -45,9 +45,13 @@ public class StreamUtil {
     /**
      * The Log.
      */
-    private final static Logger logger = LoggerFactory.getLogger(StreamUtil.class);
-    private static Random random = new Random(System.currentTimeMillis());
-    private static String[] text = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
+    private final static Logger LOGGER = LoggerFactory.getLogger(StreamUtil.class);
+    /**
+     * a ramdom generator.
+     */
+    private static final Random RANDOM = new Random(System.currentTimeMillis());
+    private static final String[] TEXT = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
+            "P",
             "Q", "R", "S", "T",
             "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
             "p", "q", "r", "s",
@@ -82,7 +86,7 @@ public class StreamUtil {
 
             stratioStreamingAPI.insertData(streamName, streamData);
         } catch (StratioEngineStatusException | StratioAPISecurityException e) {
-            logger.error("Error inserting data in stream", e);
+            LOGGER.error("Error inserting data in stream", e);
         }
     }
 
@@ -91,19 +95,19 @@ public class StreamUtil {
 
         switch (type) {
         case INT:
-            randomObject = random.nextInt();
+            randomObject = RANDOM.nextInt();
             break;
         case BIGINT:
-            randomObject = new BigInteger(500, random);
+            randomObject = new BigInteger(500, RANDOM);
             break;
         case BOOLEAN:
-            randomObject = random.nextBoolean();
+            randomObject = RANDOM.nextBoolean();
             break;
         case DOUBLE:
-            randomObject = random.nextDouble();
+            randomObject = RANDOM.nextDouble();
             break;
         case FLOAT:
-            randomObject = random.nextFloat();
+            randomObject = RANDOM.nextFloat();
             break;
 
         case TEXT:
@@ -130,7 +134,7 @@ public class StreamUtil {
     }
 
     private static String getRandonLetter() {
-        return text[Math.abs(random.nextInt()) % text.length];
+        return TEXT[Math.abs(RANDOM.nextInt() % TEXT.length)];
     }
 
 }

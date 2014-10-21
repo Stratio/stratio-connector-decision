@@ -42,7 +42,7 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
     /**
      * The Log.
      */
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * The Streaming Connection.

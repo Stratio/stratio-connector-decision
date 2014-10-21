@@ -16,7 +16,7 @@
  *  under the License.
  */
 
-package com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess;
+package com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +25,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
-import com.stratio.connector.streaming.core.engine.query.queryExecutor.timer.SendResultTimer;
+import com.stratio.connector.streaming.core.engine.query.queryexecutor.timer.SendResultTimer;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
 import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.exceptions.UnsupportedException;
@@ -36,7 +36,7 @@ import com.stratio.meta.common.exceptions.UnsupportedException;
 public class TimeWindowProcessMessage implements ProcessMessage {
 
     private final ResultsetCreator resultsetCreator;
-    boolean isInterrupted = false;
+    private boolean isInterrupted = false;
     private Timer timer;
     private List<Row> list = Collections.synchronizedList(new ArrayList<Row>());
 

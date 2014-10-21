@@ -34,7 +34,7 @@ public class ConnectorProcessHandler {
     /**
      * The log.
      */
-    final transient Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private HashMap<String, ThreadProcess> processMap = new HashMap<>();
 

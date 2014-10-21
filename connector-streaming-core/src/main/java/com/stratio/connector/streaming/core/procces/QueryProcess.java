@@ -25,7 +25,7 @@ import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryBuilder;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryParser;
-import com.stratio.connector.streaming.core.engine.query.queryExecutor.ConnectorQueryExecutor;
+import com.stratio.connector.streaming.core.engine.query.queryexecutor.ConnectorQueryExecutor;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.exceptions.ExecutionException;
@@ -43,7 +43,7 @@ public class QueryProcess implements ConnectorProcess {
     /**
      * The log.
      */
-    final transient Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
     private String queryId;
 
     private Project project;
@@ -87,7 +87,6 @@ public class QueryProcess implements ConnectorProcess {
         }
     }
 
-
     @Override
     public void endQuery() throws ExecutionException {
 
@@ -102,7 +101,7 @@ public class QueryProcess implements ConnectorProcess {
         }
     }
 
-     @Override
+    @Override
     public Project getProject() {
 
         return project;

@@ -47,7 +47,7 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
     /**
      * The Log.
      */
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * Constructor.
@@ -75,9 +75,9 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
         try {
             List<ColumnNameValue> streamData = new ArrayList<ColumnNameValue>();
             Map<String, Cell> cells = row.getCells();
-            for (String cellName : cells.keySet()) {
+            for (Map.Entry<String, Cell> cellName : cells.entrySet()) {
 
-                streamData.add(new ColumnNameValue(cellName, cells.get(cellName).getValue()));
+                streamData.add(new ColumnNameValue(cellName.getKey(), cellName.getValue().getValue()));
             }
             connection.getNativeConnection().insertData(streamName, streamData);
         } catch (StratioStreamingException e) {

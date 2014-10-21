@@ -16,15 +16,15 @@
  *  under the License.
  */
 
-package com.stratio.connector.streaming.core.engine.query.queryExecutor;
+package com.stratio.connector.streaming.core.engine.query.queryexecutor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
-import com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess.ProccesMessageFactory;
-import com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess.ProcessMessage;
+import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess.ProccesMessageFactory;
+import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess.ProcessMessage;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
 import com.stratio.meta.common.connector.IResultHandler;
 import com.stratio.meta.common.exceptions.UnsupportedException;
@@ -44,14 +44,14 @@ public class ConnectorQueryExecutor {
     /**
      * The Log.
      */
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected String queryId;
     protected ConnectorQueryData queryData;
-    IResultHandler resultHandler;
+    private IResultHandler resultHandler;
 
-    ProcessMessage proccesMesage;
-    StreamingQuery streamingQuery;
+    private ProcessMessage proccesMesage;
+    private StreamingQuery streamingQuery;
 
     public ConnectorQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler)
             throws UnsupportedException {

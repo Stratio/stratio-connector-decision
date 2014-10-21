@@ -88,31 +88,32 @@ public class ResultsetCreator {
     }
 
     private ColumnType updateColumnType(ColumnType colType) throws UnsupportedException {
+        ColumnType columnReturn;
         switch (colType) {
 
         case BIGINT:
-            colType = ColumnType.DOUBLE;
+            columnReturn = ColumnType.DOUBLE;
             break;
         case BOOLEAN:
-            colType = ColumnType.BOOLEAN;
+            columnReturn = ColumnType.BOOLEAN;
             break;
         case DOUBLE:
-            colType = ColumnType.DOUBLE;
+            columnReturn = ColumnType.DOUBLE;
             break;
         case FLOAT:
-            colType = ColumnType.DOUBLE;
+            columnReturn = ColumnType.DOUBLE;
             break;
         case INT:
-            colType = ColumnType.DOUBLE;
+            columnReturn = ColumnType.DOUBLE;
             break;
         case TEXT:
         case VARCHAR:
-            colType = ColumnType.VARCHAR;
+            columnReturn = ColumnType.VARCHAR;
             break;
         default:
             throw new UnsupportedException("Column type " + colType.name() + " not supported in Streaming");
         }
-        return colType;
+        return columnReturn;
     }
 
 }

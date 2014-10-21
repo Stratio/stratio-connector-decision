@@ -73,10 +73,7 @@
         </dependency>
 
 
-
-
-
-        <!-- SCALA AND AKKA -->
+        <!-- SCALA AND AKKA -- >
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-compiler</artifactId>
@@ -121,7 +118,7 @@
             <groupId>com.typesafe</groupId>
             <artifactId>config</artifactId>
             <version>1.2.0</version>
-        </dependency>
+        </dependency> -->
 
 
         <dependency>

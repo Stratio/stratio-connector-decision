@@ -1,4 +1,4 @@
-package com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess;
+package com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Mockito.mock;

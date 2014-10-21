@@ -45,7 +45,7 @@ public class ConnectorQueryBuilder {
     /**
      * The log.
      */
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private StringBuilder querySb = new StringBuilder();
 

@@ -42,7 +42,7 @@ public class StreamingConnector extends CommonsConnector {
     /**
      * The Log.
      */
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private transient ConnectorProcessHandler processHandler;
 
     public static void main(String[] args) {

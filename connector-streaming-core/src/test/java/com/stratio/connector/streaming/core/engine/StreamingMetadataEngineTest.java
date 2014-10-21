@@ -15,15 +15,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.internal.util.reflection.Whitebox;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.connection.ConnectionHandler;
-import com.stratio.connector.streaming.core.engine.query.ConnectorQueryBuilder;
-import com.stratio.connector.streaming.core.engine.query.ConnectorQueryParser;
-import com.stratio.connector.streaming.core.engine.query.queryExecutor.ConnectorQueryExecutor;
 import com.stratio.meta.common.exceptions.UnsupportedException;
 import com.stratio.meta2.common.data.ClusterName;
 import com.stratio.meta2.common.data.ColumnName;
@@ -35,7 +30,7 @@ import com.stratio.meta2.common.metadata.IndexMetadata;
 import com.stratio.meta2.common.metadata.TableMetadata;
 import com.stratio.meta2.common.statements.structures.selectors.Selector;
 import com.stratio.streaming.api.IStratioStreamingAPI;
-import org.powermock.api.mockito.PowerMockito;
+
 /**
  * StreamingMetadataEngine Tester.
  *
@@ -56,14 +51,11 @@ public class StreamingMetadataEngineTest {
     @Mock Connection<IStratioStreamingAPI> connection;
     @Mock com.stratio.streaming.api.IStratioStreamingAPI streamingApi;
 
-
-
     @Before
     public void before() throws Exception {
 
         when(connection.getNativeConnection()).thenReturn(streamingApi);
         streamingMetadataEngine = new StreamingMetadataEngine(connectionHandler);
-
 
     }
 

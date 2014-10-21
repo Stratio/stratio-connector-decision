@@ -16,7 +16,7 @@
  *  under the License.
  */
 
-package com.stratio.connector.streaming.core.engine.query.queryExecutor;
+package com.stratio.connector.streaming.core.engine.query.queryexecutor;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Matchers.any;
@@ -39,7 +39,7 @@ import org.mockito.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
-import com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess.ProcessMessage;
+import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess.ProcessMessage;
 import com.stratio.meta.common.connector.Operations;
 import com.stratio.meta.common.data.Row;
 import com.stratio.meta.common.logicalplan.Project;

@@ -16,17 +16,25 @@
  *  under the License.
  */
 
-package com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess;
+package com.stratio.connector.streaming.core.engine.query.queryexecutor.timer;
 
-import com.stratio.meta.common.data.Row;
+import java.util.TimerTask;
+
+import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess.TimeWindowProcessMessage;
 
 /**
- * Created by jmgomez on 16/10/14.
+ * Created by jmgomez on 9/10/14.
  */
-public interface ProcessMessage {
+public class SendResultTimer extends TimerTask {
 
-    public void processMessage(Row row);
+    private TimeWindowProcessMessage timeWindowQueryExecutor;
 
-    public void end();
+    public SendResultTimer(TimeWindowProcessMessage timeWindowQueryExecutor) {
+        this.timeWindowQueryExecutor = timeWindowQueryExecutor;
+    }
 
+    @Override
+    public void run() {
+        timeWindowQueryExecutor.sendMessages();
+    }
 }

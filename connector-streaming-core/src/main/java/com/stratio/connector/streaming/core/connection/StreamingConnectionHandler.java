@@ -38,7 +38,7 @@ public class StreamingConnectionHandler extends ConnectionHandler {
     /**
      * The Log.
      */
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public StreamingConnectionHandler(IConfiguration configuration) {
         super(configuration);

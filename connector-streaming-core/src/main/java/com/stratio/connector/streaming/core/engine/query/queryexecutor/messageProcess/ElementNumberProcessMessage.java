@@ -16,7 +16,7 @@
  *  under the License.
  */
 
-package com.stratio.connector.streaming.core.engine.query.queryExecutor.messageProcess;
+package com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess;
 
 import java.util.ArrayList;
 import java.util.Collections;

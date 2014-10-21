@@ -20,10 +20,8 @@
             <Description>The zookeeper server ip</Description>
         </Property>
     </RequiredProperties>
-    <Behaviors  >
-        <Behavior></Behavior>
-    </Behaviors>
- </DataStore>
+
+</DataStore>
 
 
 
