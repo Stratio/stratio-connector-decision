@@ -6,7 +6,7 @@
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -65,14 +65,16 @@ public class ProccesMessageFactoryTest {
         ConnectorQueryData queryDataNum = new ConnectorQueryData();
         queryDataNum.setWindow(new Window(Operations.SELECT_WINDOW, WindowType.NUM_ROWS));
         assertTrue("number row is correct",
-                        ProcessMessageFactory.getProccesMessage(queryDataNum, mock(ResultsetCreator.class)) instanceof ElementNumberProcessMessage);
+                ProcessMessageFactory.getProccesMessage(queryDataNum,
+                        mock(ResultsetCreator.class)) instanceof ElementNumberProcessMessage);
 
         ConnectorQueryData queryDataTemporal = new ConnectorQueryData();
         Window window = new Window(Operations.SELECT_WINDOW, WindowType.TEMPORAL);
         window.setTimeWindow(10, TimeUnit.DAYS);
         queryDataTemporal.setWindow(window);
         assertTrue("number row is correct",
-                        ProcessMessageFactory.getProccesMessage(queryDataTemporal, mock(ResultsetCreator.class)) instanceof TimeWindowProcessMessage);
+                ProcessMessageFactory.getProccesMessage(queryDataTemporal,
+                        mock(ResultsetCreator.class)) instanceof TimeWindowProcessMessage);
 
     }
 

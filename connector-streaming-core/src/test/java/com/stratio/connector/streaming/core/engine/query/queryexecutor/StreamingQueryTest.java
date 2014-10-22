@@ -1,19 +1,19 @@
 /*
  * Licensed to STRATIO (C) under one or more contributor license agreements.
- *  See the NOTICE file distributed with this work for additional information
- *  regarding copyright ownership. The STRATIO (C) licenses this file
- *  to you under the Apache License, Version 2.0 (the
- *  "License"); you may not use this file except in compliance
- *  with the License. You may obtain a copy of the License at
+ * See the NOTICE file distributed with this work for additional information
+ * regarding copyright ownership. The STRATIO (C) licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied. See the License for the
- *  specific language governing permissions and limitations
- *  under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package com.stratio.connector.streaming.core.engine.query.queryexecutor;
@@ -90,7 +90,8 @@ public class StreamingQueryTest {
     private static final String COLUMN_1 = "column_1";
     private static final com.stratio.streaming.commons.constants.ColumnType TYPE_1 = com.stratio.streaming.commons.constants.ColumnType.BOOLEAN;
     private static final Object VALUE_1_1 = "value_1_1";
-    private static final String COLUMN_2 = "column_2";;
+    private static final String COLUMN_2 = "column_2";
+    ;
     private static final com.stratio.streaming.commons.constants.ColumnType TYPE_2 = com.stratio.streaming.commons.constants.ColumnType.INTEGER;
     private static final Object VALUE_2_1 = "value_2_1";
     private static final Object VALUE_1_2 = "value_1_2";
@@ -136,7 +137,7 @@ public class StreamingQueryTest {
         when(stratioStreamingApi.listenStream(OUTPUT_STREAM)).thenReturn(kafkaSrteam);
 
         KafkaStream<String, StratioStreamingMessage> returnKafkaStream = streamingQuery.listenQuery(
-                        stratioStreamingApi, OUTPUT_STREAM);
+                stratioStreamingApi, OUTPUT_STREAM);
 
         assertEquals("The kafkastream is correct", kafkaSrteam, returnKafkaStream);
 
@@ -153,9 +154,9 @@ public class StreamingQueryTest {
         List<ColumnNameTypeValue> columns2 = createColumns(VALUE_1_2, VALUE_2_2);
 
         StratioStreamingMessage message1 = new StratioStreamingMessage(OPERATION, STREAM_NAME, SESION_ID, REQUEST_ID,
-                        REQUEST, TIMESTAMP, columns1, QUERIES, USERDEFINED);
+                REQUEST, TIMESTAMP, columns1, QUERIES, USERDEFINED);
         StratioStreamingMessage message2 = new StratioStreamingMessage(OPERATION, STREAM_NAME, SESION_ID, REQUEST_ID,
-                        REQUEST, TIMESTAMP, columns2, QUERIES, USERDEFINED);
+                REQUEST, TIMESTAMP, columns2, QUERIES, USERDEFINED);
 
         MessageAndMetadata messageAndMetadata1 = mock(MessageAndMetadata.class);
         when(messageAndMetadata1.message()).thenReturn(message1);

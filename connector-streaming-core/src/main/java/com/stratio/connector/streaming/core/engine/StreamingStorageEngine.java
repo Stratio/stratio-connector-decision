@@ -1,19 +1,19 @@
 /*
  * Licensed to STRATIO (C) under one or more contributor license agreements.
- *  See the NOTICE file distributed with this work for additional information
- *  regarding copyright ownership. The STRATIO (C) licenses this file
- *  to you under the Apache License, Version 2.0 (the
- *  "License"); you may not use this file except in compliance
- *  with the License. You may obtain a copy of the License at
+ * See the NOTICE file distributed with this work for additional information
+ * regarding copyright ownership. The STRATIO (C) licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied. See the License for the
- *  specific language governing permissions and limitations
- *  under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.stratio.connector.streaming.core.engine;
 
@@ -52,8 +52,7 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
     /**
      * Constructor.
      *
-     * @param connectionHandler
-     *            the connection handler.
+     * @param connectionHandler the connection handler.
      */
     public StreamingStorageEngine(ConnectionHandler connectionHandler) {
 
@@ -63,19 +62,15 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
     /**
      * Insert a document in Streaming.
      *
-     * @param targetStream
-     *            the targetName.
-     * @param row
-     *            the row.
-     * @throws com.stratio.meta.common.exceptions.ExecutionException
-     *             in case of failure during the execution.
-     * @throws com.stratio.meta.common.exceptions.UnsupportedException
-     *             it the operation is not supported.
+     * @param targetStream the targetName.
+     * @param row          the row.
+     * @throws com.stratio.meta.common.exceptions.ExecutionException   in case of failure during the execution.
+     * @throws com.stratio.meta.common.exceptions.UnsupportedException it the operation is not supported.
      */
 
     @Override
     protected void insert(TableMetadata targetStream, Row row, Connection<IStratioStreamingAPI> connection)
-                    throws UnsupportedException, ExecutionException {
+            throws UnsupportedException, ExecutionException {
         String streamName = StreamUtil.createStreamName(targetStream.getName());
         try {
             List<ColumnNameValue> streamData = new ArrayList<ColumnNameValue>();
@@ -95,16 +90,13 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
     /**
      * Insert a set of documents in Streaming.
      *
-     * @param rows
-     *            the set of rows.
-     * @throws com.stratio.meta.common.exceptions.ExecutionException
-     *             in case of failure during the execution.
-     * @throws com.stratio.meta.common.exceptions.UnsupportedException
-     *             if the operation is not supported.
+     * @param rows the set of rows.
+     * @throws com.stratio.meta.common.exceptions.ExecutionException   in case of failure during the execution.
+     * @throws com.stratio.meta.common.exceptions.UnsupportedException if the operation is not supported.
      */
     @Override
     protected void insert(TableMetadata targetStream, Collection<Row> rows, Connection<IStratioStreamingAPI> connection)
-                    throws UnsupportedException, ExecutionException {
+            throws UnsupportedException, ExecutionException {
         String streamName = targetStream.getName().getName();
         try {
             for (Row row : rows) {
