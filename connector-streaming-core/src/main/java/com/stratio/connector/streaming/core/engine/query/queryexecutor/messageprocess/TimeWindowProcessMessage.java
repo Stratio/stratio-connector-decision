@@ -42,7 +42,7 @@ public class TimeWindowProcessMessage implements ProcessMessage {
 
     /**
      * @param queryData
-     * @throws com.stratio.meta.common.exceptions.UnsupportedException
+
      */
     public TimeWindowProcessMessage(ConnectorQueryData queryData, ResultsetCreator resultsetCreator)
             throws UnsupportedException {
