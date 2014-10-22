@@ -28,15 +28,14 @@ import java.util.Map;
 import java.util.Set;
 
 import com.stratio.connector.commons.ftest.helper.IConnectorHelper;
-import com.stratio.connector.streaming.core.StreamingConnector;
-import com.stratio.meta.common.connector.ConnectorClusterConfig;
-import com.stratio.meta.common.connector.IConfiguration;
-import com.stratio.meta.common.connector.IConnector;
-import com.stratio.meta.common.exceptions.ConnectionException;
-import com.stratio.meta.common.exceptions.InitializationException;
-import com.stratio.meta.common.security.ICredentials;
-import com.stratio.meta2.common.data.ClusterName;
-import com.stratio.meta2.common.metadata.ColumnType;
+import com.stratio.crossdata.common.connector.ConnectorClusterConfig;
+import com.stratio.crossdata.common.connector.IConfiguration;
+import com.stratio.crossdata.common.connector.IConnector;
+import com.stratio.crossdata.common.data.ClusterName;
+import com.stratio.crossdata.common.exceptions.ConnectionException;
+import com.stratio.crossdata.common.exceptions.InitializationException;
+import com.stratio.crossdata.common.metadata.ColumnType;
+import com.stratio.crossdata.common.security.ICredentials;
 
 /**
  * Created by jmgomez on 4/09/14.

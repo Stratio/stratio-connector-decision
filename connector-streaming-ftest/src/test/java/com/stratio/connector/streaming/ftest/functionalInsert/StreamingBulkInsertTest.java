@@ -18,25 +18,11 @@
 
 package com.stratio.connector.streaming.ftest.functionalInsert;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.stratio.connector.commons.ftest.functionalInsert.GenericBulkInsertTest;
 import com.stratio.connector.commons.ftest.helper.IConnectorHelper;
-import com.stratio.connector.commons.ftest.schema.TableMetadataBuilder;
-import com.stratio.connector.streaming.core.StreamingConnector;
 import com.stratio.connector.streaming.ftest.helper.StreamingConnectorHelper;
-import com.stratio.meta.common.connector.ConnectorClusterConfig;
-import com.stratio.meta.common.data.Cell;
-import com.stratio.meta.common.data.Row;
-import com.stratio.meta.common.exceptions.ConnectionException;
-import com.stratio.meta.common.exceptions.ExecutionException;
-import com.stratio.meta.common.exceptions.InitializationException;
-import com.stratio.meta.common.exceptions.UnsupportedException;
-import com.stratio.meta2.common.data.ClusterName;
-import com.stratio.meta2.common.metadata.ColumnType;
-import com.stratio.meta2.common.metadata.TableMetadata;
+import com.stratio.crossdata.common.exceptions.ConnectionException;
+import com.stratio.crossdata.common.exceptions.InitializationException;
 
 /**
  * Created by jmgomez on 4/09/14.

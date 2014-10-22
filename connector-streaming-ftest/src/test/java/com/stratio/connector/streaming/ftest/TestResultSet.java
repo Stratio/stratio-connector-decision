@@ -21,11 +21,8 @@ package com.stratio.connector.streaming.ftest;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.stratio.meta.common.connector.IResultHandler;
-import com.stratio.meta.common.data.ResultSet;
-import com.stratio.meta.common.data.Row;
-import com.stratio.meta.common.exceptions.ExecutionException;
-import com.stratio.meta.common.result.QueryResult;
+import com.stratio.crossdata.common.data.Row;
+import com.stratio.crossdata.common.result.QueryResult;
 
 /**
  * @author david

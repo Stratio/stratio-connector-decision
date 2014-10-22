@@ -21,8 +21,8 @@ package com.stratio.connector.streaming.ftest.functionalMetadata;
 import com.stratio.connector.commons.ftest.functionalMetadata.GenericMetadataDropTest;
 import com.stratio.connector.commons.ftest.helper.IConnectorHelper;
 import com.stratio.connector.streaming.ftest.helper.StreamingConnectorHelper;
-import com.stratio.meta.common.exceptions.ConnectionException;
-import com.stratio.meta.common.exceptions.InitializationException;
+import com.stratio.crossdata.common.exceptions.ConnectionException;
+import com.stratio.crossdata.common.exceptions.InitializationException;
 
 /**
  * Created by jmgomez on 5/09/14.

@@ -21,16 +21,14 @@ package com.stratio.connector.streaming.ftest.thread.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.stratio.connector.streaming.core.StreamingConnector;
 import com.stratio.connector.streaming.ftest.GenericStreamingTest;
-import com.stratio.meta.common.connector.IStorageEngine;
-import com.stratio.meta.common.data.Cell;
-import com.stratio.meta.common.data.Row;
-import com.stratio.meta.common.exceptions.ExecutionException;
-import com.stratio.meta.common.exceptions.UnsupportedException;
-import com.stratio.meta2.common.data.ClusterName;
-import com.stratio.meta2.common.metadata.ColumnType;
-import com.stratio.meta2.common.metadata.TableMetadata;
+import com.stratio.crossdata.common.connector.IStorageEngine;
+import com.stratio.crossdata.common.data.Cell;
+import com.stratio.crossdata.common.data.ClusterName;
+import com.stratio.crossdata.common.data.Row;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.metadata.ColumnType;
+import com.stratio.crossdata.common.metadata.TableMetadata;
 
 public class StreamingInserter extends Thread {
 

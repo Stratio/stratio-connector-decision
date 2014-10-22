@@ -30,17 +30,15 @@ import com.stratio.connector.commons.ftest.workFlow.LogicalWorkFlowCreator;
 import com.stratio.connector.streaming.ftest.GenericStreamingTest;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
-import com.stratio.meta.common.connector.IResultHandler;
-import com.stratio.meta.common.data.Row;
-import com.stratio.meta.common.exceptions.ConnectionException;
-import com.stratio.meta.common.exceptions.ExecutionException;
-import com.stratio.meta.common.exceptions.InitializationException;
-import com.stratio.meta.common.exceptions.UnsupportedException;
-import com.stratio.meta.common.logicalplan.LogicalWorkflow;
-import com.stratio.meta.common.result.QueryResult;
-import com.stratio.meta.common.statements.structures.window.WindowType;
-import com.stratio.meta2.common.metadata.ColumnType;
-import com.stratio.meta2.common.metadata.TableMetadata;
+import com.stratio.crossdata.common.data.Row;
+import com.stratio.crossdata.common.exceptions.ConnectionException;
+import com.stratio.crossdata.common.exceptions.InitializationException;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.logicalplan.LogicalWorkflow;
+import com.stratio.crossdata.common.metadata.ColumnType;
+import com.stratio.crossdata.common.metadata.TableMetadata;
+import com.stratio.crossdata.common.result.QueryResult;
+import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
 public class ThreadFilterIntegerFunctionalTest extends GenericStreamingTest{
 
