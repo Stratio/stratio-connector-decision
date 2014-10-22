@@ -40,33 +40,7 @@ public class ConnectorQueryParser {
         LogicalStep lStep = logicalWorkFlow;
 
         do {
-            if (lStep instanceof Project) {
-                if (!queryData.hasProjection()) {
-                    queryData.setProjection((Project) lStep);
-                } else {
-                    throw new UnsupportedOperationException(" # Project > 1");
-                }
-            } else if (lStep instanceof Filter) {
-
-                Filter step = (Filter) lStep;
-                if (Operator.MATCH == step.getRelation().getOperator()) {
-                    throw new UnsupportedException("LogicalStep [" + lStep.getClass().getCanonicalName()
-                            + " not supported");
-                } else {
-                    queryData.addFilter((Filter) lStep);
-                }
-            } else if (lStep instanceof Select) {
-                queryData.setSelect((Select) lStep);
-
-            } else if (lStep instanceof Window) {
-                queryData.setWindow((Window) lStep);
-            } else if (lStep instanceof Limit) {
-                throw new UnsupportedException("LogicalStep [" + lStep.getClass().getCanonicalName()
-                        + " not yet supported");
-            } else {
-                throw new UnsupportedException(
-                        "LogicalStep [" + lStep.getClass().getCanonicalName() + " not supported");
-            }
+            extractLogicalStep(queryData, lStep);
 
             lStep = lStep.getNextStep();
 
@@ -75,6 +49,43 @@ public class ConnectorQueryParser {
         checkSupportedQuery(queryData);
 
         return queryData;
+    }
+
+    private void extractLogicalStep(ConnectorQueryData queryData, LogicalStep lStep) throws UnsupportedException {
+        if (lStep instanceof Project) {
+            processProject(queryData, (Project) lStep);
+        } else if (lStep instanceof Filter) {
+            processFilter(queryData, lStep);
+        } else if (lStep instanceof Select) {
+            queryData.setSelect((Select) lStep);
+
+        } else if (lStep instanceof Window) {
+            queryData.setWindow((Window) lStep);
+        } else if (lStep instanceof Limit) {
+            throw new UnsupportedException("LogicalStep [" + lStep.getClass().getCanonicalName()
+                    + " not yet supported");
+        } else {
+            throw new UnsupportedException(
+                    "LogicalStep [" + lStep.getClass().getCanonicalName() + " not supported");
+        }
+    }
+
+    private void processFilter(ConnectorQueryData queryData, LogicalStep lStep) throws UnsupportedException {
+        Filter step = (Filter) lStep;
+        if (Operator.MATCH == step.getRelation().getOperator()) {
+            throw new UnsupportedException("LogicalStep [" + lStep.getClass().getCanonicalName()
+                    + " not supported");
+        } else {
+            queryData.addFilter((Filter) lStep);
+        }
+    }
+
+    private void processProject(ConnectorQueryData queryData, Project lStep) {
+        if (!queryData.hasProjection()) {
+            queryData.setProjection((Project) lStep);
+        } else {
+            throw new UnsupportedOperationException(" # Project > 1");
+        }
     }
 
     private void checkSupportedQuery(ConnectorQueryData queryData) {

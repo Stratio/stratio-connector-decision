@@ -25,7 +25,7 @@ import com.stratio.crossdata.common.exceptions.UnsupportedException;
 /**
  * Created by jmgomez on 16/10/14.
  */
-public class ProcessMessageFactory {
+public final class ProcessMessageFactory {
 
     private ProcessMessageFactory() {
 

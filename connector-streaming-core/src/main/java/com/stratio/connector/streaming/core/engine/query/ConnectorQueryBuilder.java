@@ -34,8 +34,6 @@ import com.stratio.crossdata.common.logicalplan.Filter;
 import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.statements.structures.relationships.Operator;
 import com.stratio.crossdata.common.statements.structures.relationships.Relation;
-import com.stratio.crossdata.common.statements.structures.selectors.ColumnSelector;
-import com.stratio.crossdata.common.statements.structures.selectors.Selector;
 import com.stratio.crossdata.common.statements.structures.selectors.StringSelector;
 
 /**
@@ -158,16 +156,7 @@ public class ConnectorQueryBuilder {
 
     }
 
-    private String getFieldName(Selector selector) throws UnsupportedException {
-        String field = null;
-        if (selector instanceof ColumnSelector) {
-            ColumnSelector columnSelector = (ColumnSelector) selector;
-            field = columnSelector.getName().getName();
-        } else {
-            throw new UnsupportedException("Left selector must be a columnSelector in filters");
-        }
-        return field;
-    }
+
 
     private String getSiddhiOperator(Operator operator) throws UnsupportedException {
 
