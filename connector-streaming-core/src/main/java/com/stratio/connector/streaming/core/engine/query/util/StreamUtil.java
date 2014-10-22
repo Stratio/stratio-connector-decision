@@ -26,12 +26,12 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.stratio.meta.common.exceptions.UnsupportedException;
-import com.stratio.meta.common.logicalplan.Project;
-import com.stratio.meta.common.logicalplan.Select;
-import com.stratio.meta2.common.data.ColumnName;
-import com.stratio.meta2.common.data.TableName;
-import com.stratio.meta2.common.metadata.ColumnType;
+import com.stratio.crossdata.common.data.ColumnName;
+import com.stratio.crossdata.common.data.TableName;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.logicalplan.Project;
+import com.stratio.crossdata.common.logicalplan.Select;
+import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.api.messaging.ColumnNameValue;
 import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
@@ -51,11 +51,9 @@ public class StreamUtil {
      */
     private static final Random RANDOM = new Random(System.currentTimeMillis());
     private static final String[] TEXT = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
-            "P",
-            "Q", "R", "S", "T",
-            "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
-            "p", "q", "r", "s",
-            "t", "u", "v", "w", "x", "y", "z", "!", "_", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+                    "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i",
+                    "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "!", "_", "1",
+                    "2", "3", "4", "5", "6", "7", "8", "9" };
 
     public static String createStreamName(Project project) {
         return createStreamName(project.getCatalogName(), project.getTableName().getName());
@@ -74,7 +72,7 @@ public class StreamUtil {
     }
 
     public static void insertRandomData(IStratioStreamingAPI stratioStreamingAPI, String streamName, Select select)
-            throws UnsupportedException {
+                    throws UnsupportedException {
         try {
 
             List<ColumnNameValue> streamData = new LinkedList<>();
@@ -125,10 +123,10 @@ public class StreamUtil {
 
         Object randomObject;
 
-        randomObject = getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter()
-                + getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter()
-                + getRandonLetter() + getRandonLetter()
-                + getRandonLetter() + getRandonLetter();
+        randomObject = getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter()
+                        + getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter()
+                        + getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter()
+                        + getRandonLetter() + getRandonLetter();
 
         return randomObject;
     }

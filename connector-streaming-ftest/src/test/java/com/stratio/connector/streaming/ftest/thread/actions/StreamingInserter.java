@@ -21,11 +21,13 @@ package com.stratio.connector.streaming.ftest.thread.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.stratio.connector.streaming.core.StreamingConnector;
 import com.stratio.connector.streaming.ftest.GenericStreamingTest;
 import com.stratio.crossdata.common.connector.IStorageEngine;
 import com.stratio.crossdata.common.data.Cell;
 import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.data.Row;
+import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.metadata.TableMetadata;
@@ -125,7 +127,7 @@ public class StreamingInserter extends Thread {
                 break;
 
             }
-            row.addCell(GenericStreamingTest.INTEGER_CHANGEABLE_COLUMN,new Cell(integerChangeable));
+            row.addCell(GenericStreamingTest.INTEGER_CHANGEABLE_COLUMN, new Cell(integerChangeable));
         }
 
         return row;
@@ -133,11 +135,11 @@ public class StreamingInserter extends Thread {
 
     private String text = "Text";
 
-    private  int integerChangeable= 10;
+    private int integerChangeable = 10;
+
     public void changeStingColumn(String stringOutput) {
         this.text = stringOutput;
     }
-
 
     public void changeIntegerChangeableColumn(int integerChangeable) {
         this.integerChangeable = integerChangeable;

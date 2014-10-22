@@ -27,8 +27,8 @@ import java.util.TimerTask;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.timer.SendResultTimer;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
-import com.stratio.meta.common.data.Row;
-import com.stratio.meta.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.data.Row;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
 
 /**
  * Created by jmgomez on 7/10/14.
@@ -45,14 +45,14 @@ public class TimeWindowProcessMessage implements ProcessMessage {
      * @throws com.stratio.meta.common.exceptions.UnsupportedException
      */
     public TimeWindowProcessMessage(ConnectorQueryData queryData, ResultsetCreator resultsetCreator)
-            throws UnsupportedException {
+                    throws UnsupportedException {
 
         TimerTask timerTask = new SendResultTimer(this);
 
         this.resultsetCreator = resultsetCreator;
         timer = new Timer("[Timer_" + queryData.getQueryId() + "]", true);
-        timer.scheduleAtFixedRate(timerTask, queryData.getWindow().getDurationInMilliseconds(),
-                queryData.getWindow().getDurationInMilliseconds());
+        timer.scheduleAtFixedRate(timerTask, queryData.getWindow().getDurationInMilliseconds(), queryData.getWindow()
+                        .getDurationInMilliseconds());
 
     }
 
@@ -65,7 +65,8 @@ public class TimeWindowProcessMessage implements ProcessMessage {
 
     }
 
-    @Override public void end() {
+    @Override
+    public void end() {
         isInterrupted = true;
         timer.cancel();
     }

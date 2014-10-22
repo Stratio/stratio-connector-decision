@@ -40,14 +40,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess.ProcessMessage;
-import com.stratio.meta.common.connector.Operations;
-import com.stratio.meta.common.data.Row;
-import com.stratio.meta.common.logicalplan.Project;
-import com.stratio.meta.common.logicalplan.Select;
-import com.stratio.meta2.common.data.ClusterName;
-import com.stratio.meta2.common.data.ColumnName;
-import com.stratio.meta2.common.data.TableName;
-import com.stratio.meta2.common.metadata.ColumnType;
+import com.stratio.crossdata.common.connector.Operations;
+import com.stratio.crossdata.common.data.ClusterName;
+import com.stratio.crossdata.common.data.ColumnName;
+import com.stratio.crossdata.common.data.Row;
+import com.stratio.crossdata.common.data.TableName;
+import com.stratio.crossdata.common.logicalplan.Project;
+import com.stratio.crossdata.common.logicalplan.Select;
+import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.messages.ColumnNameTypeValue;
 import com.stratio.streaming.commons.messages.StratioStreamingMessage;
@@ -63,7 +63,9 @@ import kafka.serializer.Decoder;
  *
  * @author <Authors name>
  * @version 1.0
- * @since <pre>oct 15, 2014</pre>
+ * @since <pre>
+ * oct 15, 2014
+ * </pre>
  */
 @RunWith(PowerMockRunner.class)
 public class StreamingQueryTest {
@@ -71,7 +73,7 @@ public class StreamingQueryTest {
     private static final String QUERY = "query";
     private static final String CATALOG = "catalog";
     private static final String TABLE = "table";
-    private static final com.stratio.meta2.common.data.ClusterName CLUSTER_NAME = new ClusterName("CLUSTER_NAME");
+    private static final ClusterName CLUSTER_NAME = new ClusterName("CLUSTER_NAME");
     private static final String QUERY_ID = "queryId";
     private static final String OUTPUT_STREAM = "output_stream";
     private static final String COLUMN1 = "column_1";
@@ -86,22 +88,23 @@ public class StreamingQueryTest {
     private static final List<StreamQuery> QUERIES = Collections.EMPTY_LIST;
     private static final Boolean USERDEFINED = true;
     private static final String COLUMN_1 = "column_1";
-    private static final com.stratio.streaming.commons.constants.ColumnType TYPE_1 = com.stratio.streaming.commons
-            .constants.ColumnType.BOOLEAN;
+    private static final com.stratio.streaming.commons.constants.ColumnType TYPE_1 = com.stratio.streaming.commons.constants.ColumnType.BOOLEAN;
     private static final Object VALUE_1_1 = "value_1_1";
-    private static final String COLUMN_2 = "column_2";
-    ;
-    private static final com.stratio.streaming.commons.constants.ColumnType TYPE_2 = com.stratio.streaming.commons
-            .constants.ColumnType.INTEGER;
+    private static final String COLUMN_2 = "column_2";;
+    private static final com.stratio.streaming.commons.constants.ColumnType TYPE_2 = com.stratio.streaming.commons.constants.ColumnType.INTEGER;
     private static final Object VALUE_2_1 = "value_2_1";
     private static final Object VALUE_1_2 = "value_1_2";
     private static final Object VALUE_2_2 = "value_2_2";
 
     StreamingQuery streamingQuery;
-    @Mock Decoder DECODER;
-    @Mock Decoder KEYDECODER;
-    @Mock IStratioStreamingAPI stratioStreamingApi;
-    @Mock ProcessMessage processMessage;
+    @Mock
+    Decoder DECODER;
+    @Mock
+    Decoder KEYDECODER;
+    @Mock
+    IStratioStreamingAPI stratioStreamingApi;
+    @Mock
+    ProcessMessage processMessage;
 
     @Before
     public void before() throws Exception {
@@ -132,8 +135,8 @@ public class StreamingQueryTest {
         KafkaStream<String, StratioStreamingMessage> kafkaSrteam = mock(KafkaStream.class);
         when(stratioStreamingApi.listenStream(OUTPUT_STREAM)).thenReturn(kafkaSrteam);
 
-        KafkaStream<String, StratioStreamingMessage> returnKafkaStream = streamingQuery.listenQuery(stratioStreamingApi,
-                OUTPUT_STREAM);
+        KafkaStream<String, StratioStreamingMessage> returnKafkaStream = streamingQuery.listenQuery(
+                        stratioStreamingApi, OUTPUT_STREAM);
 
         assertEquals("The kafkastream is correct", kafkaSrteam, returnKafkaStream);
 
@@ -150,9 +153,9 @@ public class StreamingQueryTest {
         List<ColumnNameTypeValue> columns2 = createColumns(VALUE_1_2, VALUE_2_2);
 
         StratioStreamingMessage message1 = new StratioStreamingMessage(OPERATION, STREAM_NAME, SESION_ID, REQUEST_ID,
-                REQUEST, TIMESTAMP, columns1, QUERIES, USERDEFINED);
+                        REQUEST, TIMESTAMP, columns1, QUERIES, USERDEFINED);
         StratioStreamingMessage message2 = new StratioStreamingMessage(OPERATION, STREAM_NAME, SESION_ID, REQUEST_ID,
-                REQUEST, TIMESTAMP, columns2, QUERIES, USERDEFINED);
+                        REQUEST, TIMESTAMP, columns2, QUERIES, USERDEFINED);
 
         MessageAndMetadata messageAndMetadata1 = mock(MessageAndMetadata.class);
         when(messageAndMetadata1.message()).thenReturn(message1);
@@ -164,19 +167,19 @@ public class StreamingQueryTest {
 
         streamingQuery.readMessages(streams);
 
-        //        Row row = new Row();
-        //        Map<String, Cell> cells = new LinkedHashMap<>();
-        //        cells.put(COLUMN_1,new Cell(VALUE_1_1));
-        //        cells.put(COLUMN_2,new Cell(VALUE_2_1));
-        //        row.setCells(cells);
+        // Row row = new Row();
+        // Map<String, Cell> cells = new LinkedHashMap<>();
+        // cells.put(COLUMN_1,new Cell(VALUE_1_1));
+        // cells.put(COLUMN_2,new Cell(VALUE_2_1));
+        // row.setCells(cells);
         verify(processMessage, times(2)).processMessage(any(Row.class));
 
-        //        Row row2 = new Row();
-        //        Map<String, Cell> cells2 = new LinkedHashMap<>();
-        //        cells2.put(COLUMN_1,new Cell(VALUE_1_2));
-        //        cells2.put(COLUMN_2,new Cell(VALUE_2_2));
-        //        row2.setCells(cells);
-        //        verify(processMessage, times(1)).processMessage(eq(row2));
+        // Row row2 = new Row();
+        // Map<String, Cell> cells2 = new LinkedHashMap<>();
+        // cells2.put(COLUMN_1,new Cell(VALUE_1_2));
+        // cells2.put(COLUMN_2,new Cell(VALUE_2_2));
+        // row2.setCells(cells);
+        // verify(processMessage, times(1)).processMessage(eq(row2));
     }
 
     private List<ColumnNameTypeValue> createColumns(Object value1, Object value2) {

@@ -20,18 +20,20 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
-import com.stratio.meta.common.connector.Operations;
-import com.stratio.meta.common.data.Row;
-import com.stratio.meta.common.logicalplan.Window;
-import com.stratio.meta.common.statements.structures.window.TimeUnit;
-import com.stratio.meta.common.statements.structures.window.WindowType;
+import com.stratio.crossdata.common.connector.Operations;
+import com.stratio.crossdata.common.data.Row;
+import com.stratio.crossdata.common.logicalplan.Window;
+import com.stratio.crossdata.common.statements.structures.window.TimeUnit;
+import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
 /**
  * TimeWindowProcessMessage Tester.
  *
  * @author <Authors name>
  * @version 1.0
- * @since <pre>oct 16, 2014</pre>
+ * @since <pre>
+ * oct 16, 2014
+ * </pre>
  */
 @RunWith(PowerMockRunner.class)
 public class TimeWindowProcessMessageTest {
@@ -40,7 +42,8 @@ public class TimeWindowProcessMessageTest {
     private static final int EJECUTION_TIME = 30;
 
     TimeWindowProcessMessage timeWindowProcessMessage;
-    @Mock ResultsetCreator resultSetCreator;
+    @Mock
+    ResultsetCreator resultSetCreator;
 
     long time;
 
@@ -91,4 +94,4 @@ public class TimeWindowProcessMessageTest {
 
     }
 
-} 
+}

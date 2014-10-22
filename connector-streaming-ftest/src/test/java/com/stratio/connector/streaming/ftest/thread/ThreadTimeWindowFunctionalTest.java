@@ -37,20 +37,24 @@ import com.stratio.connector.commons.ftest.workFlow.LogicalWorkFlowCreator;
 import com.stratio.connector.streaming.ftest.GenericStreamingTest;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
+import com.stratio.crossdata.common.connector.IResultHandler;
+import com.stratio.crossdata.common.data.Cell;
 import com.stratio.crossdata.common.data.ColumnName;
 import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.data.TableName;
 import com.stratio.crossdata.common.exceptions.ConnectionException;
+import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.exceptions.InitializationException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.logicalplan.LogicalWorkflow;
 import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.metadata.TableMetadata;
+import com.stratio.crossdata.common.metadata.structures.ColumnMetadata;
 import com.stratio.crossdata.common.result.QueryResult;
 import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
-public class ThreadTimeWindowFunctionalTest  extends GenericStreamingTest {
+public class ThreadTimeWindowFunctionalTest extends GenericStreamingTest {
 
     /**
      * The Log.
@@ -58,20 +62,13 @@ public class ThreadTimeWindowFunctionalTest  extends GenericStreamingTest {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     public static final int ELEMENTS_WRITE = 500;
 
-
-
     private static final String OTHER_TEXT = "OTHER...... ";
     private static final int WAIT_TIME = 15;
-
-
 
     boolean correctOrder = true;
     Set<Integer> returnSet = new HashSet<>();
 
-
     TableMetadata tableMetadata;
-
-
 
     Boolean correct = true;
     Boolean correctType = true;
@@ -82,15 +79,15 @@ public class ThreadTimeWindowFunctionalTest  extends GenericStreamingTest {
         super.setUp();
 
         returnSet = new HashSet<>();
-         correct = true;
-         correctType = true;
-         returnTypes = true;
-         correctOrder = true;
+        correct = true;
+        correctType = true;
+        returnTypes = true;
+        correctOrder = true;
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
-        tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN,
-                ColumnType.VARCHAR).addColumn(INTEGER_COLUMN,
-                ColumnType.INT).addColumn(BOOLEAN_COLUMN,ColumnType.BOOLEAN).addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT).build();
+        tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, ColumnType.VARCHAR)
+                        .addColumn(INTEGER_COLUMN, ColumnType.INT).addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
+                        .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT).build();
         try {
             sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -108,7 +105,6 @@ public class ThreadTimeWindowFunctionalTest  extends GenericStreamingTest {
 
     @Test
     public void testStopReadBeforeStopWrite() throws InterruptedException, UnsupportedException {
-
 
         logger.debug("********************** Inserting ......");
         StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
@@ -150,7 +146,8 @@ public class ThreadTimeWindowFunctionalTest  extends GenericStreamingTest {
         LogicalWorkflow logicalWokflow = createLogicalWorkFlow();
 
         ResultHandler resultHandler = new ResultHandler((Select) logicalWokflow.getLastStep());
-        StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata, logicalWokflow, resultHandler);
+        StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata, logicalWokflow,
+                        resultHandler);
 
         stremingRead.start();
         logger.debug("********************** Querying......");
@@ -161,11 +158,10 @@ public class ThreadTimeWindowFunctionalTest  extends GenericStreamingTest {
         waitSeconds(30); // it must be at least bigger than the windows time
         resultHandler.mustNotReadMore();
         logger.debug("TEST ********************** Wait for stoped read......");
-        waitSeconds( 10*WAIT_TIME);
+        waitSeconds(10 * WAIT_TIME);
 
         stremingRead.end();
         logger.debug("TEST ********************** END Querying......");
-        
 
         assertTrue("all is correct", correct);
         assertTrue("Result is ordered", correctOrder);
@@ -184,12 +180,12 @@ public class ThreadTimeWindowFunctionalTest  extends GenericStreamingTest {
 
         stremingRead.start();
         logger.debug("********************** Querying......");
-        waitSeconds( WAIT_TIME);
+        waitSeconds(WAIT_TIME);
 
         StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
         stramingInserter.numOfElement(ELEMENTS_WRITE).elementPerSecond(ELEMENTS_WRITE);
         stramingInserter.start();
-        waitSeconds( WAIT_TIME);
+        waitSeconds(WAIT_TIME);
         stremingRead.end();
         stramingInserter.end();
 
@@ -202,17 +198,15 @@ public class ThreadTimeWindowFunctionalTest  extends GenericStreamingTest {
     }
 
     private LogicalWorkflow createLogicalWorkFlow() throws UnsupportedException {
-        LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE,
-                        getClusterName());
+        LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, getClusterName());
 
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
                         ColumnType.BOOLEAN));
-        return logicalWorkFlowCreator.addColumnName(STRING_COLUMN)
-                        .addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
-                .addWindow(WindowType.TEMPORAL, 5)
+        return logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN)
+                        .addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns).addWindow(WindowType.TEMPORAL, 5)
                         .getLogicalWorkflow();
     }
 
@@ -220,8 +214,7 @@ public class ThreadTimeWindowFunctionalTest  extends GenericStreamingTest {
     public void testManyThread() throws UnsupportedException, ExecutionException, InterruptedException {
         LogicalWorkflow logicalWokflow = new LogicalWorkFlowCreator(CATALOG, TABLE, getClusterName())
                         .addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
-                .addWindow(WindowType.TEMPORAL, 20)
-                        .getLogicalWorkflow();
+                        .addWindow(WindowType.TEMPORAL, 20).getLogicalWorkflow();
         sConnector.getQueryEngine().asyncExecute("query1", logicalWokflow,
                         new ResultHandler((Select) logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
@@ -258,7 +251,7 @@ public class ThreadTimeWindowFunctionalTest  extends GenericStreamingTest {
         private ColumnName[] orderendColumnaName;
 
         public ResultHandler(Select select) {
-        	mustRead = true;
+            mustRead = true;
             orderendColumnaName = select.getColumnMap().keySet().toArray(new ColumnName[0]);
 
         }
@@ -276,7 +269,7 @@ public class ThreadTimeWindowFunctionalTest  extends GenericStreamingTest {
 
         @Override
         public void processResult(QueryResult result) {
-            if (!mustRead && result.getResultSet().size()!=0) {
+            if (!mustRead && result.getResultSet().size() != 0) {
                 correct = false;
                 System.out.println(result.getResultSet().size());
             }
@@ -318,7 +311,7 @@ public class ThreadTimeWindowFunctionalTest  extends GenericStreamingTest {
                 ColumnMetadata[] columnMetadata = columnMetadataList.toArray(new ColumnMetadata[0]);
 
                 if (!columnMetadata[0].getType().equals(ColumnType.VARCHAR)
-                                || !columnMetadata[1].getType().equals(ColumnType.DOUBLE) //All number types are
+                                || !columnMetadata[1].getType().equals(ColumnType.DOUBLE) // All number types are
                                 // returned like double
                                 || !columnMetadata[2].getType().equals(ColumnType.BOOLEAN)) {
                     correctType = false;

@@ -27,9 +27,9 @@ import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess.ProcessMessage;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
-import com.stratio.meta.common.data.Cell;
-import com.stratio.meta.common.data.Row;
-import com.stratio.meta.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.data.Cell;
+import com.stratio.crossdata.common.data.Row;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
 import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
@@ -60,8 +60,8 @@ public class StreamingQuery {
     }
 
     public String createQuery(String query, IStratioStreamingAPI stratioStreamingAPI)
-            throws StratioEngineOperationException, StratioEngineStatusException, StratioAPISecurityException,
-            UnsupportedException {
+                    throws StratioEngineOperationException, StratioEngineStatusException, StratioAPISecurityException,
+                    UnsupportedException {
 
         String streamName = StreamUtil.createStreamName(queryData.getProjection());
         String streamOutgoingName = StreamUtil.createOutgoingName(streamName, queryData.getQueryId());
@@ -73,12 +73,11 @@ public class StreamingQuery {
     }
 
     public KafkaStream<String, StratioStreamingMessage> listenQuery(IStratioStreamingAPI stratioStreamingAPI,
-            String streamOutgoingName)
-            throws StratioEngineOperationException, StratioEngineStatusException, StratioAPISecurityException,
-            UnsupportedException {
+                    String streamOutgoingName) throws StratioEngineOperationException, StratioEngineStatusException,
+                    StratioAPISecurityException, UnsupportedException {
         logger.info("Listening stream..." + streamOutgoingName);
         KafkaStream<String, StratioStreamingMessage> messageAndMetadatas = stratioStreamingAPI
-                .listenStream(streamOutgoingName);
+                        .listenStream(streamOutgoingName);
         StreamUtil.insertRandomData(stratioStreamingAPI, streamOutgoingName, queryData.getSelect());
         return messageAndMetadatas;
     }
@@ -95,7 +94,7 @@ public class StreamingQuery {
     }
 
     public void endQuery(String streamName, Connection<IStratioStreamingAPI> connection)
-            throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
+                    throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
         IStratioStreamingAPI streamConection = connection.getNativeConnection();
         streamConection.stopListenStream(streamName);
         if (queryId != null) {

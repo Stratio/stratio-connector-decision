@@ -29,11 +29,11 @@ import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.connection.ConnectionHandler;
 import com.stratio.connector.commons.engine.CommonsStorageEngine;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
-import com.stratio.meta.common.data.Cell;
-import com.stratio.meta.common.data.Row;
-import com.stratio.meta.common.exceptions.ExecutionException;
-import com.stratio.meta.common.exceptions.UnsupportedException;
-import com.stratio.meta2.common.metadata.TableMetadata;
+import com.stratio.crossdata.common.data.Cell;
+import com.stratio.crossdata.common.data.Row;
+import com.stratio.crossdata.common.exceptions.ExecutionException;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.metadata.TableMetadata;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.api.messaging.ColumnNameValue;
 import com.stratio.streaming.commons.exceptions.StratioStreamingException;
@@ -52,7 +52,8 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
     /**
      * Constructor.
      *
-     * @param connectionHandler the connection handler.
+     * @param connectionHandler
+     *            the connection handler.
      */
     public StreamingStorageEngine(ConnectionHandler connectionHandler) {
 
@@ -62,15 +63,19 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
     /**
      * Insert a document in Streaming.
      *
-     * @param targetStream the targetName.
-     * @param row          the row.
-     * @throws com.stratio.meta.common.exceptions.ExecutionException   in case of failure during the execution.
-     * @throws com.stratio.meta.common.exceptions.UnsupportedException it the operation is not supported.
+     * @param targetStream
+     *            the targetName.
+     * @param row
+     *            the row.
+     * @throws com.stratio.meta.common.exceptions.ExecutionException
+     *             in case of failure during the execution.
+     * @throws com.stratio.meta.common.exceptions.UnsupportedException
+     *             it the operation is not supported.
      */
 
     @Override
     protected void insert(TableMetadata targetStream, Row row, Connection<IStratioStreamingAPI> connection)
-            throws UnsupportedException, ExecutionException {
+                    throws UnsupportedException, ExecutionException {
         String streamName = StreamUtil.createStreamName(targetStream.getName());
         try {
             List<ColumnNameValue> streamData = new ArrayList<ColumnNameValue>();
@@ -90,13 +95,16 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
     /**
      * Insert a set of documents in Streaming.
      *
-     * @param rows the set of rows.
-     * @throws com.stratio.meta.common.exceptions.ExecutionException   in case of failure during the execution.
-     * @throws com.stratio.meta.common.exceptions.UnsupportedException if the operation is not supported.
+     * @param rows
+     *            the set of rows.
+     * @throws com.stratio.meta.common.exceptions.ExecutionException
+     *             in case of failure during the execution.
+     * @throws com.stratio.meta.common.exceptions.UnsupportedException
+     *             if the operation is not supported.
      */
     @Override
     protected void insert(TableMetadata targetStream, Collection<Row> rows, Connection<IStratioStreamingAPI> connection)
-            throws UnsupportedException, ExecutionException {
+                    throws UnsupportedException, ExecutionException {
         String streamName = targetStream.getName().getName();
         try {
             for (Row row : rows) {

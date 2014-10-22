@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.stratio.connector.commons.ftest.helper.IConnectorHelper;
+import com.stratio.connector.streaming.core.StreamingConnector;
 import com.stratio.crossdata.common.connector.ConnectorClusterConfig;
 import com.stratio.crossdata.common.connector.IConfiguration;
 import com.stratio.crossdata.common.connector.IConnector;

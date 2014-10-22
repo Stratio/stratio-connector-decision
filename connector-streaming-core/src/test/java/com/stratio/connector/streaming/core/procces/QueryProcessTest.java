@@ -19,9 +19,9 @@ import com.stratio.connector.streaming.core.engine.query.ConnectorQueryBuilder;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryParser;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.ConnectorQueryExecutor;
-import com.stratio.meta.common.connector.IResultHandler;
-import com.stratio.meta.common.logicalplan.Project;
-import com.stratio.meta2.common.data.TableName;
+import com.stratio.crossdata.common.connector.IResultHandler;
+import com.stratio.crossdata.common.data.TableName;
+import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 
 /**
@@ -29,7 +29,9 @@ import com.stratio.streaming.api.IStratioStreamingAPI;
  *
  * @author <Authors name>
  * @version 1.0
- * @since <pre>oct 17, 2014</pre>
+ * @since <pre>
+ * oct 17, 2014
+ * </pre>
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ ConnectorQueryExecutor.class, QueryProcess.class })
@@ -38,16 +40,24 @@ public class QueryProcessTest {
     private static final String CATALOG = "catalog";
     private static final String TABLE = "table";
     String QUERY = "query";
-    @Mock Connection<IStratioStreamingAPI> CONNECTION;
-    @Mock IResultHandler RESULT_HANDLER;
-    @Mock String QUERY_ID = "QUERY_ID";
-    @Mock Project PROJECT;
+    @Mock
+    Connection<IStratioStreamingAPI> CONNECTION;
+    @Mock
+    IResultHandler RESULT_HANDLER;
+    @Mock
+    String QUERY_ID = "QUERY_ID";
+    @Mock
+    Project PROJECT;
     QueryProcess queryProcess;
-    @Mock IStratioStreamingAPI streamingApi;
+    @Mock
+    IStratioStreamingAPI streamingApi;
 
-    @Mock ConnectorQueryParser queryParser;
-    @Mock ConnectorQueryBuilder queryBuilder;
-    @Mock ConnectorQueryExecutor connectorQueryExecutor;
+    @Mock
+    ConnectorQueryParser queryParser;
+    @Mock
+    ConnectorQueryBuilder queryBuilder;
+    @Mock
+    ConnectorQueryExecutor connectorQueryExecutor;
 
     @Before
     public void before() throws Exception {
@@ -68,8 +78,8 @@ public class QueryProcessTest {
         ConnectorQueryData connectorQueryData = mock(ConnectorQueryData.class);
         when(queryParser.transformLogicalWorkFlow(PROJECT, QUERY_ID)).thenReturn(connectorQueryData);
         when(queryBuilder.createQuery(connectorQueryData)).thenReturn(QUERY);
-        PowerMockito.whenNew(ConnectorQueryExecutor.class).withArguments(connectorQueryData,
-                RESULT_HANDLER).thenReturn(connectorQueryExecutor);
+        PowerMockito.whenNew(ConnectorQueryExecutor.class).withArguments(connectorQueryData, RESULT_HANDLER)
+                        .thenReturn(connectorQueryExecutor);
         queryProcess.run();
 
         verify(connectorQueryExecutor, times(1)).executeQuery(QUERY, CONNECTION);
@@ -90,4 +100,4 @@ public class QueryProcessTest {
         verify(connectorQueryExecutor, times(1)).endQuery(CATALOG + "_" + TABLE, CONNECTION);
     }
 
-} 
+}

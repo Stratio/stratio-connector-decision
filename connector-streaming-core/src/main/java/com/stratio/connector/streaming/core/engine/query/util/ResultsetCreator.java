@@ -22,16 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
-import com.stratio.meta.common.connector.IResultHandler;
-import com.stratio.meta.common.data.ResultSet;
-import com.stratio.meta.common.data.Row;
-import com.stratio.meta.common.exceptions.UnsupportedException;
-import com.stratio.meta.common.logicalplan.Project;
-import com.stratio.meta.common.logicalplan.Select;
-import com.stratio.meta.common.metadata.structures.ColumnMetadata;
-import com.stratio.meta.common.result.QueryResult;
-import com.stratio.meta2.common.data.ColumnName;
-import com.stratio.meta2.common.metadata.ColumnType;
+import com.stratio.crossdata.common.connector.IResultHandler;
+import com.stratio.crossdata.common.data.ColumnName;
+import com.stratio.crossdata.common.data.ResultSet;
+import com.stratio.crossdata.common.data.Row;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.logicalplan.Project;
+import com.stratio.crossdata.common.logicalplan.Select;
+import com.stratio.crossdata.common.metadata.ColumnType;
+import com.stratio.crossdata.common.metadata.structures.ColumnMetadata;
+import com.stratio.crossdata.common.result.QueryResult;
 
 /**
  * Created by jmgomez on 16/10/14.
@@ -80,7 +80,7 @@ public class ResultsetCreator {
             ColumnType colType = select.getTypeMap().get(colName.getQualifiedName());
             colType = updateColumnType(colType);
             ColumnMetadata columnMetadata = new ColumnMetadata(projection.getTableName().getQualifiedName(),
-                    colName.getQualifiedName(), colType);
+                            colName.getQualifiedName(), colType);
             columnMetadata.setColumnAlias(select.getColumnMap().get(colName));
             columnsMetadata.add(columnMetadata);
         }

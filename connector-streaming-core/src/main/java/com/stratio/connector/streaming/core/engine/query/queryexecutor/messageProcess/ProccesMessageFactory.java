@@ -20,7 +20,7 @@ package com.stratio.connector.streaming.core.engine.query.queryexecutor.messageP
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
-import com.stratio.meta.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
 
 /**
  * Created by jmgomez on 16/10/14.

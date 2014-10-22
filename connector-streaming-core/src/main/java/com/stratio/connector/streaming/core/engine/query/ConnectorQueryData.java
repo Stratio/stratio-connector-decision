@@ -21,11 +21,11 @@ package com.stratio.connector.streaming.core.engine.query;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.stratio.meta.common.logicalplan.Filter;
-import com.stratio.meta.common.logicalplan.Limit;
-import com.stratio.meta.common.logicalplan.Project;
-import com.stratio.meta.common.logicalplan.Select;
-import com.stratio.meta.common.logicalplan.Window;
+import com.stratio.crossdata.common.logicalplan.Filter;
+import com.stratio.crossdata.common.logicalplan.Limit;
+import com.stratio.crossdata.common.logicalplan.Project;
+import com.stratio.crossdata.common.logicalplan.Select;
+import com.stratio.crossdata.common.logicalplan.Window;
 
 /**
  * This class is a representation of a ElasticSearch query. Created by jmgomez on 15/09/14.
@@ -53,7 +53,8 @@ public class ConnectorQueryData {
     /**
      * Add a filter.
      *
-     * @param filter the filter.
+     * @param filter
+     *            the filter.
      */
     public void addFilter(Filter filter) {
 
@@ -83,7 +84,8 @@ public class ConnectorQueryData {
     /**
      * Set the projection.
      *
-     * @param projection the projection.
+     * @param projection
+     *            the projection.
      */
     public void setProjection(Project projection) {
 
@@ -120,7 +122,8 @@ public class ConnectorQueryData {
     /**
      * Add a select type.
      *
-     * @param select the select.
+     * @param select
+     *            the select.
      */
     public void setSelect(Select select) {
         this.select = select;

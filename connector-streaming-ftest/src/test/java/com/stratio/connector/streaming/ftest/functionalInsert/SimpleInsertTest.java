@@ -33,11 +33,14 @@ import com.stratio.connector.streaming.ftest.TestResultSet;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
 import com.stratio.crossdata.common.data.ClusterName;
+import com.stratio.crossdata.common.data.ResultSet;
 import com.stratio.crossdata.common.data.Row;
+import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.logicalplan.LogicalWorkflow;
 import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.metadata.TableMetadata;
+import com.stratio.crossdata.common.metadata.structures.ColumnMetadata;
 
 /**
  * @author david

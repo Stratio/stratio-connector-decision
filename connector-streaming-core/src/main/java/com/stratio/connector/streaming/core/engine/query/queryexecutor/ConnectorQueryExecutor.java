@@ -26,8 +26,8 @@ import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess.ProccesMessageFactory;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess.ProcessMessage;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
-import com.stratio.meta.common.connector.IResultHandler;
-import com.stratio.meta.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.connector.IResultHandler;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
 import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
@@ -54,15 +54,15 @@ public class ConnectorQueryExecutor {
     private StreamingQuery streamingQuery;
 
     public ConnectorQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler)
-            throws UnsupportedException {
+                    throws UnsupportedException {
         this.queryData = queryData;
         this.resultHandler = resultHandler;
 
     }
 
     public void executeQuery(String query, Connection<IStratioStreamingAPI> connection)
-            throws StratioEngineOperationException, StratioAPISecurityException, StratioEngineStatusException,
-            InterruptedException, UnsupportedException {
+                    throws StratioEngineOperationException, StratioAPISecurityException, StratioEngineStatusException,
+                    InterruptedException, UnsupportedException {
 
         IStratioStreamingAPI stratioStreamingAPI = connection.getNativeConnection();
         ResultsetCreator resultSetCreator = new ResultsetCreator(queryData);
@@ -73,14 +73,14 @@ public class ConnectorQueryExecutor {
         String streamOutgoingName = streamingQuery.createQuery(query, stratioStreamingAPI);
 
         KafkaStream<String, StratioStreamingMessage> stream = streamingQuery.listenQuery(stratioStreamingAPI,
-                streamOutgoingName);
+                        streamOutgoingName);
 
         streamingQuery.readMessages(stream);
 
     }
 
     public void endQuery(String streamName, Connection<IStratioStreamingAPI> connection)
-            throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
+                    throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
         streamingQuery.endQuery(streamName, connection);
 
     }

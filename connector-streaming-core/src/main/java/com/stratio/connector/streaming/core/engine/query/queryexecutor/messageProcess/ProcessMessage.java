@@ -18,7 +18,7 @@
 
 package com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess;
 
-import com.stratio.meta.common.data.Row;
+import com.stratio.crossdata.common.data.Row;
 
 /**
  * Created by jmgomez on 16/10/14.

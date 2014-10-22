@@ -27,10 +27,10 @@ import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryParser;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.ConnectorQueryExecutor;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
-import com.stratio.meta.common.connector.IResultHandler;
-import com.stratio.meta.common.exceptions.ExecutionException;
-import com.stratio.meta.common.exceptions.UnsupportedException;
-import com.stratio.meta.common.logicalplan.Project;
+import com.stratio.crossdata.common.connector.IResultHandler;
+import com.stratio.crossdata.common.exceptions.ExecutionException;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
 import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
@@ -54,7 +54,7 @@ public class QueryProcess implements ConnectorProcess {
     private ConnectorQueryBuilder queryBuilder = new ConnectorQueryBuilder();
 
     public QueryProcess(String queryId, Project project, IResultHandler resultHandler,
-            Connection<IStratioStreamingAPI> connection) {
+                    Connection<IStratioStreamingAPI> connection) {
         this.project = project;
         this.resultHandler = resultHandler;
         this.connection = connection;
@@ -76,7 +76,7 @@ public class QueryProcess implements ConnectorProcess {
             queryExecutor.executeQuery(query, connection);
 
         } catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException
-                | UnsupportedException | ExecutionException e) {
+                        | UnsupportedException | ExecutionException e) {
             String msg = "Streaming query execution fail." + e.getMessage();
             logger.error(msg);
             resultHandler.processException(queryId, new ExecutionException(msg, e));

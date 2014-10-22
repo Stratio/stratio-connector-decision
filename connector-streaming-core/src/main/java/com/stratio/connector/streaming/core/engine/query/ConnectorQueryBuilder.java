@@ -26,16 +26,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
-import com.stratio.meta.common.exceptions.ExecutionException;
-import com.stratio.meta.common.exceptions.UnsupportedException;
-import com.stratio.meta.common.logicalplan.Filter;
-import com.stratio.meta.common.logicalplan.Select;
-import com.stratio.meta.common.statements.structures.relationships.Operator;
-import com.stratio.meta.common.statements.structures.relationships.Relation;
-import com.stratio.meta2.common.data.ColumnName;
-import com.stratio.meta2.common.statements.structures.selectors.ColumnSelector;
-import com.stratio.meta2.common.statements.structures.selectors.Selector;
-import com.stratio.meta2.common.statements.structures.selectors.StringSelector;
+import com.stratio.crossdata.common.data.ColumnName;
+import com.stratio.crossdata.common.exceptions.ExecutionException;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.logicalplan.Filter;
+import com.stratio.crossdata.common.logicalplan.Select;
+import com.stratio.crossdata.common.statements.structures.relationships.Operator;
+import com.stratio.crossdata.common.statements.structures.relationships.Relation;
+import com.stratio.crossdata.common.statements.structures.selectors.ColumnSelector;
+import com.stratio.crossdata.common.statements.structures.selectors.Selector;
+import com.stratio.crossdata.common.statements.structures.selectors.StringSelector;
 
 /**
  * Created by jmgomez on 30/09/14.
@@ -62,8 +62,8 @@ public class ConnectorQueryBuilder {
      * @param queryData
      */
     private void createOutputQuery(ConnectorQueryData queryData) {
-        String outgoing = StreamUtil
-                .createOutgoingName(StreamUtil.createStreamName(queryData.getProjection()), queryData.getQueryId());
+        String outgoing = StreamUtil.createOutgoingName(StreamUtil.createStreamName(queryData.getProjection()),
+                        queryData.getQueryId());
         querySb.append(" insert into ");
         querySb.append(outgoing);
     }
@@ -92,8 +92,8 @@ public class ConnectorQueryBuilder {
         int i = 0;
         for (ColumnName colName : columnMetadataList) {
 
-            querySb.append(StreamUtil.createStreamName(queryData.getProjection())).append(".").append(
-                    colName.getName()).append(" as ").append(aliasMapping.get(colName));
+            querySb.append(StreamUtil.createStreamName(queryData.getProjection())).append(".")
+                            .append(colName.getName()).append(" as ").append(aliasMapping.get(colName));
             if (++i < numFields) {
                 querySb.append(",");
             }
@@ -138,7 +138,7 @@ public class ConnectorQueryBuilder {
             Relation rel = filterIter.next().getRelation();
 
             querySb.append(getFieldName(rel.getLeftTerm())).append(" ").append(getSiddhiOperator(rel.getOperator()))
-                    .append(" ");
+                            .append(" ");
             if (rel.getRightTerm() instanceof StringSelector) {
                 querySb.append("'").append(((StringSelector) rel.getRightTerm()).getValue()).append("'");
             } else {

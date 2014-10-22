@@ -31,11 +31,14 @@ import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.stratio.connector.streaming.core.StreamingConnector;
+import com.stratio.connector.streaming.core.connection.StreamingConnection;
 import com.stratio.crossdata.common.connector.ConnectorClusterConfig;
 import com.stratio.crossdata.common.connector.IConfiguration;
 import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.data.TableName;
 import com.stratio.crossdata.common.exceptions.ConnectionException;
+import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.exceptions.InitializationException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.security.ICredentials;
@@ -48,7 +51,7 @@ public abstract class GenericStreamingTest {
 
     protected String SERVER_KAFKA = "10.200.0.58";// "192.168.0.2";
     protected String PORT_KAFKA = "9092";
-    protected String SERVER_ZOOKEEPER =  "10.200.0.58"; //"192.168.0.2";
+    protected String SERVER_ZOOKEEPER = "10.200.0.58"; // "192.168.0.2";
     protected String PORT_ZOOKEEPER = "2181";
 
     public static String STRING_COLUMN = "string_column";
@@ -61,11 +64,9 @@ public abstract class GenericStreamingTest {
 
     public String CATALOG = "catalog_functional_test";
 
-    public final String TABLE = this.getClass().getSimpleName() + UUID.randomUUID().toString().replaceAll("-","_");
+    public final String TABLE = this.getClass().getSimpleName() + UUID.randomUUID().toString().replaceAll("-", "_");
 
     protected Random random;
-
-
 
     protected StreamingConnector sConnector;
     /**

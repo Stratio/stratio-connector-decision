@@ -17,17 +17,19 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
-import com.stratio.meta.common.connector.Operations;
-import com.stratio.meta.common.data.Row;
-import com.stratio.meta.common.logicalplan.Window;
-import com.stratio.meta.common.statements.structures.window.WindowType;
+import com.stratio.crossdata.common.connector.Operations;
+import com.stratio.crossdata.common.data.Row;
+import com.stratio.crossdata.common.logicalplan.Window;
+import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
 /**
  * ElementNumberProcessMessage Tester.
  *
  * @author <Authors name>
  * @version 1.0
- * @since <pre>oct 16, 2014</pre>
+ * @since <pre>
+ * oct 16, 2014
+ * </pre>
  */
 @RunWith(PowerMockRunner.class)
 public class ElementNumberProcessMessageTest {
@@ -35,7 +37,8 @@ public class ElementNumberProcessMessageTest {
     public static final int ITERATIONS = 100;
     private static final int NUM_ROWS = 10;
     ElementNumberProcessMessage elementNumberProcessMessage;
-    @Mock ResultsetCreator resultSetCreator;
+    @Mock
+    ResultsetCreator resultSetCreator;
 
     @Before
     public void before() throws Exception {
@@ -69,7 +72,7 @@ public class ElementNumberProcessMessageTest {
      */
     @Test
     public void testEnd() throws Exception {
-        //TODO: Test goes here...
+        // TODO: Test goes here...
     }
 
-} 
+}

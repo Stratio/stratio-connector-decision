@@ -27,12 +27,12 @@ import com.stratio.connector.streaming.core.engine.StreamingMetadataEngine;
 import com.stratio.connector.streaming.core.engine.StreamingQueryEngine;
 import com.stratio.connector.streaming.core.engine.StreamingStorageEngine;
 import com.stratio.connector.streaming.core.procces.ConnectorProcessHandler;
-import com.stratio.connectors.ConnectorApp;
-import com.stratio.meta.common.connector.IConfiguration;
-import com.stratio.meta.common.connector.IMetadataEngine;
-import com.stratio.meta.common.connector.IQueryEngine;
-import com.stratio.meta.common.connector.IStorageEngine;
-import com.stratio.meta.common.exceptions.ExecutionException;
+import com.stratio.crossdata.common.connector.IConfiguration;
+import com.stratio.crossdata.common.connector.IMetadataEngine;
+import com.stratio.crossdata.common.connector.IQueryEngine;
+import com.stratio.crossdata.common.connector.IStorageEngine;
+import com.stratio.crossdata.common.exceptions.ExecutionException;
+import com.stratio.crossdata.connectors.ConnectorApp;
 
 /**
  * This class implements the connector for Streaming.
@@ -56,7 +56,8 @@ public class StreamingConnector extends CommonsConnector {
      * Create a connection to Streaming. The client will be a transportClient by default unless stratio nodeClient is
      * specified.
      *
-     * @param configuration the connection configuration. It must be not null.
+     * @param configuration
+     *            the connection configuration. It must be not null.
      */
 
     @Override

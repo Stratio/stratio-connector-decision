@@ -24,8 +24,8 @@ import java.util.List;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
-import com.stratio.meta.common.data.Row;
-import com.stratio.meta.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.data.Row;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
 
 /**
  * Created by jmgomez on 7/10/14.
@@ -45,9 +45,8 @@ public class ElementNumberProcessMessage implements ProcessMessage {
      * @param queryData
      * @throws com.stratio.meta.common.exceptions.UnsupportedException
      */
-    public ElementNumberProcessMessage(ConnectorQueryData queryData,
-            ResultsetCreator resultsetCreator)
-            throws UnsupportedException {
+    public ElementNumberProcessMessage(ConnectorQueryData queryData, ResultsetCreator resultsetCreator)
+                    throws UnsupportedException {
 
         this.resultsetCreator = resultsetCreator;
         windowLength = queryData.getWindow().getNumRows();
@@ -73,7 +72,8 @@ public class ElementNumberProcessMessage implements ProcessMessage {
         }
     }
 
-    @Override public void end() {
+    @Override
+    public void end() {
 
     }
 

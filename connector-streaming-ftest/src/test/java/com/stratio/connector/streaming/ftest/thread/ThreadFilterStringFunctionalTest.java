@@ -30,8 +30,10 @@ import com.stratio.connector.commons.ftest.workFlow.LogicalWorkFlowCreator;
 import com.stratio.connector.streaming.ftest.GenericStreamingTest;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
+import com.stratio.crossdata.common.connector.IResultHandler;
 import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.exceptions.ConnectionException;
+import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.exceptions.InitializationException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.logicalplan.LogicalWorkflow;
@@ -40,46 +42,37 @@ import com.stratio.crossdata.common.metadata.TableMetadata;
 import com.stratio.crossdata.common.result.QueryResult;
 import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
-public class ThreadFilterStringFunctionalTest extends GenericStreamingTest{
+public class ThreadFilterStringFunctionalTest extends GenericStreamingTest {
 
     private static final String TEXT = "Text";
-    public static final int CORRECT_ELMENT_TO_FIND = 90; //Must be a time window
+    public static final int CORRECT_ELMENT_TO_FIND = 90; // Must be a time window
 
     private static final int DEFAULT_INT_VALUE = 10;
-    public static final int OTHER_INT_VALUE = 5; //Must be a time window
-
+    public static final int OTHER_INT_VALUE = 5; // Must be a time window
 
     private static final String OTHER_TEXT = "OTHER...... ";
     private static final int WAIT_TIME = 20;
-
-
-
-
-
 
     TableMetadata tableMetadata;
 
     int numberDefaultText = 0;
     int numberAlternativeText = 0;
 
-
-
-    private int numberDefaultInt =0 ;
+    private int numberDefaultInt = 0;
     private int numberAlternativeInt = 0;
 
     @Before
     public void setUp() throws ConnectionException, UnsupportedException, ExecutionException, InitializationException {
-         super.setUp();
-         numberDefaultText = 0;
-         numberAlternativeText = 0;
-         numberDefaultInt =0 ;
-         numberAlternativeInt = 0;
-
+        super.setUp();
+        numberDefaultText = 0;
+        numberAlternativeText = 0;
+        numberDefaultInt = 0;
+        numberAlternativeInt = 0;
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
-        tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN,
-                ColumnType.VARCHAR).addColumn(INTEGER_COLUMN,
-                ColumnType.INT).addColumn(BOOLEAN_COLUMN,ColumnType.BOOLEAN).addColumn(INTEGER_CHANGEABLE_COLUMN,ColumnType.INT).build();
+        tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, ColumnType.VARCHAR)
+                        .addColumn(INTEGER_COLUMN, ColumnType.INT).addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
+                        .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT).build();
         try {
             sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -89,16 +82,11 @@ public class ThreadFilterStringFunctionalTest extends GenericStreamingTest{
 
     }
 
-
     @Test
     public void testEqualFilter() throws InterruptedException, UnsupportedException {
 
-
-
-
         StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata,
-                createEqualLogicalWorkFlow(),
-                        new ResultTextHandler());
+                        createEqualLogicalWorkFlow(), new ResultTextHandler());
 
         stremingRead.start();
         System.out.println("TEST ********************** Querying......");
@@ -126,25 +114,16 @@ public class ThreadFilterStringFunctionalTest extends GenericStreamingTest{
         oherStreamingInserter.end();
         stramingInserter.end();
 
-
-
         assertEquals("Dont exist incorrect elements", 0, numberAlternativeText);
         assertEquals("All correct elements have been found", CORRECT_ELMENT_TO_FIND, numberDefaultText);
 
-
     }
-
-
 
     @Test
     public void testDistinctFilter() throws InterruptedException, UnsupportedException {
 
-
-
-
         StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata,
-                createDistinctLogicalWorkFlow(),
-                new ResultTextHandler());
+                        createDistinctLogicalWorkFlow(), new ResultTextHandler());
 
         stremingRead.start();
         System.out.println("TEST ********************** Querying......");
@@ -176,48 +155,39 @@ public class ThreadFilterStringFunctionalTest extends GenericStreamingTest{
         assertEquals("Don't exist incorrect elements", 0, numberDefaultText);
         assertEquals("All correct elements have been found", CORRECT_ELMENT_TO_FIND, numberAlternativeText);
 
-
     }
 
-
-
-
     private LogicalWorkflow createEqualLogicalWorkFlow() throws UnsupportedException {
-        LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE,
-                getClusterName());
+        LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, getClusterName());
 
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN,STRING_COLUMN, ColumnType.TEXT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN,INTEGER_COLUMN,ColumnType.INT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN,BOOLEAN_COLUMN,ColumnType.BOOLEAN));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
+                        ColumnType.BOOLEAN));
 
-        return logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName
-                (INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns).addEqualFilter(STRING_COLUMN,
-                TEXT,false,false).addWindow(WindowType.TEMPORAL,10)
+        return logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN)
+                        .addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
+                        .addEqualFilter(STRING_COLUMN, TEXT, false, false).addWindow(WindowType.TEMPORAL, 10)
                         .getLogicalWorkflow();
     }
 
     private LogicalWorkflow createDistinctLogicalWorkFlow() throws UnsupportedException {
-        LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE,
-                getClusterName());
+        LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, getClusterName());
 
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN,STRING_COLUMN, ColumnType.TEXT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN,INTEGER_COLUMN,ColumnType.INT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN,BOOLEAN_COLUMN,ColumnType.BOOLEAN));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
+                        ColumnType.BOOLEAN));
 
-        return logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName
-                (INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns).addDistinctFilter(STRING_COLUMN,
-                TEXT, false).addWindow(WindowType.TEMPORAL,5)
-                .getLogicalWorkflow();
+        return logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN)
+                        .addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
+                        .addDistinctFilter(STRING_COLUMN, TEXT, false).addWindow(WindowType.TEMPORAL, 5)
+                        .getLogicalWorkflow();
     }
 
-
-
     private class ResultTextHandler implements IResultHandler {
-
-
-
 
         @Override
         public void processException(String queryId, ExecutionException exception) {
@@ -225,21 +195,17 @@ public class ThreadFilterStringFunctionalTest extends GenericStreamingTest{
             exception.printStackTrace();
         }
 
-
-
-
         @Override
         public void processResult(QueryResult result) {
 
-
             for (Row row : result.getResultSet()) {
                 Object value = row.getCell(STRING_COLUMN).getValue();
-                System.out.println("********************>>"+ value);
-                if (TEXT.equals(value)){
+                System.out.println("********************>>" + value);
+                if (TEXT.equals(value)) {
                     numberDefaultText++;
 
-                }else if (OTHER_TEXT.equals(value)){
-                // If streaming read random init value
+                } else if (OTHER_TEXT.equals(value)) {
+                    // If streaming read random init value
                     numberAlternativeText++;
                 }
 
@@ -247,10 +213,6 @@ public class ThreadFilterStringFunctionalTest extends GenericStreamingTest{
 
         }
 
-
-
     }
-
-
 
 }

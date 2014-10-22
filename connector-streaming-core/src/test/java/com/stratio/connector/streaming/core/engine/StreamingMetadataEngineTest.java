@@ -19,16 +19,16 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.connection.ConnectionHandler;
-import com.stratio.meta.common.exceptions.UnsupportedException;
-import com.stratio.meta2.common.data.ClusterName;
-import com.stratio.meta2.common.data.ColumnName;
-import com.stratio.meta2.common.data.IndexName;
-import com.stratio.meta2.common.data.TableName;
-import com.stratio.meta2.common.metadata.ColumnMetadata;
-import com.stratio.meta2.common.metadata.ColumnType;
-import com.stratio.meta2.common.metadata.IndexMetadata;
-import com.stratio.meta2.common.metadata.TableMetadata;
-import com.stratio.meta2.common.statements.structures.selectors.Selector;
+import com.stratio.crossdata.common.data.ClusterName;
+import com.stratio.crossdata.common.data.ColumnName;
+import com.stratio.crossdata.common.data.IndexName;
+import com.stratio.crossdata.common.data.TableName;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.metadata.ColumnMetadata;
+import com.stratio.crossdata.common.metadata.ColumnType;
+import com.stratio.crossdata.common.metadata.IndexMetadata;
+import com.stratio.crossdata.common.metadata.TableMetadata;
+import com.stratio.crossdata.common.statements.structures.selectors.Selector;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 
 /**
@@ -36,10 +36,11 @@ import com.stratio.streaming.api.IStratioStreamingAPI;
  *
  * @author <Authors name>
  * @version 1.0
- * @since <pre>oct 16, 2014</pre>
+ * @since <pre>
+ * oct 16, 2014
+ * </pre>
  */
 @RunWith(PowerMockRunner.class)
-
 public class StreamingMetadataEngineTest {
 
     private static final String CATALOG = "catalog";
@@ -47,9 +48,12 @@ public class StreamingMetadataEngineTest {
     private static final String CLUSTER_NAME = "cluster_name";
     private static final String COLUM = "column";
     StreamingMetadataEngine streamingMetadataEngine;
-    @Mock ConnectionHandler connectionHandler;
-    @Mock Connection<IStratioStreamingAPI> connection;
-    @Mock com.stratio.streaming.api.IStratioStreamingAPI streamingApi;
+    @Mock
+    ConnectionHandler connectionHandler;
+    @Mock
+    Connection<IStratioStreamingAPI> connection;
+    @Mock
+    com.stratio.streaming.api.IStratioStreamingAPI streamingApi;
 
     @Before
     public void before() throws Exception {
@@ -77,13 +81,13 @@ public class StreamingMetadataEngineTest {
         Map<IndexName, IndexMetadata> index = Collections.EMPTY_MAP;
         Map<ColumnName, ColumnMetadata> columns = new LinkedHashMap<>();
         ColumnMetadata columnMetadata = new ColumnMetadata(new ColumnName(CATALOG, TABLE, COLUM), new Object[0],
-                ColumnType.INT);
+                        ColumnType.INT);
         columns.put(new ColumnName(CATALOG, TABLE, COLUM), columnMetadata);
 
         List<ColumnName> partitionKey = Collections.EMPTY_LIST;
         List<ColumnName> clusterKey = Collections.EMPTY_LIST;
         TableMetadata tableMetadata = new TableMetadata(true, new TableName(CATALOG, TABLE), options, columns, index,
-                new ClusterName(CLUSTER_NAME), partitionKey, clusterKey);
+                        new ClusterName(CLUSTER_NAME), partitionKey, clusterKey);
         streamingMetadataEngine.createTable(tableMetadata, connection);
 
         verify(streamingApi, times(1)).createStream(eq(CATALOG + "_" + TABLE), anyList());
@@ -125,4 +129,4 @@ public class StreamingMetadataEngineTest {
         streamingMetadataEngine.dropIndex(null, (Connection) null);
     }
 
-} 
+}

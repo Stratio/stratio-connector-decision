@@ -11,17 +11,19 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
-import com.stratio.meta.common.connector.Operations;
-import com.stratio.meta.common.logicalplan.Window;
-import com.stratio.meta.common.statements.structures.window.TimeUnit;
-import com.stratio.meta.common.statements.structures.window.WindowType;
+import com.stratio.crossdata.common.connector.Operations;
+import com.stratio.crossdata.common.logicalplan.Window;
+import com.stratio.crossdata.common.statements.structures.window.TimeUnit;
+import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
 /**
  * ProccesMessageFactory Tester.
  *
  * @author <Authors name>
  * @version 1.0
- * @since <pre>oct 16, 2014</pre>
+ * @since <pre>
+ * oct 16, 2014
+ * </pre>
  */
 @RunWith(PowerMockRunner.class)
 public class ProccesMessageFactoryTest {
@@ -42,16 +44,16 @@ public class ProccesMessageFactoryTest {
 
         ConnectorQueryData queryDataNum = new ConnectorQueryData();
         queryDataNum.setWindow(new Window(Operations.SELECT_WINDOW, WindowType.NUM_ROWS));
-        assertTrue("number row is correct", ProccesMessageFactory.getProccesMessage(queryDataNum,
-                mock(ResultsetCreator.class)) instanceof ElementNumberProcessMessage);
+        assertTrue("number row is correct",
+                        ProccesMessageFactory.getProccesMessage(queryDataNum, mock(ResultsetCreator.class)) instanceof ElementNumberProcessMessage);
 
         ConnectorQueryData queryDataTemporal = new ConnectorQueryData();
         Window window = new Window(Operations.SELECT_WINDOW, WindowType.TEMPORAL);
         window.setTimeWindow(10, TimeUnit.DAYS);
         queryDataTemporal.setWindow(window);
-        assertTrue("number row is correct", ProccesMessageFactory.getProccesMessage(queryDataTemporal,
-                mock(ResultsetCreator.class)) instanceof TimeWindowProcessMessage);
+        assertTrue("number row is correct",
+                        ProccesMessageFactory.getProccesMessage(queryDataTemporal, mock(ResultsetCreator.class)) instanceof TimeWindowProcessMessage);
 
     }
 
-} 
+}

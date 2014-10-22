@@ -18,14 +18,14 @@
 
 package com.stratio.connector.streaming.core.engine.query;
 
-import com.stratio.meta.common.exceptions.UnsupportedException;
-import com.stratio.meta.common.logicalplan.Filter;
-import com.stratio.meta.common.logicalplan.Limit;
-import com.stratio.meta.common.logicalplan.LogicalStep;
-import com.stratio.meta.common.logicalplan.Project;
-import com.stratio.meta.common.logicalplan.Select;
-import com.stratio.meta.common.logicalplan.Window;
-import com.stratio.meta.common.statements.structures.relationships.Operator;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.logicalplan.Filter;
+import com.stratio.crossdata.common.logicalplan.Limit;
+import com.stratio.crossdata.common.logicalplan.LogicalStep;
+import com.stratio.crossdata.common.logicalplan.Project;
+import com.stratio.crossdata.common.logicalplan.Select;
+import com.stratio.crossdata.common.logicalplan.Window;
+import com.stratio.crossdata.common.statements.structures.relationships.Operator;
 
 /**
  * Created by jmgomez on 15/09/14.
@@ -33,7 +33,7 @@ import com.stratio.meta.common.statements.structures.relationships.Operator;
 public class ConnectorQueryParser {
 
     public ConnectorQueryData transformLogicalWorkFlow(Project logicalWorkFlow, String queryId)
-            throws UnsupportedException {
+                    throws UnsupportedException {
 
         ConnectorQueryData queryData = new ConnectorQueryData();
         queryData.setQueryId(queryId);
@@ -51,7 +51,7 @@ public class ConnectorQueryParser {
                 Filter step = (Filter) lStep;
                 if (Operator.MATCH == step.getRelation().getOperator()) {
                     throw new UnsupportedException("LogicalStep [" + lStep.getClass().getCanonicalName()
-                            + " not supported");
+                                    + " not supported");
                 } else {
                     queryData.addFilter((Filter) lStep);
                 }
@@ -62,10 +62,9 @@ public class ConnectorQueryParser {
                 queryData.setWindow((Window) lStep);
             } else if (lStep instanceof Limit) {
                 throw new UnsupportedException("LogicalStep [" + lStep.getClass().getCanonicalName()
-                        + " not yet supported");
+                                + " not yet supported");
             } else {
-                throw new UnsupportedException(
-                        "LogicalStep [" + lStep.getClass().getCanonicalName() + " not supported");
+                throw new UnsupportedException("LogicalStep [" + lStep.getClass().getCanonicalName() + " not supported");
             }
 
             lStep = lStep.getNextStep();

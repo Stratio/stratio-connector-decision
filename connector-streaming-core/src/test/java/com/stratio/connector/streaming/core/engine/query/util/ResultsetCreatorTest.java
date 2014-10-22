@@ -16,32 +16,34 @@ import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
-import com.stratio.meta.common.connector.IResultHandler;
-import com.stratio.meta.common.connector.Operations;
-import com.stratio.meta.common.data.Cell;
-import com.stratio.meta.common.data.Row;
-import com.stratio.meta.common.logicalplan.Project;
-import com.stratio.meta.common.logicalplan.Select;
-import com.stratio.meta.common.metadata.structures.ColumnMetadata;
-import com.stratio.meta.common.result.QueryResult;
-import com.stratio.meta2.common.data.ClusterName;
-import com.stratio.meta2.common.data.ColumnName;
-import com.stratio.meta2.common.data.TableName;
-import com.stratio.meta2.common.metadata.ColumnType;
+import com.stratio.crossdata.common.connector.IResultHandler;
+import com.stratio.crossdata.common.connector.Operations;
+import com.stratio.crossdata.common.data.Cell;
+import com.stratio.crossdata.common.data.ClusterName;
+import com.stratio.crossdata.common.data.ColumnName;
+import com.stratio.crossdata.common.data.Row;
+import com.stratio.crossdata.common.data.TableName;
+import com.stratio.crossdata.common.logicalplan.Project;
+import com.stratio.crossdata.common.logicalplan.Select;
+import com.stratio.crossdata.common.metadata.ColumnType;
+import com.stratio.crossdata.common.metadata.structures.ColumnMetadata;
+import com.stratio.crossdata.common.result.QueryResult;
 
 /**
  * ResultsetCreator Tester.
  *
  * @author <Authors name>
  * @version 1.0
- * @since <pre>oct 16, 2014</pre>
+ * @since <pre>
+ * oct 16, 2014
+ * </pre>
  */
 @RunWith(PowerMockRunner.class)
 public class ResultsetCreatorTest {
 
     private static final String CATALOG = "catalog";
     private static final String TABLE = "table";
-    private static final com.stratio.meta2.common.data.ClusterName CLUSTER_NAME = new ClusterName("CLUSTER_NAME");
+    private static final ClusterName CLUSTER_NAME = new ClusterName("CLUSTER_NAME");
     private static final String QUERY_ID = "queryId";
     private static final String VALUE_1_1 = "value_1_1";
     private static final Object VALUE_2_1 = "value_2_1";
@@ -49,7 +51,8 @@ public class ResultsetCreatorTest {
     private static final String CELL_2 = "cell_2";
     private static final Object VALUE_2_2 = "value_2_2";
     private static final String VALUE_1_2 = "value_1_1";
-    @Mock IResultHandler iResultHandler;
+    @Mock
+    IResultHandler iResultHandler;
     private ResultsetCreator resultsetCreator;
     private String[] ALIAS = { "alias_1", "alias_2" };
     private String[] NAME = { "name_1", "name_2" };
@@ -59,8 +62,8 @@ public class ResultsetCreatorTest {
     public void before() throws Exception {
 
         resultsetCreator = new ResultsetCreator(createQueryData());
-        List<ColumnMetadata> columnMetadata = (List<ColumnMetadata>) Whitebox
-                .getInternalState(resultsetCreator, "columnsMetadata");
+        List<ColumnMetadata> columnMetadata = (List<ColumnMetadata>) Whitebox.getInternalState(resultsetCreator,
+                        "columnsMetadata");
 
         valiateMetadata(columnMetadata);
     }
@@ -125,4 +128,4 @@ public class ResultsetCreatorTest {
         return queryData;
     }
 
-} 
+}
