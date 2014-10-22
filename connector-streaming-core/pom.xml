@@ -45,6 +45,25 @@
             <groupId>com.stratio.streaming</groupId>
             <artifactId>streaming-api</artifactId>
             <version>0.4.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.datastax.cassandra</groupId>
+                    <artifactId>cassandra-driver-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.mongodb</groupId>
+                    <artifactId>mongo-java-driver</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-all</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.scalamock</groupId>
+                    <artifactId>scalamock-scalatest-support_2.10</artifactId>                  
+                </exclusion>
+
+            </exclusions>
         </dependency>
 
         <dependency>
