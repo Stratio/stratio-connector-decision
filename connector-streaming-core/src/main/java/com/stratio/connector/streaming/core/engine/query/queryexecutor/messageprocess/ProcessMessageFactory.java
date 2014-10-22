@@ -26,8 +26,13 @@ import com.stratio.crossdata.common.exceptions.UnsupportedException;
  * Created by jmgomez on 16/10/14.
  */
 public class ProcessMessageFactory {
+
+    private ProcessMessageFactory() {
+
+    }
+
     public static ProcessMessage getProccesMessage(ConnectorQueryData queryData, ResultsetCreator resultSetCreator)
-            throws UnsupportedException {
+                    throws UnsupportedException {
         ProcessMessage connectorQueryExecutor = null;
 
         switch (queryData.getWindow().getType()) {

@@ -40,7 +40,7 @@ import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
 /**
  * Created by jmgomez on 1/10/14.
  */
-public class StreamUtil {
+public final class StreamUtil {
 
     /**
      * The Log.
