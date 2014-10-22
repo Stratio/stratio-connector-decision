@@ -25,6 +25,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.stratio.connector.commons.util.SelectorHelper;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.crossdata.common.data.ColumnName;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
@@ -106,7 +107,7 @@ public class ConnectorQueryBuilder {
      * @return
      * @throws UnsupportedException
      */
-    private void createInputQuery(ConnectorQueryData queryData) throws UnsupportedException {
+    private void createInputQuery(ConnectorQueryData queryData) throws UnsupportedException, ExecutionException {
         querySb.append("from ");
         createStreamQuery(queryData);
     }
@@ -115,7 +116,7 @@ public class ConnectorQueryBuilder {
      * @param queryData
      * @throws UnsupportedException
      */
-    private void createStreamQuery(ConnectorQueryData queryData) throws UnsupportedException {
+    private void createStreamQuery(ConnectorQueryData queryData) throws UnsupportedException, ExecutionException {
 
         String streamName = StreamUtil.createStreamName(queryData.getProjection());
 
@@ -130,33 +131,23 @@ public class ConnectorQueryBuilder {
      * @param queryData
      * @throws UnsupportedException
      */
-    private void createConditionList(ConnectorQueryData queryData) throws UnsupportedException {
+    private void createConditionList(ConnectorQueryData queryData) throws UnsupportedException, ExecutionException {
 
         querySb.append("[");
         Iterator<Filter> filterIter = queryData.getFilter().iterator();
         while (filterIter.hasNext()) {
             Relation rel = filterIter.next().getRelation();
 
-            querySb.append(getFieldName(rel.getLeftTerm())).append(" ").append(getSiddhiOperator(rel.getOperator()))
+            String value = SelectorHelper.getValue(String.class,
+                    rel.getRightTerm());
+
+            querySb.append(SelectorHelper.getValue(String.class,rel.getLeftTerm())).append(" ").append(getSiddhiOperator(rel.getOperator()))
                     .append(" ");
-            if (rel.getRightTerm() instanceof StringSelector) {
-                querySb.append("'").append(((StringSelector) rel.getRightTerm()).getValue()).append("'");
-            } else {
-                switch (rel.getRightTerm().getType()) {
-                case BOOLEAN:
-                case INTEGER:
-                case FLOATING_POINT:
-                    querySb.append(rel.getRightTerm().toString());
-                    break;
-                case COLUMN:
-                    querySb.append(getFieldName(rel.getRightTerm()));
-                    break;
-                case FUNCTION:
-                case RELATION:
-                case ASTERISK:
-                default:
-                    throw new UnsupportedException("Type " + rel.getRightTerm().getType() + "unsupported");
-                }
+
+            if (rel.getRightTerm() instanceof StringSelector){
+                querySb.append("'").append(value).append("'");
+            }else{
+                querySb.append(value);
             }
 
             if (filterIter.hasNext()) {
