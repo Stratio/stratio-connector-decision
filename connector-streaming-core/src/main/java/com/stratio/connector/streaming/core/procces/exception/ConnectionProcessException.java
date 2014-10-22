@@ -21,7 +21,12 @@ package com.stratio.connector.streaming.core.procces.exception;
 /**
  * Created by jmgomez on 3/10/14.
  */
-public class ConnectionProcessException extends Throwable {
+public class ConnectionProcessException extends Exception {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3322179458067576056L;
+
     public ConnectionProcessException(String msg) {
         super(msg);
     }

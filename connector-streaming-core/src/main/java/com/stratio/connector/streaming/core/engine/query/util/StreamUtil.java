@@ -55,6 +55,9 @@ public class StreamUtil {
                     "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "!", "_", "1",
                     "2", "3", "4", "5", "6", "7", "8", "9" };
 
+    private StreamUtil() {
+    }
+
     public static String createStreamName(Project project) {
         return createStreamName(project.getCatalogName(), project.getTableName().getName());
     }

@@ -19,6 +19,7 @@
 package com.stratio.connector.streaming.core.procces;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ public class ConnectorProcessHandler {
      */
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private HashMap<String, ThreadProcess> processMap = new HashMap<>();
+    private Map<String, ThreadProcess> processMap = new HashMap<>();
 
     public void strartProcess(String queryId, ConnectorProcess connectorProcess) throws ConnectionProcessException {
         if (processMap.containsKey(queryId)) {
@@ -55,28 +56,36 @@ public class ConnectorProcessHandler {
             logger.error(msg);
             throw new ConnectionProcessException(msg);
         }
-        return processMap.get(queryId).process;
+        return processMap.get(queryId).getProcess();
     }
 
     public void stopProcess(String queryId) throws ConnectionProcessException, ExecutionException {
         ThreadProcess threadProcess = processMap.get(queryId);
 
-        threadProcess.process.endQuery();
-        threadProcess.thread.interrupt();
+        threadProcess.getProcess().endQuery();
+        threadProcess.getThread().interrupt();
         processMap.remove(queryId);
 
     }
 
-    private class ThreadProcess {
+}
 
-        Thread thread;
-        ConnectorProcess process;
+class ThreadProcess {
 
-        ThreadProcess(Thread thread, ConnectorProcess process) {
-            this.thread = thread;
-            this.process = process;
-        }
+    private Thread thread;
+    private ConnectorProcess process;
 
+    ThreadProcess(Thread thread, ConnectorProcess process) {
+        this.thread = thread;
+        this.process = process;
+    }
+
+    public Thread getThread() {
+        return thread;
+    }
+
+    public ConnectorProcess getProcess() {
+        return process;
     }
 
 }

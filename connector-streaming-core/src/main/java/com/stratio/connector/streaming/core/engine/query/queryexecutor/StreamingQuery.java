@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
-import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess.ProcessMessage;
+import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageprocess.ProcessMessage;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.crossdata.common.data.Cell;
 import com.stratio.crossdata.common.data.Row;

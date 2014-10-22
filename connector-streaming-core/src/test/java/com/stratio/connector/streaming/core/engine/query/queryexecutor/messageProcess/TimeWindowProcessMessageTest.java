@@ -19,6 +19,7 @@ import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
+import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageprocess.TimeWindowProcessMessage;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
 import com.stratio.crossdata.common.connector.Operations;
 import com.stratio.crossdata.common.data.Row;

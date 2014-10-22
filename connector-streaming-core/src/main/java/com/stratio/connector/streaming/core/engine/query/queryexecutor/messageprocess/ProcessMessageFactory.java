@@ -16,7 +16,7 @@
  *  under the License.
  */
 
-package com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess;
+package com.stratio.connector.streaming.core.engine.query.queryexecutor.messageprocess;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
@@ -25,7 +25,7 @@ import com.stratio.crossdata.common.exceptions.UnsupportedException;
 /**
  * Created by jmgomez on 16/10/14.
  */
-public class ProccesMessageFactory {
+public class ProcessMessageFactory {
     public static ProcessMessage getProccesMessage(ConnectorQueryData queryData, ResultsetCreator resultSetCreator)
             throws UnsupportedException {
         ProcessMessage connectorQueryExecutor = null;

@@ -18,13 +18,10 @@
 
 package com.stratio.connector.streaming.core.engine.query.queryexecutor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
-import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess.ProccesMessageFactory;
-import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess.ProcessMessage;
+import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageprocess.ProcessMessage;
+import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageprocess.ProcessMessageFactory;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
 import com.stratio.crossdata.common.connector.IResultHandler;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
@@ -40,11 +37,6 @@ import kafka.consumer.KafkaStream;
  * Created by jmgomez on 30/09/14.
  */
 public class ConnectorQueryExecutor {
-
-    /**
-     * The Log.
-     */
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected String queryId;
     protected ConnectorQueryData queryData;
@@ -67,7 +59,7 @@ public class ConnectorQueryExecutor {
         IStratioStreamingAPI stratioStreamingAPI = connection.getNativeConnection();
         ResultsetCreator resultSetCreator = new ResultsetCreator(queryData);
         resultSetCreator.setResultHandler(resultHandler);
-        proccesMesage = ProccesMessageFactory.getProccesMessage(queryData, resultSetCreator);
+        proccesMesage = ProcessMessageFactory.getProccesMessage(queryData, resultSetCreator);
 
         streamingQuery = new StreamingQuery(queryData, proccesMesage);
         String streamOutgoingName = streamingQuery.createQuery(query, stratioStreamingAPI);

@@ -39,7 +39,7 @@ import org.mockito.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
-import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess.ProcessMessage;
+import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageprocess.ProcessMessage;
 import com.stratio.crossdata.common.connector.Operations;
 import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.data.ColumnName;

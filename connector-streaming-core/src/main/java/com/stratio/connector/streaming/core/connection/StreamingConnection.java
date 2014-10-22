@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.util.ConnectorParser;
 import com.stratio.crossdata.common.connector.ConnectorClusterConfig;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.security.ICredentials;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.api.StratioStreamingAPIFactory;
@@ -58,11 +59,18 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
     /**
      * Constructor.
      *
-     * @param credentiasl the credentials.
-     * @param config      The cluster configuration.
+     * @param credentiasl
+     *            the credentials.
+     * @param config
+     *            The cluster configuration.
+     * @throws UnsupportedException
      */
-    public StreamingConnection(ICredentials credentiasl, ConnectorClusterConfig config)
-            throws StratioEngineConnectionException {
+    public StreamingConnection(ICredentials credentials, ConnectorClusterConfig config)
+                    throws StratioEngineConnectionException {
+
+        if (credentials != null) {
+            throw new StratioEngineConnectionException("Credentials are not supported");
+        }
 
         String kafkaServer = ConnectorParser.hosts(config.getOptions().get(KAFKA_SERVER))[0];
         int kafkaPort = Integer.parseInt(ConnectorParser.ports(config.getOptions().get(KAFKA_PORT))[0]);
@@ -71,7 +79,7 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
         int zooKeeperPort = Integer.parseInt(ConnectorParser.ports(config.getOptions().get(ZOOKEEPER_PORT))[0]);
 
         stratioStreamingAPI = StratioStreamingAPIFactory.create().initializeWithServerConfig(kafkaServer, kafkaPort,
-                zooKeeperServer, zooKeeperPort);
+                        zooKeeperServer, zooKeeperPort);
 
         connectionName = config.getName().getName();
         logger.info("Streaming  connection [" + connectionName + "] established ");

@@ -46,7 +46,7 @@ public class StreamingConnectionHandler extends ConnectionHandler {
 
     @Override
     protected Connection<IStratioStreamingAPI> createNativeConnection(ICredentials iCredentials,
-            ConnectorClusterConfig connectorClusterConfig) throws CreateNativeConnectionException {
+                    ConnectorClusterConfig connectorClusterConfig) throws CreateNativeConnectionException {
         Connection<IStratioStreamingAPI> con = null;
         try {
             con = new StreamingConnection(iCredentials, connectorClusterConfig);

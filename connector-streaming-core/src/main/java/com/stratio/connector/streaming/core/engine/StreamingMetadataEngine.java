@@ -78,7 +78,6 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
     @Override
     protected void createCatalog(CatalogMetadata indexMetaData, Connection<IStratioStreamingAPI> connection)
                     throws UnsupportedException, ExecutionException {
-        System.out.println("Create catalog");
         throw new UnsupportedException("Create catalog not supported in Streaming connector");
     }
 

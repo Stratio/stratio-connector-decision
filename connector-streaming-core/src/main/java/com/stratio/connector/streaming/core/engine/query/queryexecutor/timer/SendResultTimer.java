@@ -20,7 +20,7 @@ package com.stratio.connector.streaming.core.engine.query.queryexecutor.timer;
 
 import java.util.TimerTask;
 
-import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageProcess.TimeWindowProcessMessage;
+import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageprocess.TimeWindowProcessMessage;
 
 /**
  * Created by jmgomez on 9/10/14.
