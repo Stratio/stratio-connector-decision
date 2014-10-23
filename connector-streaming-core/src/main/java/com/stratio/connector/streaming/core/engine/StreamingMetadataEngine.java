@@ -44,7 +44,7 @@ import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
 import com.stratio.streaming.commons.exceptions.StratioStreamingException;
 
 /**
- * This class is the responsible of manage the StreamingMetadata
+ * This class is the responsible of manage the StreamingMetadata.
  */
 
 public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStreamingAPI> {

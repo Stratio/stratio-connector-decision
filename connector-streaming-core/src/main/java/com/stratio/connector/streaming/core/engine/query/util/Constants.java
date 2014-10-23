@@ -16,26 +16,16 @@
  * under the License.
  */
 
-package com.stratio.connector.streaming.core.procces;
-
-import com.stratio.crossdata.common.exceptions.ExecutionException;
-import com.stratio.crossdata.common.logicalplan.Project;
+package com.stratio.connector.streaming.core.engine.query.util;
 
 /**
- * A connecror procces.
- * Created by jmgomez on 3/10/14.
+ * This class contains the constants.
+ * Created by jmgomez on 23/10/14.
  */
-public interface ConnectorProcess extends Runnable {
+public class Constants {
 
     /**
-     * End the query.
-     * @throws ExecutionException if any error happens.
+     * The number of byte for a random big integer.
      */
-    void endQuery() throws ExecutionException;
-
-    /**
-     * Get the query project.
-     * @return the query project.
-     */
-    Project getProject();
+    public static final Integer NUM_BITE_RANDOM_BIG_INTEGER = 500;
 }

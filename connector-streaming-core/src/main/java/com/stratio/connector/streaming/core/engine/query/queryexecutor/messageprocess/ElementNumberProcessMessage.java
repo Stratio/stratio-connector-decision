@@ -34,7 +34,7 @@ import com.stratio.crossdata.common.exceptions.UnsupportedException;
 public class ElementNumberProcessMessage implements ProcessMessage {
 
     /**
-     * The window length
+     * The window length.
      */
     private int windowLength;
 

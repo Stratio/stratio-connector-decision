@@ -103,6 +103,7 @@ public class StreamingConnector extends CommonsConnector {
     /**
      * Return the MetadataEngine.
      *
+
      * @return the MetadataEngine
      */
     @Override

@@ -45,7 +45,7 @@ public final class StreamUtil {
     /**
      * The Log.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(StreamUtil.class);
+    private  static final Logger LOGGER = LoggerFactory.getLogger(StreamUtil.class);
     /**
      * A random generator.
      */
@@ -122,7 +122,8 @@ public final class StreamUtil {
             }
 
             stratioStreamingAPI.insertData(streamName, streamData);
-        } catch (StratioEngineStatusException | StratioAPISecurityException e) {
+        } catch (
+                StratioEngineStatusException | StratioAPISecurityException e) {
             LOGGER.error("Error inserting data in stream", e);
         }
     }
@@ -142,7 +143,7 @@ public final class StreamUtil {
             randomObject = RANDOM.nextInt();
             break;
         case BIGINT:
-            randomObject = new BigInteger(500, RANDOM);
+            randomObject = new BigInteger(Constants.NUM_BITE_RANDOM_BIG_INTEGER, RANDOM);
             break;
         case BOOLEAN:
             randomObject = RANDOM.nextBoolean();
