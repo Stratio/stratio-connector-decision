@@ -40,7 +40,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageprocess.ProcessMessage;
-import com.stratio.crossdata.common.metadata.Operations;
 import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.data.ColumnName;
 import com.stratio.crossdata.common.data.Row;
@@ -48,6 +47,7 @@ import com.stratio.crossdata.common.data.TableName;
 import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.metadata.ColumnType;
+import com.stratio.crossdata.common.metadata.Operations;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.messages.ColumnNameTypeValue;
 import com.stratio.streaming.commons.messages.StratioStreamingMessage;
@@ -90,8 +90,7 @@ public class StreamingQueryTest {
     private static final String COLUMN_1 = "column_1";
     private static final com.stratio.streaming.commons.constants.ColumnType TYPE_1 = com.stratio.streaming.commons.constants.ColumnType.BOOLEAN;
     private static final Object VALUE_1_1 = "value_1_1";
-    private static final String COLUMN_2 = "column_2";
-    ;
+    private static final String COLUMN_2 = "column_2";;
     private static final com.stratio.streaming.commons.constants.ColumnType TYPE_2 = com.stratio.streaming.commons.constants.ColumnType.INTEGER;
     private static final Object VALUE_2_1 = "value_2_1";
     private static final Object VALUE_1_2 = "value_1_2";
@@ -137,7 +136,7 @@ public class StreamingQueryTest {
         when(stratioStreamingApi.listenStream(OUTPUT_STREAM)).thenReturn(kafkaSrteam);
 
         KafkaStream<String, StratioStreamingMessage> returnKafkaStream = streamingQuery.listenQuery(
-                stratioStreamingApi, OUTPUT_STREAM);
+                        stratioStreamingApi, OUTPUT_STREAM);
 
         assertEquals("The kafkastream is correct", kafkaSrteam, returnKafkaStream);
 
@@ -154,9 +153,9 @@ public class StreamingQueryTest {
         List<ColumnNameTypeValue> columns2 = createColumns(VALUE_1_2, VALUE_2_2);
 
         StratioStreamingMessage message1 = new StratioStreamingMessage(OPERATION, STREAM_NAME, SESION_ID, REQUEST_ID,
-                REQUEST, TIMESTAMP, columns1, QUERIES, USERDEFINED);
+                        REQUEST, TIMESTAMP, columns1, QUERIES, USERDEFINED);
         StratioStreamingMessage message2 = new StratioStreamingMessage(OPERATION, STREAM_NAME, SESION_ID, REQUEST_ID,
-                REQUEST, TIMESTAMP, columns2, QUERIES, USERDEFINED);
+                        REQUEST, TIMESTAMP, columns2, QUERIES, USERDEFINED);
 
         MessageAndMetadata messageAndMetadata1 = mock(MessageAndMetadata.class);
         when(messageAndMetadata1.message()).thenReturn(message1);
@@ -198,7 +197,9 @@ public class StreamingQueryTest {
         columnMap.put(new ColumnName(CATALOG, TABLE, COLUMN1), ALIAS1);
         Map<String, ColumnType> typemap = new LinkedHashMap<>();
         typemap.put(CATALOG + "." + TABLE + "." + COLUMN1, ColumnType.INT);
-        Select select = new Select(Operations.SELECT_OPERATOR, columnMap, typemap);
+        Map<ColumnName, ColumnType> typemapColumnName = new LinkedHashMap<>();
+        typemapColumnName.put(new ColumnName(CATALOG, TABLE, COLUMN1), ColumnType.INT);
+        Select select = new Select(Operations.SELECT_OPERATOR, columnMap, typemap, typemapColumnName);
         queryData.setSelect(select);
         return queryData;
     }

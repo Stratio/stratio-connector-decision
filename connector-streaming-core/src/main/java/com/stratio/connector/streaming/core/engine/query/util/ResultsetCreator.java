@@ -77,10 +77,10 @@ public class ResultsetCreator {
 
         for (ColumnName colName : select.getColumnMap().keySet()) {
 
-            ColumnType colType = select.getTypeMap().get(colName.getQualifiedName());
+            ColumnType colType = select.getTypeMapFromColumnName().get(colName);
             colType = updateColumnType(colType);
             ColumnMetadata columnMetadata = new ColumnMetadata(projection.getTableName().getQualifiedName(),
-                    colName.getQualifiedName(), colType);
+                            colName.getQualifiedName(), colType);
             columnMetadata.setColumnAlias(select.getColumnMap().get(colName));
             columnsMetadata.add(columnMetadata);
         }

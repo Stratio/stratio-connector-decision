@@ -25,7 +25,6 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.stratio.crossdata.common.metadata.Operations;
 import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.data.ColumnName;
 import com.stratio.crossdata.common.data.TableName;
@@ -33,11 +32,12 @@ import com.stratio.crossdata.common.logicalplan.Filter;
 import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.metadata.ColumnType;
-import com.stratio.crossdata.common.statements.structures.relationships.Operator;
-import com.stratio.crossdata.common.statements.structures.relationships.Relation;
-import com.stratio.crossdata.common.statements.structures.selectors.ColumnSelector;
-import com.stratio.crossdata.common.statements.structures.selectors.Selector;
-import com.stratio.crossdata.common.statements.structures.selectors.StringSelector;
+import com.stratio.crossdata.common.metadata.Operations;
+import com.stratio.crossdata.common.statements.structures.ColumnSelector;
+import com.stratio.crossdata.common.statements.structures.Operator;
+import com.stratio.crossdata.common.statements.structures.Relation;
+import com.stratio.crossdata.common.statements.structures.Selector;
+import com.stratio.crossdata.common.statements.structures.StringSelector;
 
 /**
  * ConnectorQueryBuilder Tester.
@@ -93,7 +93,15 @@ public class ConnectorQueryBuilderTest {
     private Select createSelect() {
         Map<ColumnName, String> columMap = createColumnMap();
         Map<String, ColumnType> typeMap = createTypeMap();
-        return new Select(Operations.SELECT_OPERATOR, columMap, typeMap);
+        Map<ColumnName, ColumnType> typeMapColumnName = createTypeMapColumnName();
+        return new Select(Operations.SELECT_OPERATOR, columMap, typeMap, typeMapColumnName);
+    }
+
+    private Map<ColumnName, ColumnType> createTypeMapColumnName() {
+        Map<ColumnName, ColumnType> typeMap = new LinkedHashMap<>();
+        typeMap.put(new ColumnName(CATALOG, TABLE, COLUMN_1), ColumnType.DOUBLE);
+        typeMap.put(new ColumnName(CATALOG, TABLE, COLUMN_2), ColumnType.INT);
+        return typeMap;
     }
 
     private Map<String, ColumnType> createTypeMap() {

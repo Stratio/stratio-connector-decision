@@ -34,7 +34,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.crossdata.common.connector.IResultHandler;
-import com.stratio.crossdata.common.metadata.Operations;
 import com.stratio.crossdata.common.data.Cell;
 import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.data.ColumnName;
@@ -43,6 +42,7 @@ import com.stratio.crossdata.common.data.TableName;
 import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.metadata.ColumnType;
+import com.stratio.crossdata.common.metadata.Operations;
 import com.stratio.crossdata.common.metadata.structures.ColumnMetadata;
 import com.stratio.crossdata.common.result.QueryResult;
 
@@ -80,7 +80,7 @@ public class ResultsetCreatorTest {
 
         resultsetCreator = new ResultsetCreator(createQueryData());
         List<ColumnMetadata> columnMetadata = (List<ColumnMetadata>) Whitebox.getInternalState(resultsetCreator,
-                "columnsMetadata");
+                        "columnsMetadata");
 
         valiateMetadata(columnMetadata);
     }
@@ -139,7 +139,11 @@ public class ResultsetCreatorTest {
         Map<String, ColumnType> typemap = new LinkedHashMap();
         typemap.put(CATALOG + "." + TABLE + "." + NAME[0], TYPE[0]);
         typemap.put(CATALOG + "." + TABLE + "." + NAME[1], TYPE[1]);
-        Select select = new Select(Operations.SELECT_OPERATOR, columnMap, typemap);
+        Map<ColumnName, ColumnType> typemapColumnName = new LinkedHashMap<>();
+        typemapColumnName.put(new ColumnName(CATALOG, TABLE, NAME[0]), TYPE[0]);
+        typemapColumnName.put(new ColumnName(CATALOG, TABLE, NAME[1]), TYPE[1]);
+
+        Select select = new Select(Operations.SELECT_OPERATOR, columnMap, typemap, typemapColumnName);
         queryData.setSelect(select);
 
         return queryData;
