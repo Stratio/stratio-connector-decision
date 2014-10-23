@@ -18,17 +18,20 @@
 
 package com.stratio.connector.streaming.core.engine.query.queryexecutor;
 
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageprocess.ProcessMessage;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageprocess.ProcessMessageFactory;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
 import com.stratio.crossdata.common.connector.IResultHandler;
+import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.streaming.api.IStratioStreamingAPI;
-import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
-import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
-import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
 import com.stratio.streaming.commons.messages.StratioStreamingMessage;
 
 import kafka.consumer.KafkaStream;
@@ -39,19 +42,36 @@ import kafka.consumer.KafkaStream;
  */
 public class ConnectorQueryExecutor {
 
+
     /**
-     * The queryId.
+     * The Log.
      */
-    //protected String queryId;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     /**
      * The queryData.
      */
     protected ConnectorQueryData queryData;
+    /**
+     * The result handler.
+     */
     private IResultHandler resultHandler;
 
+    /**
+     * The message processor.
+     */
     private ProcessMessage proccesMesage;
-    private StreamingQuery streamingQuery;
+    /**
+     * The streaming queryCreator.
+     */
+    private StreamingQueryCreator streamingQueryCreator;
 
+    /**
+     * Constructor
+     * @param queryData the query data.
+     * @param resultHandler the result handler.
+     * @throws UnsupportedException if an operation is not supported.
+     */
     public ConnectorQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler)
             throws UnsupportedException {
         this.queryData = queryData;
@@ -59,28 +79,42 @@ public class ConnectorQueryExecutor {
 
     }
 
+    /**
+     * This method execute a query.
+     * @param query the query.
+     * @param connection the connection.
+     * @throws ExecutionException if fail the execution.
+     * @throws InterruptedException when the asynchronous query stop.
+     * @throws UnsupportedException if a operation is not supported.
+     */
     public void executeQuery(String query, Connection<IStratioStreamingAPI> connection)
-            throws StratioEngineOperationException, StratioAPISecurityException, StratioEngineStatusException,
-            InterruptedException, UnsupportedException {
+            throws InterruptedException, UnsupportedException, ExecutionException {
 
         IStratioStreamingAPI stratioStreamingAPI = connection.getNativeConnection();
         ResultsetCreator resultSetCreator = new ResultsetCreator(queryData);
         resultSetCreator.setResultHandler(resultHandler);
         proccesMesage = ProcessMessageFactory.getProccesMessage(queryData, resultSetCreator);
 
-        streamingQuery = new StreamingQuery(queryData, proccesMesage);
-        String streamOutgoingName = streamingQuery.createQuery(query, stratioStreamingAPI);
+        streamingQueryCreator = new StreamingQueryCreator(queryData, proccesMesage);
+        String streamOutgoingName = streamingQueryCreator.createQuery(query, stratioStreamingAPI);
 
-        KafkaStream<String, StratioStreamingMessage> stream = streamingQuery.listenQuery(stratioStreamingAPI,
+        KafkaStream<String, StratioStreamingMessage> stream = streamingQueryCreator.listenQuery(stratioStreamingAPI,
                 streamOutgoingName);
 
-        streamingQuery.readMessages(stream);
+        streamingQueryCreator.readMessages(stream);
+
 
     }
 
-    public void endQuery(String streamName, Connection<IStratioStreamingAPI> connection)
-            throws StratioEngineStatusException, StratioAPISecurityException, StratioEngineOperationException {
-        streamingQuery.endQuery(streamName, connection);
+    /**
+     * This method finalize the query execution.
+     * @param streamName the stream name.
+     * @param connection the connection.
+     * @throws ExecutionException if fail the operation.
+     */
+    public void endQuery(String streamName, Connection<IStratioStreamingAPI> connection) throws ExecutionException {
+
+             streamingQueryCreator.endQuery(streamName, connection);
 
     }
 

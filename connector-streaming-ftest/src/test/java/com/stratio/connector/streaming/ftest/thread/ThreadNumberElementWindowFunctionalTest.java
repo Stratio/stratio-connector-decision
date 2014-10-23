@@ -38,9 +38,8 @@ import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
 import com.stratio.crossdata.common.connector.IResultHandler;
 import com.stratio.crossdata.common.data.TableName;
-import com.stratio.crossdata.common.exceptions.ConnectionException;
+import com.stratio.crossdata.common.exceptions.ConnectorException;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
-import com.stratio.crossdata.common.exceptions.InitializationException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.logicalplan.LogicalWorkflow;
 import com.stratio.crossdata.common.metadata.ColumnType;
@@ -69,7 +68,7 @@ public class ThreadNumberElementWindowFunctionalTest extends GenericStreamingTes
     Boolean correctNumberOfElement = true;
 
     @Before
-    public void setUp() throws ConnectionException, UnsupportedException, ExecutionException, InitializationException {
+    public void setUp() throws ConnectorException {
         super.setUp();
 
         returnSet = new HashSet<>();
@@ -88,7 +87,7 @@ public class ThreadNumberElementWindowFunctionalTest extends GenericStreamingTes
     }
 
     @After
-    public void tearDown() throws UnsupportedException, ExecutionException {
+    public void tearDown() throws ConnectorException {
         sConnector.getMetadataEngine().dropTable(getClusterName(), new TableName(CATALOG, TABLE));
         sConnector.close(getClusterName());
     }

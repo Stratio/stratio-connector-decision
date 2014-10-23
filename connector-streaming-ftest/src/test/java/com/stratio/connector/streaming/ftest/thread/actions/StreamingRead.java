@@ -21,8 +21,6 @@ package com.stratio.connector.streaming.ftest.thread.actions;
 import com.stratio.connector.streaming.core.StreamingConnector;
 import com.stratio.crossdata.common.connector.IResultHandler;
 import com.stratio.crossdata.common.data.ClusterName;
-import com.stratio.crossdata.common.exceptions.ExecutionException;
-import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.logicalplan.LogicalWorkflow;
 import com.stratio.crossdata.common.metadata.TableMetadata;
 
@@ -54,7 +52,7 @@ public class StreamingRead extends Thread {
         try {
             System.out.println("****************************** STARTING StreamingInserter **********************");
             streamingConnector.getQueryEngine().asyncExecute(queryId, logicalWorkFlow, resultHandler);
-        } catch (UnsupportedException | ExecutionException e) {
+        } catch (com.stratio.crossdata.common.exceptions.ConnectorException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -63,7 +61,7 @@ public class StreamingRead extends Thread {
     public void end() {
         try {
             streamingConnector.getQueryEngine().stop(queryId);
-        } catch (UnsupportedException | ExecutionException e) {
+        } catch (com.stratio.crossdata.common.exceptions.ConnectorException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

@@ -97,7 +97,7 @@ public class StreamingQueryTest {
     private static final Object VALUE_1_2 = "value_1_2";
     private static final Object VALUE_2_2 = "value_2_2";
 
-    StreamingQuery streamingQuery;
+    StreamingQueryCreator streamingQuery;
     @Mock
     Decoder DECODER;
     @Mock
@@ -110,7 +110,7 @@ public class StreamingQueryTest {
     @Before
     public void before() throws Exception {
 
-        streamingQuery = new StreamingQuery(createQueryData(), processMessage);
+        streamingQuery = new StreamingQueryCreator(createQueryData(), processMessage);
     }
 
     @After

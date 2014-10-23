@@ -42,9 +42,8 @@ import com.stratio.crossdata.common.data.Cell;
 import com.stratio.crossdata.common.data.ColumnName;
 import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.data.TableName;
-import com.stratio.crossdata.common.exceptions.ConnectionException;
+import com.stratio.crossdata.common.exceptions.ConnectorException;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
-import com.stratio.crossdata.common.exceptions.InitializationException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.logicalplan.LogicalWorkflow;
 import com.stratio.crossdata.common.logicalplan.Select;
@@ -75,7 +74,7 @@ public class ThreadTimeWindowFunctionalTest extends GenericStreamingTest {
     Boolean returnTypes = true;
 
     @Before
-    public void setUp() throws ConnectionException, UnsupportedException, ExecutionException, InitializationException {
+    public void setUp() throws ConnectorException {
         super.setUp();
 
         returnSet = new HashSet<>();
@@ -98,7 +97,7 @@ public class ThreadTimeWindowFunctionalTest extends GenericStreamingTest {
     }
 
     @After
-    public void tearDown() throws UnsupportedException, ExecutionException {
+    public void tearDown() throws ConnectorException {
         sConnector.getMetadataEngine().dropTable(getClusterName(), new TableName(CATALOG, TABLE));
         sConnector.close(getClusterName());
     }
@@ -211,7 +210,7 @@ public class ThreadTimeWindowFunctionalTest extends GenericStreamingTest {
     }
 
     @Test
-    public void testManyThread() throws UnsupportedException, ExecutionException, InterruptedException {
+    public void testManyThread() throws ConnectorException, InterruptedException {
         LogicalWorkflow logicalWokflow = new LogicalWorkFlowCreator(CATALOG, TABLE, getClusterName())
                         .addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
                         .addWindow(WindowType.TEMPORAL, 20).getLogicalWorkflow();

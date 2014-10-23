@@ -38,6 +38,7 @@ import com.stratio.crossdata.common.connector.IConfiguration;
 import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.data.TableName;
 import com.stratio.crossdata.common.exceptions.ConnectionException;
+import com.stratio.crossdata.common.exceptions.ConnectorException;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.exceptions.InitializationException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
@@ -81,7 +82,7 @@ public abstract class GenericStreamingTest {
     }
 
     @Before
-    public void setUp() throws InitializationException, ConnectionException, UnsupportedException, ExecutionException {
+    public void setUp() throws ConnectorException {
         sConnector = new StreamingConnector();
         sConnector.init(getConfiguration());
         sConnector.connect(getICredentials(), getConnectorClusterConfig());
@@ -134,7 +135,7 @@ public abstract class GenericStreamingTest {
     }
 
     @After
-    public void tearDown() throws ConnectionException, UnsupportedException, ExecutionException {
+    public void tearDown() throws ConnectorException {
 
         if (deleteBeteweenTest) {
             deleteTable(CATALOG, TABLE);

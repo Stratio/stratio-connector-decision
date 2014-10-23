@@ -35,8 +35,7 @@ import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
 import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.data.ResultSet;
 import com.stratio.crossdata.common.data.Row;
-import com.stratio.crossdata.common.exceptions.ExecutionException;
-import com.stratio.crossdata.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.exceptions.ConnectorException;
 import com.stratio.crossdata.common.logicalplan.LogicalWorkflow;
 import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.metadata.TableMetadata;
@@ -49,7 +48,7 @@ import com.stratio.crossdata.common.metadata.structures.ColumnMetadata;
 public class SimpleInsertTest extends GenericStreamingTest {
 
     @Test
-    public void testInsertInt() throws UnsupportedException, ExecutionException {
+    public void testInsertInt() throws ConnectorException {
         ClusterName clusterName = getClusterName();
         System.out.println("*********************************** INIT FUNCTIONAL TEST testInsertInt "
                         + clusterName.getName() + " ***********************************");
@@ -112,7 +111,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
     }
 
     @Test
-    public void testInsertLong() throws UnsupportedException, ExecutionException {
+    public void testInsertLong() throws ConnectorException {
         ClusterName clusterName = getClusterName();
         System.out.println("*********************************** INIT FUNCTIONAL TEST testInsertLong "
                         + clusterName.getName() + " ***********************************");
@@ -176,7 +175,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
     }
 
     @Test
-    public void testInsertBoolean() throws UnsupportedException, ExecutionException {
+    public void testInsertBoolean() throws ConnectorException {
         ClusterName clusterName = getClusterName();
         System.out.println("*********************************** INIT FUNCTIONAL TEST testInsertBool "
                         + clusterName.getName() + " ***********************************");
@@ -236,7 +235,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
     }
 
     @Test
-    public void testInsertFloat() throws UnsupportedException, ExecutionException {
+    public void testInsertFloat() throws ConnectorException {
         ClusterName clusterName = getClusterName();
         System.out.println("*********************************** INIT FUNCTIONAL TEST testInsertFloat "
                         + clusterName.getName() + " ***********************************");
@@ -299,7 +298,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
     }
 
     @Test
-    public void testInsertDouble() throws UnsupportedException, ExecutionException {
+    public void testInsertDouble() throws ConnectorException {
         ClusterName clusterName = getClusterName();
         System.out.println("*********************************** INIT FUNCTIONAL TEST testInsertDouble "
                         + clusterName.getName() + " ***********************************");
@@ -362,7 +361,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
     }
 
     @Test
-    public void testInsertString() throws UnsupportedException, ExecutionException {
+    public void testInsertString() throws ConnectorException {
         ClusterName clusterName = getClusterName();
         System.out.println("*********************************** INIT FUNCTIONAL TEST testInsertDouble "
                         + clusterName.getName() + " ***********************************");

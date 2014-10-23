@@ -32,9 +32,6 @@ import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.streaming.api.IStratioStreamingAPI;
-import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
-import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
-import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
 
 /**
  * Created by jmgomez on 3/10/14.
@@ -75,8 +72,7 @@ public class QueryProcess implements ConnectorProcess {
             queryExecutor = new ConnectorQueryExecutor(queryData, resultHandler);
             queryExecutor.executeQuery(query, connection);
 
-        } catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException
-                | UnsupportedException | ExecutionException e) {
+        } catch (UnsupportedException | ExecutionException e) {
             String msg = "Streaming query execution fail." + e.getMessage();
             logger.error(msg);
             resultHandler.processException(queryId, new ExecutionException(msg, e));
@@ -89,17 +85,8 @@ public class QueryProcess implements ConnectorProcess {
 
     @Override
     public void endQuery() throws ExecutionException {
-
-        try {
-
             queryExecutor.endQuery(StreamUtil.createStreamName(project.getTableName()), connection);
-        } catch (StratioEngineStatusException | StratioAPISecurityException | StratioEngineOperationException e) {
-            String msg = "Streaming query stop fail." + e.getMessage();
-            logger.error(msg);
-            throw new ExecutionException(msg, e);
-
         }
-    }
 
     @Override
     public Project getProject() {

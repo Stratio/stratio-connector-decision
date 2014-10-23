@@ -27,8 +27,7 @@ import com.stratio.crossdata.common.connector.IStorageEngine;
 import com.stratio.crossdata.common.data.Cell;
 import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.data.Row;
-import com.stratio.crossdata.common.exceptions.ExecutionException;
-import com.stratio.crossdata.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.exceptions.ConnectorException;
 import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.metadata.TableMetadata;
 
@@ -86,13 +85,17 @@ public class StreamingInserter extends Thread {
 
                 Row row = getRowToInsert(i);
 
-                storageEngine.insert(clusterName, stream, row);
+                try {
+                    storageEngine.insert(clusterName, stream, row);
+                } catch (ConnectorException e) {
+                    e.printStackTrace();
+                }
 
                 if ((i % elementPerSecond) == 0)
                     Thread.sleep(1000);
 
             }
-        } catch (UnsupportedException | ExecutionException | InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         System.out.println("****************************** ENDING StreamingInserter **********************");
