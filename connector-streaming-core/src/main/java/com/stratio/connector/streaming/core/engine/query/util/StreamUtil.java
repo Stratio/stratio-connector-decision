@@ -47,33 +47,69 @@ public final class StreamUtil {
      */
     private final static Logger LOGGER = LoggerFactory.getLogger(StreamUtil.class);
     /**
-     * a ramdom generator.
+     * A random generator.
      */
     private static final Random RANDOM = new Random(System.currentTimeMillis());
+    /**
+     * A set of letters.
+     */
     private static final String[] TEXT = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
             "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i",
             "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "!", "_", "1",
             "2", "3", "4", "5", "6", "7", "8", "9" };
 
+    /**
+     * Constructor.
+     */
     private StreamUtil() {
     }
 
+    /**
+     * Create a streamName with a project.
+     * @param project the project.
+     * @return the StreamName.
+     */
     public static String createStreamName(Project project) {
         return createStreamName(project.getCatalogName(), project.getTableName().getName());
     }
 
+    /**
+     * Create a streamName with a tableNAme.
+     * @param tableName the table name.
+     * @return the StreamName.
+     */
     public static String createStreamName(TableName tableName) {
         return createStreamName(tableName.getCatalogName().getName(), tableName.getName());
     }
 
+
+    /**
+     * Create a streamName with a catalog and table.
+     * @param catalog the catalog name.
+     * @param table the table name.
+     * @return the StreamName.
+     */
     private static String createStreamName(String catalog, String table) {
         return catalog + "_" + table;
     }
 
+    /**
+     * Create an stream outgoing name.
+     * @param streamName the stream name.
+     * @param metaQueryId the queryId.
+     * @return the outgoing name.
+     */
     public static String createOutgoingName(String streamName, String metaQueryId) {
         return streamName + "_" + metaQueryId.replace("-", "_");
     }
 
+    /**
+     * Insert a random message in a stream.
+     * @param stratioStreamingAPI the stream api.
+     * @param streamName the stream name.
+     * @param select the select.
+     * @throws UnsupportedException if any option is no supported.
+     */
     public static void insertRandomData(IStratioStreamingAPI stratioStreamingAPI, String streamName, Select select)
             throws UnsupportedException {
         try {
@@ -91,6 +127,13 @@ public final class StreamUtil {
         }
     }
 
+    /**
+     * Recovered a rondom type for a columntype.
+     * @param type the column type.
+     * @return the random value.
+     *
+     * @throws UnsupportedException if any error happens.
+     */
     private static Object getRandomValue(ColumnType type) throws UnsupportedException {
         Object randomObject;
 
@@ -122,9 +165,13 @@ public final class StreamUtil {
         return randomObject;
     }
 
-    private static Object getRandonText() {
+    /**
+     * Return a random text.
+     * @return a random text.
+     */
+    private static String getRandonText() {
 
-        Object randomObject;
+        String randomObject;
 
         randomObject = getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter()
                 + getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter()
@@ -134,6 +181,10 @@ public final class StreamUtil {
         return randomObject;
     }
 
+    /**
+     * Get a random letter.
+     * @return a letter.
+     */
     private static String getRandonLetter() {
         return TEXT[Math.abs(RANDOM.nextInt() % TEXT.length)];
     }

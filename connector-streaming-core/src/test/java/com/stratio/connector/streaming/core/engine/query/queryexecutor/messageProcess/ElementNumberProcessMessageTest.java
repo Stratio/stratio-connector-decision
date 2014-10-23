@@ -65,7 +65,7 @@ public class ElementNumberProcessMessageTest {
         Window window = new Window(Operations.SELECT_WINDOW, WindowType.NUM_ROWS);
         window.setNumRows(NUM_ROWS);
         queryData.setWindow(window);
-        when(resultSetCreator.createResultSet(any(List.class))).thenReturn(resultSetCreator);
+        when(resultSetCreator.create(any(List.class))).thenReturn(resultSetCreator);
         elementNumberProcessMessage = new ElementNumberProcessMessage(queryData, resultSetCreator);
     }
 

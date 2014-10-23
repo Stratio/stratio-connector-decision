@@ -101,7 +101,7 @@ public class ResultsetCreatorTest {
     }
 
     /**
-     * Method: createResultSet(List<Row> rows)
+     * Method: create(List<Row> rows)
      */
     @Test
     public void testCreateResultSet() throws Exception {
@@ -110,7 +110,7 @@ public class ResultsetCreatorTest {
         rows.add(createRow(VALUE_1_1, VALUE_2_1));
         rows.add(createRow(VALUE_1_2, VALUE_2_2));
 
-        resultsetCreator.createResultSet(rows);
+        resultsetCreator.create(rows);
         QueryResult returnValue = (QueryResult) Whitebox.getInternalState(resultsetCreator, "queryResult");
 
         valiateMetadata(returnValue.getResultSet().getColumnMetadata());

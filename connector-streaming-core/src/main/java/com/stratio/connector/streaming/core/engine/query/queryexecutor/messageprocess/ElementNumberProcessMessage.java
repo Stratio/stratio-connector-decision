@@ -81,7 +81,7 @@ public class ElementNumberProcessMessage implements ProcessMessage {
         }
 
         if (isWindowReady) {
-            resultsetCreator.createResultSet(copyNotSyncrhonizedList).send();
+            resultsetCreator.create(copyNotSyncrhonizedList).send();
         }
     }
 

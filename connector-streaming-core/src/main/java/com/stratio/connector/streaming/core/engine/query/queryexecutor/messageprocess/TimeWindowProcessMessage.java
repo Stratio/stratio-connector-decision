@@ -106,7 +106,7 @@ public class TimeWindowProcessMessage implements ProcessMessage {
                 rowTemporalStore.clear();
             }
 
-            resultsetCreator.createResultSet(copyNotSyncrhonizedList).send();
+            resultsetCreator.create(copyNotSyncrhonizedList).send();
         }
 
     }

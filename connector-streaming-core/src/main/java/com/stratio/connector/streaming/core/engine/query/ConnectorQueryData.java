@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.stratio.crossdata.common.logicalplan.Filter;
-import com.stratio.crossdata.common.logicalplan.Limit;
 import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.logicalplan.Window;
@@ -46,8 +45,14 @@ public class ConnectorQueryData {
      * The select.
      */
     private Select select;
-    private Limit limit;
+
+    /**
+     * The queryID.
+     */
     private String queryId;
+    /**
+     * The window.
+     */
     private Window window;
 
     /**
@@ -127,29 +132,34 @@ public class ConnectorQueryData {
 
     }
 
-    public Limit getLimit() {
-        return limit;
-    }
-
-    public void setLimit(Limit limit) {
-        this.limit = limit;
-    }
-
+    /**
+     * return the queryID.
+     * @return the queryID.
+     */
     public String getQueryId() {
         return queryId;
     }
 
+    /**
+     * Set the queryID.
+     * @param queryId the query ID.
+     */
     public void setQueryId(String queryId) {
         this.queryId = queryId;
     }
 
     /**
-     * @return
+     * Return the window.
+     * @return the window.
      */
     public Window getWindow() {
         return window;
     }
 
+    /**
+     * Set the window.
+     * @param window the window.
+     */
     public void setWindow(Window window) {
         this.window = window;
     }

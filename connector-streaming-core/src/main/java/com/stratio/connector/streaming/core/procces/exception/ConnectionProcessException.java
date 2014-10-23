@@ -19,14 +19,19 @@
 package com.stratio.connector.streaming.core.procces.exception;
 
 /**
+ * A connection process exception.
  * Created by jmgomez on 3/10/14.
  */
 public class ConnectionProcessException extends Exception {
     /**
-     *
+     * The uid.
      */
     private static final long serialVersionUID = 3322179458067576056L;
 
+    /**
+     * Constructor.
+     * @param msg the message.
+     */
     public ConnectionProcessException(String msg) {
         super(msg);
     }

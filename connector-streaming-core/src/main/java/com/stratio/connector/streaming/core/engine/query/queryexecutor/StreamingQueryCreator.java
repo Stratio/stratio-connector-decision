@@ -147,9 +147,7 @@ public class StreamingQueryCreator {
      * This method finish the streaming query.
      * @param streamName the stream name.
      * @param connection the connection.
-     * @throws StratioEngineStatusException
-     * @throws StratioAPISecurityException
-     * @throws StratioEngineOperationException
+     * @throws ExecutionException if a fail happens.
      */
     public void endQuery(String streamName, Connection<IStratioStreamingAPI> connection) throws ExecutionException {
         try {

@@ -72,7 +72,7 @@ public class TimeWindowProcessMessageTest {
         Window window = new Window(Operations.SELECT_WINDOW, WindowType.TEMPORAL);
         window.setTimeWindow(NUM_TIME_UNITS, TimeUnit.SECONDS);
         queryData.setWindow(window);
-        when(resultSetCreator.createResultSet(any(List.class))).thenReturn(resultSetCreator);
+        when(resultSetCreator.create(any(List.class))).thenReturn(resultSetCreator);
 
         timeWindowProcessMessage = new TimeWindowProcessMessage(queryData, resultSetCreator);
 
