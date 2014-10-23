@@ -23,16 +23,27 @@ import java.util.TimerTask;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageprocess.TimeWindowProcessMessage;
 
 /**
+ * A timer to send the message.
  * Created by jmgomez on 9/10/14.
  */
 public class SendResultTimer extends TimerTask {
 
+    /**
+     * The timer message executor.
+     */
     private TimeWindowProcessMessage timeWindowQueryExecutor;
 
+    /**
+     * Constructor.
+     * @param timeWindowQueryExecutor a time window executor.
+     */
     public SendResultTimer(TimeWindowProcessMessage timeWindowQueryExecutor) {
         this.timeWindowQueryExecutor = timeWindowQueryExecutor;
     }
 
+    /**
+     * This method starts the timer.
+     */
     @Override
     public void run() {
         timeWindowQueryExecutor.sendMessages();

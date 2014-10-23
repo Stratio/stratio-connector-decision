@@ -132,7 +132,7 @@ public class StreamingStorageEngineTest {
 
         List<ColumnName> partitionKey = Collections.EMPTY_LIST;
         List<ColumnName> clusterKey = Collections.EMPTY_LIST;
-        return new TableMetadata(true, new TableName(CATALOG, TABLE), options, columns, index, new ClusterName(
+        return new TableMetadata(new TableName(CATALOG, TABLE), options, columns, index, new ClusterName(
                 CLUSTER_NAME), partitionKey, clusterKey);
     }
 

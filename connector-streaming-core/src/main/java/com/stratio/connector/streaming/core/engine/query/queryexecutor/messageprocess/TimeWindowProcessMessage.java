@@ -31,18 +31,34 @@ import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 
 /**
+ * This class represent a message processor by element time.
  * Created by jmgomez on 7/10/14.
  */
 public class TimeWindowProcessMessage implements ProcessMessage {
 
+    /**
+     * The result set creator.
+     */
     private final ResultsetCreator resultsetCreator;
+    /**
+     * Check if the job is interrupt.
+     */
     private boolean isInterrupted = false;
+    /**
+     * A timer.
+     */
     private Timer timer;
-    private List<Row> list = Collections.synchronizedList(new ArrayList<Row>());
 
     /**
-     * @param queryData
+     * A row temporal store.
+     */
+    private List<Row> rowTemporalStore = Collections.synchronizedList(new ArrayList<Row>());
 
+    /**
+     * constructor.
+     * @param queryData the querydata.
+     * @param resultsetCreator the resultSet creator.
+     * @throws UnsupportedException if an error happens.
      */
     public TimeWindowProcessMessage(ConnectorQueryData queryData, ResultsetCreator resultsetCreator)
             throws UnsupportedException {
@@ -56,28 +72,38 @@ public class TimeWindowProcessMessage implements ProcessMessage {
 
     }
 
+    /**
+     * This method process a row.
+     * @param row a row.
+     */
     @Override
     public void processMessage(Row row) {
 
-        synchronized (list) {
-            list.add(row);
+        synchronized (rowTemporalStore) {
+            rowTemporalStore.add(row);
         }
 
     }
 
+    /**
+     * End the process.
+     */
     @Override
     public void end() {
         isInterrupted = true;
         timer.cancel();
     }
 
+    /**
+     * This method send a message.
+     */
     public void sendMessages() {
         if (!isInterrupted) {
 
             List<Row> copyNotSyncrhonizedList;
-            synchronized (list) {
-                copyNotSyncrhonizedList = new ArrayList<>(list);
-                list.clear();
+            synchronized (rowTemporalStore) {
+                copyNotSyncrhonizedList = new ArrayList<>(rowTemporalStore);
+                rowTemporalStore.clear();
             }
 
             resultsetCreator.createResultSet(copyNotSyncrhonizedList).send();

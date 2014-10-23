@@ -31,7 +31,8 @@ import com.stratio.streaming.api.StratioStreamingAPIFactory;
 import com.stratio.streaming.commons.exceptions.StratioEngineConnectionException;
 
 /**
- * This class represents a logic connection. Created by jmgomez on 28/08/14.
+ * This class represents a logic connection to streaming.
+ * Created by jmgomez on 28/08/14.
  */
 public class StreamingConnection extends Connection<IStratioStreamingAPI> {
 
@@ -59,7 +60,7 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
     /**
      * Constructor.
      *
-     * @param credentiasl the credentials.
+     * @param credentials the credentials.
      * @param config      The cluster configuration.
      * @throws UnsupportedException
      */
@@ -85,6 +86,9 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
         isConnect = true;
     }
 
+    /**
+     * This method close the connection.
+     */
     public void close() {
         if (stratioStreamingAPI != null) {
             isConnect = false;
@@ -94,11 +98,19 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
 
     }
 
+    /**
+     * Check if the connection is open.
+     * @return true if the connection is open. False in other case.
+     */
     @Override
     public boolean isConnect() {
         return isConnect;
     }
 
+    /**
+     * Return a streaming native connection.
+     * @return a streaming native connection.
+     */
     @Override
     public IStratioStreamingAPI getNativeConnection() {
         return stratioStreamingAPI;

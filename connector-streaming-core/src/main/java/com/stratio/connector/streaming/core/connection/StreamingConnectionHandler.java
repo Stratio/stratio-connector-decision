@@ -31,6 +31,7 @@ import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.exceptions.StratioEngineConnectionException;
 
 /**
+ * This class manages the logic connections.
  * Created by jmgomez on 28/08/14.
  */
 public class StreamingConnectionHandler extends ConnectionHandler {
@@ -40,10 +41,21 @@ public class StreamingConnectionHandler extends ConnectionHandler {
      */
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * constructor.
+     * @param configuration the configuration.
+     */
     public StreamingConnectionHandler(IConfiguration configuration) {
         super(configuration);
     }
 
+    /**
+     * This method creates a steaming native connection.
+     * @param iCredentials the credentials.
+     * @param connectorClusterConfig the configuration.
+     * @return a logic connection with a native connection inside.
+     * @throws CreateNativeConnectionException if a error happens.
+     */
     @Override
     protected Connection<IStratioStreamingAPI> createNativeConnection(ICredentials iCredentials,
             ConnectorClusterConfig connectorClusterConfig) throws CreateNativeConnectionException {

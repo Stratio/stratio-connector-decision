@@ -21,12 +21,20 @@ package com.stratio.connector.streaming.core.engine.query.queryexecutor.messagep
 import com.stratio.crossdata.common.data.Row;
 
 /**
+ * Interface to process messages.
  * Created by jmgomez on 16/10/14.
  */
 public interface ProcessMessage {
 
+    /**
+     * Process a row.
+     * @param row a row.
+     */
     public void processMessage(Row row);
 
+    /**
+     * End the processor.
+     */
     public void end();
 
 }

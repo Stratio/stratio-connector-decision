@@ -28,6 +28,7 @@ import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 
 /**
+ * This class represent a message processor by element number.
  * Created by jmgomez on 7/10/14.
  */
 public class ElementNumberProcessMessage implements ProcessMessage {
@@ -37,13 +38,21 @@ public class ElementNumberProcessMessage implements ProcessMessage {
      */
     private int windowLength;
 
-    private List<Row> list = Collections.synchronizedList(new ArrayList());
+    /**
+     * The row temporal store.
+     */
+    private List<Row> rowTemporalStore = Collections.synchronizedList(new ArrayList());
 
+    /**
+     * The resultSet creator.
+     */
     private ResultsetCreator resultsetCreator;
 
     /**
-     * @param queryData
-
+     * constructor.
+     * @param queryData the querydata.
+     * @param resultsetCreator the resultSet creator.
+     * @throws UnsupportedException if an error happens.
      */
     public ElementNumberProcessMessage(ConnectorQueryData queryData, ResultsetCreator resultsetCreator)
             throws UnsupportedException {
@@ -53,17 +62,21 @@ public class ElementNumberProcessMessage implements ProcessMessage {
 
     }
 
+    /**
+     * This method process a row.
+     * @param row a row.
+     */
     @Override
     public void processMessage(Row row) {
 
         boolean isWindowReady = false;
         ArrayList<Row> copyNotSyncrhonizedList = null;
-        synchronized (list) { // TODO ver si se puede sincronizar menos
-            list.add(row);
-            isWindowReady = (list.size() == windowLength);
+        synchronized (rowTemporalStore) {
+            rowTemporalStore.add(row);
+            isWindowReady = (rowTemporalStore.size() == windowLength);
             if (isWindowReady) {
-                copyNotSyncrhonizedList = new ArrayList<>(list);
-                list.clear();
+                copyNotSyncrhonizedList = new ArrayList<>(rowTemporalStore);
+                rowTemporalStore.clear();
             }
         }
 
@@ -72,6 +85,9 @@ public class ElementNumberProcessMessage implements ProcessMessage {
         }
     }
 
+    /**
+     * End the process.
+     */
     @Override
     public void end() {
 

@@ -23,14 +23,20 @@ import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 
 /**
+ * A process manager factory.
  * Created by jmgomez on 16/10/14.
  */
 public final class ProcessMessageFactory {
 
-    private ProcessMessageFactory() {
+    private ProcessMessageFactory() {}
 
-    }
-
+    /**
+     * Return the correct process manager.
+     * @param queryData the query data.
+     * @param resultSetCreator the result creator.
+     * @return the correct configure processMessage.
+     * @throws UnsupportedException  if an error happens.
+     */
     public static ProcessMessage getProccesMessage(ConnectorQueryData queryData, ResultsetCreator resultSetCreator)
             throws UnsupportedException {
         ProcessMessage connectorQueryExecutor = null;

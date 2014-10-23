@@ -34,11 +34,18 @@ import com.stratio.streaming.commons.messages.StratioStreamingMessage;
 import kafka.consumer.KafkaStream;
 
 /**
+ * This class responsibility is to control the process to execute a query.
  * Created by jmgomez on 30/09/14.
  */
 public class ConnectorQueryExecutor {
 
-    protected String queryId;
+    /**
+     * The queryId.
+     */
+    //protected String queryId;
+    /**
+     * The queryData.
+     */
     protected ConnectorQueryData queryData;
     private IResultHandler resultHandler;
 

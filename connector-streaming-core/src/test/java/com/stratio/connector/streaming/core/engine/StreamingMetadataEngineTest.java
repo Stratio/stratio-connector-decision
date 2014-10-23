@@ -103,7 +103,7 @@ public class StreamingMetadataEngineTest {
 
         List<ColumnName> partitionKey = Collections.EMPTY_LIST;
         List<ColumnName> clusterKey = Collections.EMPTY_LIST;
-        TableMetadata tableMetadata = new TableMetadata(true, new TableName(CATALOG, TABLE), options, columns, index,
+        TableMetadata tableMetadata = new TableMetadata(new TableName(CATALOG, TABLE), options, columns, index,
                 new ClusterName(CLUSTER_NAME), partitionKey, clusterKey);
         streamingMetadataEngine.createTable(tableMetadata, connection);
 
