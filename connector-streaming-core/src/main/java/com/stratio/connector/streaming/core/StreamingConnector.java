@@ -45,18 +45,12 @@ public class StreamingConnector extends CommonsConnector {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private transient ConnectorProcessHandler processHandler;
 
-    public static void main(String[] args) {
-        StreamingConnector cassandraConnector = new StreamingConnector();
-        ConnectorApp connectorApp = new ConnectorApp();
-        connectorApp.startup(cassandraConnector);
-        cassandraConnector.attachShutDownHook();
-    }
-
     /**
      * Create a connection to Streaming. The client will be a transportClient by default unless stratio nodeClient is
      * specified.
      *
-     * @param configuration the connection configuration. It must be not null.
+     * @param configuration
+     *            the connection configuration. It must be not null.
      */
 
     @Override
@@ -114,6 +108,13 @@ public class StreamingConnector extends CommonsConnector {
     @Override
     public IMetadataEngine getMetadataEngine() {
         return new StreamingMetadataEngine(connectionHandler);
+    }
+
+    public static void main(String[] args) {
+        StreamingConnector streamingConnector = new StreamingConnector();
+        ConnectorApp connectorApp = new ConnectorApp();
+        connectorApp.startup(streamingConnector);
+        streamingConnector.attachShutDownHook();
     }
 
     public void attachShutDownHook() {
