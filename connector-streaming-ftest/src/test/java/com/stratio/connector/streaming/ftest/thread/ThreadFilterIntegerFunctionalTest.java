@@ -63,8 +63,8 @@ public class ThreadFilterIntegerFunctionalTest extends GenericStreamingTest {
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, ColumnType.VARCHAR)
-                .addColumn(INTEGER_COLUMN, ColumnType.INT).addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
-                .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT).build();
+                        .addColumn(INTEGER_COLUMN, ColumnType.INT).addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
+                        .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT).build();
         try {
             sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -80,7 +80,7 @@ public class ThreadFilterIntegerFunctionalTest extends GenericStreamingTest {
         int correctValue = 4;
         int incorrectValue = OTHER_INT_VALUE;
         StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata,
-                createLowerLogicalWorkFlow(), new ResultNumberHandler(correctValue, incorrectValue));
+                        createLowerLogicalWorkFlow(), new ResultNumberHandler(correctValue, incorrectValue));
 
         stremingRead.start();
         System.out.println("TEST ********************** Querying......");
@@ -121,7 +121,7 @@ public class ThreadFilterIntegerFunctionalTest extends GenericStreamingTest {
         int correctValue = 6;
         int incorrectValue = OTHER_INT_VALUE;
         StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata,
-                createGreatLogicalWorkFlow(), new ResultNumberHandler(correctValue, incorrectValue));
+                        createGreatLogicalWorkFlow(), new ResultNumberHandler(correctValue, incorrectValue));
 
         stremingRead.start();
         System.out.println("TEST ********************** Querying......");
@@ -162,7 +162,7 @@ public class ThreadFilterIntegerFunctionalTest extends GenericStreamingTest {
         int correctValue = DEFAULT_INT_VALUE;
         int incorrectValue = DEFAULT_INT_VALUE - 1;
         StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata,
-                createGreatEqualLogicalWorkFlow(), new ResultNumberHandler(correctValue, incorrectValue));
+                        createGreatEqualLogicalWorkFlow(), new ResultNumberHandler(correctValue, incorrectValue));
 
         stremingRead.start();
         System.out.println("TEST ********************** Querying......");
@@ -201,7 +201,7 @@ public class ThreadFilterIntegerFunctionalTest extends GenericStreamingTest {
     public void testLowerEqualsFilter() throws InterruptedException, UnsupportedException {
 
         StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata,
-                createLowerEqualsLogicalWorkFlow(), new ResultNumberHandler(OTHER_INT_VALUE, DEFAULT_INT_VALUE));
+                        createLowerEqualsLogicalWorkFlow(), new ResultNumberHandler(OTHER_INT_VALUE, DEFAULT_INT_VALUE));
 
         stremingRead.start();
         System.out.println("TEST ********************** Querying......");
@@ -242,14 +242,14 @@ public class ThreadFilterIntegerFunctionalTest extends GenericStreamingTest {
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
-                ColumnType.BOOLEAN));
+                        ColumnType.BOOLEAN));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_CHANGEABLE_COLUMN,
-                INTEGER_CHANGEABLE_COLUMN, ColumnType.INT));
+                        INTEGER_CHANGEABLE_COLUMN, ColumnType.INT));
 
         return logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN)
-                .addColumnName(BOOLEAN_COLUMN).addColumnName(INTEGER_CHANGEABLE_COLUMN)
-                .addSelect(selectColumns).addNLowerFilter(INTEGER_CHANGEABLE_COLUMN, OTHER_INT_VALUE, false)
-                .addWindow(WindowType.TEMPORAL, 5).getLogicalWorkflow();
+                        .addColumnName(BOOLEAN_COLUMN).addColumnName(INTEGER_CHANGEABLE_COLUMN)
+                        .addSelect(selectColumns).addNLowerFilter(INTEGER_CHANGEABLE_COLUMN, OTHER_INT_VALUE, false)
+                        .addWindow(WindowType.TEMPORAL, 5).getLogicalWorkflow();
     }
 
     private LogicalWorkflow createGreatEqualLogicalWorkFlow() throws UnsupportedException {
@@ -259,15 +259,15 @@ public class ThreadFilterIntegerFunctionalTest extends GenericStreamingTest {
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
-                ColumnType.BOOLEAN));
+                        ColumnType.BOOLEAN));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_CHANGEABLE_COLUMN,
-                INTEGER_CHANGEABLE_COLUMN, ColumnType.INT));
+                        INTEGER_CHANGEABLE_COLUMN, ColumnType.INT));
 
         return logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN)
-                .addColumnName(BOOLEAN_COLUMN).addColumnName(INTEGER_CHANGEABLE_COLUMN)
-                .addSelect(selectColumns)
-                .addGreaterEqualFilter(INTEGER_CHANGEABLE_COLUMN, OTHER_INT_VALUE, false, false)
-                .addWindow(WindowType.TEMPORAL, 5).getLogicalWorkflow();
+                        .addColumnName(BOOLEAN_COLUMN).addColumnName(INTEGER_CHANGEABLE_COLUMN)
+                        .addSelect(selectColumns)
+                        .addGreaterEqualFilter(INTEGER_CHANGEABLE_COLUMN, OTHER_INT_VALUE, false, false)
+                        .addWindow(WindowType.TEMPORAL, 5).getLogicalWorkflow();
     }
 
     private LogicalWorkflow createGreatLogicalWorkFlow() throws UnsupportedException {
@@ -277,14 +277,14 @@ public class ThreadFilterIntegerFunctionalTest extends GenericStreamingTest {
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
-                ColumnType.BOOLEAN));
+                        ColumnType.BOOLEAN));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_CHANGEABLE_COLUMN,
-                INTEGER_CHANGEABLE_COLUMN, ColumnType.INT));
+                        INTEGER_CHANGEABLE_COLUMN, ColumnType.INT));
 
         return logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN)
-                .addColumnName(BOOLEAN_COLUMN).addColumnName(INTEGER_CHANGEABLE_COLUMN)
-                .addSelect(selectColumns).addGreaterFilter(INTEGER_CHANGEABLE_COLUMN, OTHER_INT_VALUE, false)
-                .addWindow(WindowType.TEMPORAL, 5).getLogicalWorkflow();
+                        .addColumnName(BOOLEAN_COLUMN).addColumnName(INTEGER_CHANGEABLE_COLUMN)
+                        .addSelect(selectColumns).addGreaterFilter(INTEGER_CHANGEABLE_COLUMN, OTHER_INT_VALUE, false)
+                        .addWindow(WindowType.TEMPORAL, 5).getLogicalWorkflow();
     }
 
     private LogicalWorkflow createLowerEqualsLogicalWorkFlow() throws UnsupportedException {
@@ -294,15 +294,15 @@ public class ThreadFilterIntegerFunctionalTest extends GenericStreamingTest {
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
-                ColumnType.BOOLEAN));
+                        ColumnType.BOOLEAN));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_CHANGEABLE_COLUMN,
-                INTEGER_CHANGEABLE_COLUMN, ColumnType.INT));
+                        INTEGER_CHANGEABLE_COLUMN, ColumnType.INT));
 
         return logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN)
-                .addColumnName(BOOLEAN_COLUMN).addColumnName(INTEGER_CHANGEABLE_COLUMN)
-                .addSelect(selectColumns)
-                .addLowerEqualFilter(INTEGER_CHANGEABLE_COLUMN, OTHER_INT_VALUE, false)
-                .addWindow(WindowType.TEMPORAL, 2).getLogicalWorkflow();
+                        .addColumnName(BOOLEAN_COLUMN).addColumnName(INTEGER_CHANGEABLE_COLUMN)
+                        .addSelect(selectColumns)
+                        .addLowerEqualFilter(INTEGER_CHANGEABLE_COLUMN, OTHER_INT_VALUE, false)
+                        .addWindow(WindowType.TEMPORAL, 2).getLogicalWorkflow();
     }
 
     private class ResultNumberHandler implements IResultHandler {
@@ -325,7 +325,7 @@ public class ThreadFilterIntegerFunctionalTest extends GenericStreamingTest {
         public void processResult(QueryResult result) {
 
             for (Row row : result.getResultSet()) {
-                int value = ((Double) row.getCell(INTEGER_CHANGEABLE_COLUMN).getValue()).intValue();
+                int value = (int) row.getCell(INTEGER_CHANGEABLE_COLUMN).getValue();
                 System.out.println("********************>>" + value);
 
                 if (correctValue == value) {
