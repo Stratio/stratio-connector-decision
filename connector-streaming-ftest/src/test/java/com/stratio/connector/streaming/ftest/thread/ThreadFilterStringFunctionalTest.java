@@ -43,12 +43,10 @@ import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
 public class ThreadFilterStringFunctionalTest extends GenericStreamingTest {
 
-    private static final String TEXT = "Text";
     public static final int CORRECT_ELMENT_TO_FIND = 90; // Must be a time window
-
-    private static final int DEFAULT_INT_VALUE = 10;
     public static final int OTHER_INT_VALUE = 5; // Must be a time window
-
+    private static final String TEXT = "Text";
+    private static final int DEFAULT_INT_VALUE = 10;
     private static final String OTHER_TEXT = "OTHER...... ";
     private static final int WAIT_TIME = 20;
 
@@ -184,6 +182,7 @@ public class ThreadFilterStringFunctionalTest extends GenericStreamingTest {
                         .addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
                         .addDistinctFilter(STRING_COLUMN, TEXT, false, false).addWindow(WindowType.TEMPORAL, 5)
                         .getLogicalWorkflow();
+
     }
 
     private class ResultTextHandler implements IResultHandler {

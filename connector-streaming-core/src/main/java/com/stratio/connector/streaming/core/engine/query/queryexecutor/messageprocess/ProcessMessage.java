@@ -28,13 +28,14 @@ public interface ProcessMessage {
 
     /**
      * Process a row.
+     *
      * @param row a row.
      */
-    public void processMessage(Row row);
+    void processMessage(Row row);
 
     /**
      * End the processor.
      */
-    public void end();
+    void end();
 
 }

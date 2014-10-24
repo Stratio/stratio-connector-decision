@@ -43,7 +43,6 @@ import com.stratio.crossdata.common.metadata.structures.ColumnMetadata;
 
 /**
  * @author david
- *
  */
 public class SimpleInsertTest extends GenericStreamingTest {
 
@@ -51,11 +50,11 @@ public class SimpleInsertTest extends GenericStreamingTest {
     public void testInsertInt() throws ConnectorException {
         ClusterName clusterName = getClusterName();
         System.out.println("*********************************** INIT FUNCTIONAL TEST testInsertInt "
-                        + clusterName.getName() + " ***********************************");
+                + clusterName.getName() + " ***********************************");
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         TableMetadata tableMetadata = tableMetadataBuilder.addColumn(INTEGER_COLUMN, ColumnType.INT)
-                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build();
+                .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build();
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -63,9 +62,10 @@ public class SimpleInsertTest extends GenericStreamingTest {
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, clusterName);
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
+        selectColumns
+                .add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
         LogicalWorkflow logicalWorkFlow = logicalWorkFlowCreator.addColumnName(INTEGER_COLUMN)
-                        .addColumnName(STRING_COLUMN).addSelect(selectColumns).getLogicalWorkflow();
+                .addColumnName(STRING_COLUMN).addSelect(selectColumns).getLogicalWorkflow();
 
         TestResultSet resultSet = new TestResultSet();
         StreamingRead reader = new StreamingRead(sConnector, clusterName, tableMetadata, logicalWorkFlow, resultSet);
@@ -114,11 +114,11 @@ public class SimpleInsertTest extends GenericStreamingTest {
     public void testInsertLong() throws ConnectorException {
         ClusterName clusterName = getClusterName();
         System.out.println("*********************************** INIT FUNCTIONAL TEST testInsertLong "
-                        + clusterName.getName() + " ***********************************");
+                + clusterName.getName() + " ***********************************");
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         TableMetadata tableMetadata = tableMetadataBuilder.addColumn(LONG_COLUMN, ColumnType.BIGINT)
-                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build();
+                .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build();
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -126,9 +126,10 @@ public class SimpleInsertTest extends GenericStreamingTest {
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, clusterName);
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(LONG_COLUMN, LONG_COLUMN, ColumnType.BIGINT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
+        selectColumns
+                .add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
         LogicalWorkflow logicalWorkFlow = logicalWorkFlowCreator.addColumnName(LONG_COLUMN)
-                        .addColumnName(STRING_COLUMN).addSelect(selectColumns).getLogicalWorkflow();
+                .addColumnName(STRING_COLUMN).addSelect(selectColumns).getLogicalWorkflow();
 
         TestResultSet resultSet = new TestResultSet();
         StreamingRead reader = new StreamingRead(sConnector, clusterName, tableMetadata, logicalWorkFlow, resultSet);
@@ -178,11 +179,11 @@ public class SimpleInsertTest extends GenericStreamingTest {
     public void testInsertBoolean() throws ConnectorException {
         ClusterName clusterName = getClusterName();
         System.out.println("*********************************** INIT FUNCTIONAL TEST testInsertBool "
-                        + clusterName.getName() + " ***********************************");
+                + clusterName.getName() + " ***********************************");
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         TableMetadata tableMetadata = tableMetadataBuilder.addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
-                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build();
+                .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build();
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -190,10 +191,11 @@ public class SimpleInsertTest extends GenericStreamingTest {
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, clusterName);
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
-                        ColumnType.BOOLEAN));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
+                ColumnType.BOOLEAN));
+        selectColumns
+                .add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
         LogicalWorkflow logicalWorkFlow = logicalWorkFlowCreator.addColumnName(BOOLEAN_COLUMN, STRING_COLUMN)
-                        .addSelect(selectColumns).getLogicalWorkflow();
+                .addSelect(selectColumns).getLogicalWorkflow();
 
         TestResultSet resultSet = new TestResultSet();
         StreamingRead reader = new StreamingRead(sConnector, clusterName, tableMetadata, logicalWorkFlow, resultSet);
@@ -238,11 +240,11 @@ public class SimpleInsertTest extends GenericStreamingTest {
     public void testInsertFloat() throws ConnectorException {
         ClusterName clusterName = getClusterName();
         System.out.println("*********************************** INIT FUNCTIONAL TEST testInsertFloat "
-                        + clusterName.getName() + " ***********************************");
+                + clusterName.getName() + " ***********************************");
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         TableMetadata tableMetadata = tableMetadataBuilder.addColumn(FLOAT_COLUMN, ColumnType.FLOAT)
-                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build();
+                .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build();
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -250,9 +252,10 @@ public class SimpleInsertTest extends GenericStreamingTest {
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, clusterName);
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(FLOAT_COLUMN, FLOAT_COLUMN, ColumnType.FLOAT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
+        selectColumns
+                .add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
         LogicalWorkflow logicalWorkFlow = logicalWorkFlowCreator.addColumnName(FLOAT_COLUMN, STRING_COLUMN)
-                        .addSelect(selectColumns).getLogicalWorkflow();
+                .addSelect(selectColumns).getLogicalWorkflow();
 
         TestResultSet resultSet = new TestResultSet();
         StreamingRead reader = new StreamingRead(sConnector, clusterName, tableMetadata, logicalWorkFlow, resultSet);
@@ -301,11 +304,11 @@ public class SimpleInsertTest extends GenericStreamingTest {
     public void testInsertDouble() throws ConnectorException {
         ClusterName clusterName = getClusterName();
         System.out.println("*********************************** INIT FUNCTIONAL TEST testInsertDouble "
-                        + clusterName.getName() + " ***********************************");
+                + clusterName.getName() + " ***********************************");
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         TableMetadata tableMetadata = tableMetadataBuilder.addColumn(DOUBLE_COLUMN, ColumnType.DOUBLE)
-                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build();
+                .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build();
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -313,9 +316,10 @@ public class SimpleInsertTest extends GenericStreamingTest {
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, clusterName);
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(DOUBLE_COLUMN, DOUBLE_COLUMN, ColumnType.DOUBLE));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
+        selectColumns
+                .add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
         LogicalWorkflow logicalWorkFlow = logicalWorkFlowCreator.addColumnName(DOUBLE_COLUMN, STRING_COLUMN)
-                        .addSelect(selectColumns).getLogicalWorkflow();
+                .addSelect(selectColumns).getLogicalWorkflow();
 
         TestResultSet resultSet = new TestResultSet();
         StreamingRead reader = new StreamingRead(sConnector, clusterName, tableMetadata, logicalWorkFlow, resultSet);
@@ -364,7 +368,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
     public void testInsertString() throws ConnectorException {
         ClusterName clusterName = getClusterName();
         System.out.println("*********************************** INIT FUNCTIONAL TEST testInsertDouble "
-                        + clusterName.getName() + " ***********************************");
+                + clusterName.getName() + " ***********************************");
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         TableMetadata tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, ColumnType.VARCHAR).build();
@@ -374,9 +378,10 @@ public class SimpleInsertTest extends GenericStreamingTest {
         // TODO window with 1element
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, clusterName);
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
+        selectColumns
+                .add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
         LogicalWorkflow logicalWorkFlow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addSelect(selectColumns)
-                        .getLogicalWorkflow();
+                .getLogicalWorkflow();
 
         TestResultSet resultSet = new TestResultSet();
         StreamingRead reader = new StreamingRead(sConnector, clusterName, tableMetadata, logicalWorkFlow, resultSet);

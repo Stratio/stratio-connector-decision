@@ -31,22 +31,55 @@ import com.stratio.crossdata.common.logicalplan.LogicalWorkflow;
 import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.crossdata.common.result.QueryResult;
 
+/**
+ * This class is a Streaming implementation for queryEngine.
+ */
 public class StreamingQueryEngine implements IQueryEngine {
 
+    /**
+     * The processor. handler.
+     */
     private transient ConnectorProcessHandler connectorProcessHandler;
+    /**
+     * The connection.
+     */
     private transient ConnectionHandler connectionHandler;
 
+    /**
+     * Constructor.
+     *
+     * @param connectionHandler the connection handler.
+     * @param processHandler    the processor handler.
+     */
     public StreamingQueryEngine(ConnectionHandler connectionHandler, ConnectorProcessHandler processHandler) {
 
         this.connectionHandler = connectionHandler;
         this.connectorProcessHandler = processHandler;
     }
 
+    /**
+     * Execute a query.
+     *
+     * @param workflow the work flow witch represents the query.
+     * @return the query result.
+     * @throws UnsupportedException if aany operation is not supported.
+     * @throws ExecutionException   if any error happens.
+     */
     @Override
     public QueryResult execute(LogicalWorkflow workflow) throws UnsupportedException, ExecutionException {
         throw new UnsupportedException("execute not supported in Streaming connector");
     }
 
+    /**
+     * Execute a asynchronous query.
+     *
+     * @param queryId       the queryId.
+     * @param workflow      the work flow witch represents the query.
+     * @param resultHandler the result handler.
+     * @return the query result.
+     * @throws UnsupportedException if aany operation is not supported.
+     * @throws ExecutionException   if any error happens.
+     */
     @Override
     public void asyncExecute(String queryId, LogicalWorkflow workflow, IResultHandler resultHandler)
             throws UnsupportedException, ExecutionException {
@@ -63,6 +96,13 @@ public class StreamingQueryEngine implements IQueryEngine {
         }
     }
 
+    /**
+     * This method stop a query.
+     *
+     * @param queryId the queryId.
+     * @throws UnsupportedException if any operation is not supported.
+     * @throws ExecutionException   if any error happens.
+     */
     @Override
     public synchronized void stop(String queryId) throws UnsupportedException, ExecutionException {
         try {
@@ -74,6 +114,16 @@ public class StreamingQueryEngine implements IQueryEngine {
         }
     }
 
+    /**
+     * This method initialize a process.
+     *
+     * @param queryId       the queryId.
+     * @param workflow      the workflow.
+     * @param resultHandler the result handler.
+     * @return a query process.
+     * @throws ConnectionProcessException if the connection fails.
+     * @throws HandlerConnectionException if handling the connection fails.
+     */
     private QueryProcess initProcess(String queryId, LogicalWorkflow workflow, IResultHandler resultHandler)
             throws ConnectionProcessException, HandlerConnectionException {
 
@@ -86,6 +136,13 @@ public class StreamingQueryEngine implements IQueryEngine {
         return queryProcess;
     }
 
+    /**
+     * check if a exception happens.
+     *
+     * @param queryId       the queryId.
+     * @param workflow      the workflow,.
+     * @param resultHandler the resultHandler.
+     */
     private void checkExceptions(String queryId, LogicalWorkflow workflow, IResultHandler resultHandler) {
         if (workflow.getInitialSteps().size() != 1) {
             resultHandler.processException(queryId, new ExecutionException("Only one project can be executed in "

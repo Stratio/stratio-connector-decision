@@ -28,6 +28,7 @@ import com.stratio.connector.streaming.core.procces.exception.ConnectionProcessE
 import com.stratio.crossdata.common.exceptions.ExecutionException;
 
 /**
+ * This clas handle a process.
  * Created by jmgomez on 3/10/14.
  */
 public class ConnectorProcessHandler {
@@ -37,8 +38,18 @@ public class ConnectorProcessHandler {
      */
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * The process map.
+     */
     private Map<String, ThreadProcess> processMap = new HashMap<>();
 
+    /**
+     * Start the process.
+     *
+     * @param queryId          the query id.
+     * @param connectorProcess a connector procces.
+     * @throws ConnectionProcessException if the connection fail.
+     */
     public void strartProcess(String queryId, ConnectorProcess connectorProcess) throws ConnectionProcessException {
         if (processMap.containsKey(queryId)) {
             String msg = "The processMap with id " + queryId + " already exists ";
@@ -50,6 +61,13 @@ public class ConnectorProcessHandler {
         thread.start();
     }
 
+    /**
+     * Return the query process.
+     *
+     * @param queryId the query id.
+     * @return the process.
+     * @throws ConnectionProcessException if a error happens.
+     */
     public ConnectorProcess getProcess(String queryId) throws ConnectionProcessException {
         if (!processMap.containsKey(queryId)) {
             String msg = "The processMap with id " + queryId + " not exists ";
@@ -59,6 +77,13 @@ public class ConnectorProcessHandler {
         return processMap.get(queryId).getProcess();
     }
 
+    /**
+     * Stop the process.
+     *
+     * @param queryId the queryId.
+     * @throws ConnectionProcessException if any error happens in the process.
+     * @throws ExecutionException         if a execurion error happens.
+     */
     public void stopProcess(String queryId) throws ConnectionProcessException, ExecutionException {
         ThreadProcess threadProcess = processMap.get(queryId);
 
@@ -70,20 +95,45 @@ public class ConnectorProcessHandler {
 
 }
 
+/**
+ * A class to envelope the tread and the connectorProcess.
+ */
 class ThreadProcess {
 
+    /**
+     * The thread.
+     */
     private Thread thread;
+    /**
+     * The connector process.
+     */
     private ConnectorProcess process;
 
+    /**
+     * Constructor.
+     *
+     * @param thread  the thread.
+     * @param process the process.
+     */
     ThreadProcess(Thread thread, ConnectorProcess process) {
         this.thread = thread;
         this.process = process;
     }
 
+    /**
+     * Return the thread.
+     *
+     * @return the thread.
+     */
     public Thread getThread() {
         return thread;
     }
 
+    /**
+     * Return the process.
+     *
+     * @return the preocess.
+     */
     public ConnectorProcess getProcess() {
         return process;
     }

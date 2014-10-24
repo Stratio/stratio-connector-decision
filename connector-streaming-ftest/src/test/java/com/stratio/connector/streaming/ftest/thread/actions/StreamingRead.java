@@ -34,7 +34,7 @@ public class StreamingRead extends Thread {
     private String queryId;
 
     public StreamingRead(StreamingConnector sC, ClusterName clusterName, TableMetadata tableMetadata,
-                    LogicalWorkflow logicalWorkFlow, IResultHandler resultHandler) {
+            LogicalWorkflow logicalWorkFlow, IResultHandler resultHandler) {
         super("[StreamingRead]");
         this.streamingConnector = sC;
         this.clusterName = clusterName;

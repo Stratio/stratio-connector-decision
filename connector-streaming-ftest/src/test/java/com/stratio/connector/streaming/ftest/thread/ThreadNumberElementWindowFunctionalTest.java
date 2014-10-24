@@ -49,17 +49,15 @@ import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
 public class ThreadNumberElementWindowFunctionalTest extends GenericStreamingTest {
 
+    public static final int ELEMENTS_WRITE = 500;
+    private static final int WINDOW_ELEMENTS = 10;
+    public static String STRING_COLUMN = "string_column";
+    public static String INTEGER_COLUMN = "integer_column";
+    public static String BOOLEAN_COLUMN = "boolean_column";
     /**
      * The Log.
      */
     final Logger logger = LoggerFactory.getLogger(this.getClass());
-    public static final int ELEMENTS_WRITE = 500;
-    private static final int WINDOW_ELEMENTS = 10;
-
-    public static String STRING_COLUMN = "string_column";
-    public static String INTEGER_COLUMN = "integer_column";
-    public static String BOOLEAN_COLUMN = "boolean_column";
-
     Set<Integer> returnSet = new HashSet<>();
 
     TableMetadata tableMetadata;
@@ -75,8 +73,8 @@ public class ThreadNumberElementWindowFunctionalTest extends GenericStreamingTes
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, ColumnType.VARCHAR)
-                        .addColumn(INTEGER_COLUMN, ColumnType.INT).addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
-                        .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT).build();
+                .addColumn(INTEGER_COLUMN, ColumnType.INT).addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
+                .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT).build();
         try {
             sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -101,13 +99,13 @@ public class ThreadNumberElementWindowFunctionalTest extends GenericStreamingTes
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
-                        ColumnType.BOOLEAN));
+                ColumnType.BOOLEAN));
         LogicalWorkflow logicalWokflow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN)
-                        .addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
-                        .addWindow(WindowType.NUM_ROWS, WINDOW_ELEMENTS).getLogicalWorkflow();
+                .addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
+                .addWindow(WindowType.NUM_ROWS, WINDOW_ELEMENTS).getLogicalWorkflow();
 
         StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata, logicalWokflow,
-                        new ResultHandler());
+                new ResultHandler());
 
         stremingRead.start();
         logger.debug(" ********************** Quering......");
@@ -121,7 +119,7 @@ public class ThreadNumberElementWindowFunctionalTest extends GenericStreamingTes
         stramingInserter.end();
         Thread.sleep(10000);
         assertEquals("the numberDefaultText of windows is correct", ELEMENTS_WRITE / WINDOW_ELEMENTS,
-                        (Object) windowNumber);
+                (Object) windowNumber);
         assertTrue("the elements in the windows are correct", correctNumberOfElement);
 
     }

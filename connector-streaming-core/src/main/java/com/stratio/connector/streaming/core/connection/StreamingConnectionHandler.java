@@ -43,6 +43,7 @@ public class StreamingConnectionHandler extends ConnectionHandler {
 
     /**
      * constructor.
+     *
      * @param configuration the configuration.
      */
     public StreamingConnectionHandler(IConfiguration configuration) {
@@ -51,7 +52,8 @@ public class StreamingConnectionHandler extends ConnectionHandler {
 
     /**
      * This method creates a steaming native connection.
-     * @param iCredentials the credentials.
+     *
+     * @param iCredentials           the credentials.
      * @param connectorClusterConfig the configuration.
      * @return a logic connection with a native connection inside.
      * @throws CreateNativeConnectionException if a error happens.

@@ -38,9 +38,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageprocess.TimeWindowProcessMessage;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
-import com.stratio.crossdata.common.metadata.Operations;
 import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.logicalplan.Window;
+import com.stratio.crossdata.common.metadata.Operations;
 import com.stratio.crossdata.common.statements.structures.window.TimeUnit;
 import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
@@ -72,7 +72,7 @@ public class TimeWindowProcessMessageTest {
         Window window = new Window(Operations.SELECT_WINDOW, WindowType.TEMPORAL);
         window.setTimeWindow(NUM_TIME_UNITS, TimeUnit.SECONDS);
         queryData.setWindow(window);
-        when(resultSetCreator.createResultSet(any(List.class))).thenReturn(resultSetCreator);
+        when(resultSetCreator.create(any(List.class))).thenReturn(resultSetCreator);
 
         timeWindowProcessMessage = new TimeWindowProcessMessage(queryData, resultSetCreator);
 

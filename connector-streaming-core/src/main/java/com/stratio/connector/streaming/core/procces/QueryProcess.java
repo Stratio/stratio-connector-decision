@@ -34,6 +34,7 @@ import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 
 /**
+ * This class represents a query processor.
  * Created by jmgomez on 3/10/14.
  */
 public class QueryProcess implements ConnectorProcess {
@@ -41,15 +42,44 @@ public class QueryProcess implements ConnectorProcess {
      * The log.
      */
     private final transient Logger logger = LoggerFactory.getLogger(this.getClass());
+    /**
+     * The queryId.
+     */
     private String queryId;
 
+    /**
+     * The project.
+     */
     private Project project;
+    /**
+     * The result handler.
+     */
     private IResultHandler resultHandler;
+    /**
+     * The straming connection.
+     */
     private Connection<IStratioStreamingAPI> connection;
+    /**
+     * The queryExecutor.
+     */
     private ConnectorQueryExecutor queryExecutor;
+    /**
+     * The query parser.
+     */
     private ConnectorQueryParser queryParser = new ConnectorQueryParser();
+    /**
+     * The query builder.
+     */
     private ConnectorQueryBuilder queryBuilder = new ConnectorQueryBuilder();
 
+    /**
+     * Constructor.
+     *
+     * @param queryId       the queryId.
+     * @param project       the project.
+     * @param resultHandler the result handler.
+     * @param connection    the streaming connection.
+     */
     public QueryProcess(String queryId, Project project, IResultHandler resultHandler,
             Connection<IStratioStreamingAPI> connection) {
         this.project = project;
@@ -58,6 +88,9 @@ public class QueryProcess implements ConnectorProcess {
         this.queryId = queryId;
     }
 
+    /**
+     * Strart the process.
+     */
     public void run() {
         try {
 
@@ -83,11 +116,21 @@ public class QueryProcess implements ConnectorProcess {
         }
     }
 
+    /**
+     * End the process.
+     *
+     * @throws ExecutionException in any error happens.
+     */
     @Override
     public void endQuery() throws ExecutionException {
-            queryExecutor.endQuery(StreamUtil.createStreamName(project.getTableName()), connection);
-        }
+        queryExecutor.endQuery(StreamUtil.createStreamName(project.getTableName()), connection);
+    }
 
+    /**
+     * Return the query project.
+     *
+     * @return the query project.
+     */
     @Override
     public Project getProject() {
 

@@ -36,8 +36,8 @@ import com.stratio.crossdata.common.statements.structures.Operator;
 import com.stratio.crossdata.common.statements.structures.Relation;
 import com.stratio.crossdata.common.statements.structures.StringSelector;
 
-
 /**
+ * This class builds the queries.
  * Created by jmgomez on 30/09/14.
  */
 public class ConnectorQueryBuilder {
@@ -47,8 +47,19 @@ public class ConnectorQueryBuilder {
      */
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * The query under building.
+     */
     private StringBuilder querySb = new StringBuilder();
 
+    /**
+     * This method create a query.
+     *
+     * @param queryData the query data.
+     * @return the string query representation.
+     * @throws ExecutionException   in any error happens.
+     * @throws UnsupportedException if any operation is not supported.
+     */
     public String createQuery(ConnectorQueryData queryData) throws ExecutionException, UnsupportedException {
 
         createInputQuery(queryData);
@@ -59,7 +70,9 @@ public class ConnectorQueryBuilder {
     }
 
     /**
-     * @param queryData
+     * Create the query output part.
+     *
+     * @param queryData the query data.
      */
     private void createOutputQuery(ConnectorQueryData queryData) {
         String outgoing = StreamUtil.createOutgoingName(StreamUtil.createStreamName(queryData.getProjection()),
@@ -69,8 +82,10 @@ public class ConnectorQueryBuilder {
     }
 
     /**
-     * @param queryData
-     * @throws UnsupportedException
+     * Create the query projection part.
+     *
+     * @param queryData the query data.
+     * @throws UnsupportedException if any operation is not supported.
      */
     private void createProjection(ConnectorQueryData queryData) throws UnsupportedException {
 
@@ -102,20 +117,14 @@ public class ConnectorQueryBuilder {
     }
 
     /**
-     * @param queryData
-     * @return
-     * @throws UnsupportedException
+     * Create the query input part.
+     *
+     * @param queryData the query data.
+     * @throws UnsupportedException if any operation is not supported.
+     * @throws ExecutionException   in any error happens.
      */
     private void createInputQuery(ConnectorQueryData queryData) throws UnsupportedException, ExecutionException {
         querySb.append("from ");
-        createStreamQuery(queryData);
-    }
-
-    /**
-     * @param queryData
-     * @throws UnsupportedException
-     */
-    private void createStreamQuery(ConnectorQueryData queryData) throws UnsupportedException, ExecutionException {
 
         String streamName = StreamUtil.createStreamName(queryData.getProjection());
 
@@ -127,8 +136,11 @@ public class ConnectorQueryBuilder {
     }
 
     /**
-     * @param queryData
-     * @throws UnsupportedException
+     * Create the condition query  part.
+     *
+     * @param queryData the query data.
+     * @throws UnsupportedException if any operation is not supported.
+     * @throws ExecutionException   in any error happens.
      */
     private void createConditionList(ConnectorQueryData queryData) throws UnsupportedException, ExecutionException {
 
@@ -140,12 +152,13 @@ public class ConnectorQueryBuilder {
             String value = SelectorHelper.getValue(String.class,
                     rel.getRightTerm());
 
-            querySb.append(SelectorHelper.getValue(String.class,rel.getLeftTerm())).append(" ").append(getSiddhiOperator(rel.getOperator()))
+            querySb.append(SelectorHelper.getValue(String.class, rel.getLeftTerm())).append(" ")
+                    .append(getSiddhiOperator(rel.getOperator()))
                     .append(" ");
 
-            if (rel.getRightTerm() instanceof StringSelector){
+            if (rel.getRightTerm() instanceof StringSelector) {
                 querySb.append("'").append(value).append("'");
-            }else{
+            } else {
                 querySb.append(value);
             }
 
@@ -157,8 +170,13 @@ public class ConnectorQueryBuilder {
 
     }
 
-
-
+    /**
+     * Turn a crossdata operator into a shiddhi operator.
+     *
+     * @param operator the crossdata operator.
+     * @return a the siddhi operator.
+     * @throws UnsupportedException if any operation is not supported.
+     */
     private String getSiddhiOperator(Operator operator) throws UnsupportedException {
 
         String siddhiOperator;

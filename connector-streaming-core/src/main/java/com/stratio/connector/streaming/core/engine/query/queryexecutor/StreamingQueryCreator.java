@@ -65,12 +65,17 @@ public class StreamingQueryCreator {
     private ProcessMessage processMessage;
 
     /**
-     * Constructor.
+     * Constructor. <<<<<<< HEAD
      * 
      * @param queryData
      *            the query data.
      * @param processMessage
-     *            the message processor.
+     *            the message processor. =======
+     *
+     * @param queryData
+     *            the query data.
+     * @param processMessage
+     *            the message processor. >>>>>>> d2834cefc00164cbe89d40a527d27c11ab45093d
      */
     public StreamingQueryCreator(ConnectorQueryData queryData, ProcessMessage processMessage) {
         this.processMessage = processMessage;
@@ -79,7 +84,7 @@ public class StreamingQueryCreator {
     }
 
     /**
-     * This method send a query in streaming.
+     * <<<<<<< HEAD This method send a query in streaming.
      * 
      * @param query
      *            the query to send.
@@ -89,7 +94,17 @@ public class StreamingQueryCreator {
      * @throws ExecutionException
      *             if the execution fail.
      * @throws UnsupportedException
-     *             if a operation is not supported.
+     *             if a operation is not supported. ======= This method send a query in streaming.
+     *
+     * @param query
+     *            the query to send.
+     * @param stratioStreamingAPI
+     *            the streaming api.
+     * @return the query id.
+     * @throws ExecutionException
+     *             if the execution fail.
+     * @throws UnsupportedException
+     *             if a operation is not supported. >>>>>>> d2834cefc00164cbe89d40a527d27c11ab45093d
      */
     public String createQuery(String query, IStratioStreamingAPI stratioStreamingAPI) throws UnsupportedException,
                     ExecutionException {
@@ -110,7 +125,7 @@ public class StreamingQueryCreator {
     }
 
     /**
-     * This method listen a streami query.
+     * This method listen a streami query. <<<<<<< HEAD
      * 
      * @param stratioStreamingAPI
      *            the stratio straming api.
@@ -120,14 +135,26 @@ public class StreamingQueryCreator {
      * @throws UnsupportedException
      *             if an operation is not supported.
      * @throws ExecutionException
-     *             if a error happen.
+     *             if a error happen. =======
+     *
+     * @param stratioStreamingAPI
+     *            the stratio straming api.
+     * @param streamOutgoingName
+     *            the query name.
+     * @return the query result.
+     * @throws UnsupportedException
+     *             if an operation is not supported.
+     * @throws ExecutionException
+     *             if a error happen. >>>>>>> d2834cefc00164cbe89d40a527d27c11ab45093d
      */
     public KafkaStream<String, StratioStreamingMessage> listenQuery(IStratioStreamingAPI stratioStreamingAPI,
                     String streamOutgoingName) throws UnsupportedException, ExecutionException {
         KafkaStream<String, StratioStreamingMessage> messageAndMetadatas = null;
         try {
             logger.info("Listening stream..." + streamOutgoingName);
+
             messageAndMetadatas = stratioStreamingAPI.listenStream(streamOutgoingName);
+
             StreamUtil.insertRandomData(stratioStreamingAPI, streamOutgoingName, queryData.getSelect());
         } catch (StratioAPISecurityException | StratioEngineStatusException e) {
             String msg = "Streaming listen query creation fail." + e.getMessage();
@@ -139,7 +166,11 @@ public class StreamingQueryCreator {
     }
 
     /**
-     * This metod read a message.
+     * This metod read a message. <<<<<<< HEAD
+     * 
+     * =======
+     *
+     * >>>>>>> d2834cefc00164cbe89d40a527d27c11ab45093d
      * 
      * @param streams
      * @throws UnsupportedException
@@ -158,7 +189,7 @@ public class StreamingQueryCreator {
     }
 
     /**
-     * This method finish the streaming query.
+     * This method finish the streaming query. <<<<<<< HEAD
      * 
      * @param streamName
      *            the stream name.
@@ -167,6 +198,14 @@ public class StreamingQueryCreator {
      * @throws StratioEngineStatusException
      * @throws StratioAPISecurityException
      * @throws StratioEngineOperationException
+     *             =======
+     *
+     * @param streamName
+     *            the stream name.
+     * @param connection
+     *            the connection.
+     * @throws ExecutionException
+     *             if a fail happens. >>>>>>> d2834cefc00164cbe89d40a527d27c11ab45093d
      */
     public void endQuery(String streamName, Connection<IStratioStreamingAPI> connection) throws ExecutionException {
         try {

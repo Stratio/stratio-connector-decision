@@ -27,8 +27,7 @@ import com.stratio.crossdata.common.exceptions.InitializationException;
 /**
  * Created by jmgomez on 4/09/14.
  */
-public class StreamingBulkInsertTest extends GenericBulkInsertTest{
-
+public class StreamingBulkInsertTest extends GenericBulkInsertTest {
 
     @Override
     protected IConnectorHelper getConnectorHelper() {

@@ -44,7 +44,7 @@ import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
 import com.stratio.streaming.commons.exceptions.StratioStreamingException;
 
 /**
- * This class is the responsible of manage the StreamingMetadata
+ * This class is the responsible of manage the StreamingMetadata.
  */
 
 public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStreamingAPI> {
@@ -67,8 +67,8 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
      * This method create a index in ES.
      *
      * @param indexMetaData the index configuration.
-     * @throws com.stratio.meta.common.exceptions.UnsupportedException if any operation is not supported.
-     * @throws com.stratio.meta.common.exceptions.ExecutionException   if an error occur.
+     * @throws UnsupportedException if any operation is not supported.
+     * @throws ExecutionException   if an error occur.
      */
 
     @Override
@@ -81,8 +81,8 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
      * This method create a type in Streaming.
      *
      * @param streamMetadata the stream configuration.
-     * @throws com.stratio.meta.common.exceptions.UnsupportedException if any operation is not supported.
-     * @throws com.stratio.meta.common.exceptions.ExecutionException   if an error occur.
+     * @throws UnsupportedException if any operation is not supported.
+     * @throws ExecutionException   if an error occur.
      */
     @Override
     protected void createTable(TableMetadata streamMetadata, Connection<IStratioStreamingAPI> connection)
@@ -111,7 +111,9 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
     /**
      * This method drop a index in Streaming.
      *
-     * @param indexName the index name.
+     * @param indexName  the index name
+     * @param connection the connection.
+     * @throws UnsupportedException if the operation is not supported.
      */
 
     @Override
@@ -124,7 +126,9 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
     /**
      * This method drop a type in Streaming.
      *
-     * @param stream the stream name.
+     * @param stream     the stream name.
+     * @param connection the connection.
+     * @throws ExecutionException if any error happens.
      */
     @Override
     protected void dropTable(TableName stream, Connection<IStratioStreamingAPI> connection) throws ExecutionException,
@@ -141,18 +145,41 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
 
     }
 
+    /**
+     * This method create a index.
+     *
+     * @param indexMetadata the index metadata.
+     * @param connection    the conection.
+     * @throws UnsupportedException if the operation is not supported.
+     * @throws ExecutionException   if any error happens.
+     */
     @Override
     protected void createIndex(IndexMetadata indexMetadata, Connection<IStratioStreamingAPI> connection)
             throws UnsupportedException, ExecutionException {
         throw new UnsupportedException("Create Index not supported in Streaming connector");
     }
 
+    /**
+     * This method drop a index.
+     *
+     * @param indexMetadata the index metadata.
+     * @param connection    the conection.
+     * @throws UnsupportedException if the operation is not supported.
+     * @throws ExecutionException   if any error happens.
+     */
     @Override
     protected void dropIndex(IndexMetadata indexMetadata, Connection<IStratioStreamingAPI> connection)
             throws UnsupportedException, ExecutionException {
         throw new UnsupportedException("Drop Index not supported in Streaming connector");
     }
 
+    /**
+     * Turn cross data type into streaming types.
+     *
+     * @param columnType the crossdata type.
+     * @return the streaming type.
+     * @throws UnsupportedException if columnType is not supported.
+     */
     private com.stratio.streaming.commons.constants.ColumnType convertType(ColumnType columnType)
             throws UnsupportedException {
         com.stratio.streaming.commons.constants.ColumnType returnType = null;

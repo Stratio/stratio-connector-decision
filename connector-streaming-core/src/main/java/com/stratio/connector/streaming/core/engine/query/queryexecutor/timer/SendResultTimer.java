@@ -35,6 +35,7 @@ public class SendResultTimer extends TimerTask {
 
     /**
      * Constructor.
+     *
      * @param timeWindowQueryExecutor a time window executor.
      */
     public SendResultTimer(TimeWindowProcessMessage timeWindowQueryExecutor) {

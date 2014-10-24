@@ -34,29 +34,64 @@ import com.stratio.crossdata.common.metadata.structures.ColumnMetadata;
 import com.stratio.crossdata.common.result.QueryResult;
 
 /**
- * Created by jmgomez on 16/10/14.
+ * This class creates the resultset. Created by jmgomez on 16/10/14.
  */
 public class ResultsetCreator {
 
+    /**
+     * The column metadata.
+     */
     private List<ColumnMetadata> columnsMetadata;
+    /**
+     * The query data.
+     */
     private ConnectorQueryData queryData;
+    /**
+     * The result handler.
+     */
     private IResultHandler resultHandler;
+    /**
+     * The query result.
+     */
     private QueryResult queryResult;
 
+    /**
+     * Constructor.
+     *
+     * @param queryData
+     *            the query data.
+     * @throws UnsupportedException
+     *             if a operation is not supperted.
+     */
     public ResultsetCreator(ConnectorQueryData queryData) throws UnsupportedException {
         this.queryData = queryData;
         createColumnMetadata();
     }
 
+    /**
+     * Set the result handler.
+     *
+     * @param resultHandler
+     */
     public void setResultHandler(IResultHandler resultHandler) {
         this.resultHandler = resultHandler;
     }
 
+    /**
+     * Send the resultset.
+     */
     public void send() {
         resultHandler.processResult(queryResult);
     }
 
-    public ResultsetCreator createResultSet(List<Row> rows) {
+    /**
+     * Create a resultset.
+     *
+     * @param rows
+     *            a row list.
+     * @return a resultsetCreator.
+     */
+    public ResultsetCreator create(List<Row> rows) {
         ResultSet resultSet = new ResultSet();
         resultSet.setColumnMetadata(this.columnsMetadata);
         resultSet.setRows(rows);
@@ -68,7 +103,10 @@ public class ResultsetCreator {
     }
 
     /**
-     * @throws com.stratio.meta.common.exceptions.UnsupportedException
+     * Create the column metadata.
+     *
+     * @throws UnsupportedException
+     *             if a type is not supported.
      */
     private void createColumnMetadata() throws UnsupportedException {
         columnsMetadata = new ArrayList<>();

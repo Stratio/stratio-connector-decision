@@ -56,7 +56,8 @@ public class TimeWindowProcessMessage implements ProcessMessage {
 
     /**
      * constructor.
-     * @param queryData the querydata.
+     *
+     * @param queryData        the querydata.
      * @param resultsetCreator the resultSet creator.
      * @throws UnsupportedException if an error happens.
      */
@@ -74,6 +75,7 @@ public class TimeWindowProcessMessage implements ProcessMessage {
 
     /**
      * This method process a row.
+     *
      * @param row a row.
      */
     @Override
@@ -106,7 +108,7 @@ public class TimeWindowProcessMessage implements ProcessMessage {
                 rowTemporalStore.clear();
             }
 
-            resultsetCreator.createResultSet(copyNotSyncrhonizedList).send();
+            resultsetCreator.create(copyNotSyncrhonizedList).send();
         }
 
     }

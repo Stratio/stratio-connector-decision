@@ -20,11 +20,9 @@ package com.stratio.connector.streaming.core.connection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.util.ConnectorParser;
 import com.stratio.crossdata.common.connector.ConnectorClusterConfig;
-import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.security.ICredentials;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.api.StratioStreamingAPIFactory;
@@ -62,7 +60,7 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
      *
      * @param credentials the credentials.
      * @param config      The cluster configuration.
-     * @throws UnsupportedException
+     * @throws StratioEngineConnectionException if an connections error happens.
      */
     public StreamingConnection(ICredentials credentials, ConnectorClusterConfig config)
             throws StratioEngineConnectionException {
@@ -100,6 +98,7 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
 
     /**
      * Check if the connection is open.
+     *
      * @return true if the connection is open. False in other case.
      */
     @Override
@@ -109,6 +108,7 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
 
     /**
      * Return a streaming native connection.
+     *
      * @return a streaming native connection.
      */
     @Override

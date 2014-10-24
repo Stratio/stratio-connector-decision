@@ -16,10 +16,21 @@
  * under the License.
  */
 
-package com.stratio.connector.streaming.core.procces.exception;
+package com.stratio.connector.streaming.core.engine.query.util;
 
 /**
- * Created by jmgomez on 3/10/14.
+ * This class contains the constants.
+ * Created by jmgomez on 23/10/14.
  */
-public class ProcessExecutionException extends Exception {
+public final class Constants {
+
+    /**
+     * Constructor.
+     */
+    private Constants(){}
+
+    /**
+     * The number of byte for a random big integer.
+     */
+    public static final Integer NUM_BITE_RANDOM_BIG_INTEGER = 500;
 }

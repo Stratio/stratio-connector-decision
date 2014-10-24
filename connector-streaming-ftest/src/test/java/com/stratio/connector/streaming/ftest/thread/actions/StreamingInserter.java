@@ -39,6 +39,10 @@ public class StreamingInserter extends Thread {
     private TableMetadata stream;
     private boolean finishThread = false;
     private List<ColumnType> typesToInsert = null;
+    private long elementPerSecond = 10;
+    private long numOfElement = 0;
+    private String text = "Text";
+    private int integerChangeable = 10;
 
     public StreamingInserter(StreamingConnector sC, ClusterName clusterName, TableMetadata stream) {
         super("[StreamingInserter]");
@@ -46,9 +50,6 @@ public class StreamingInserter extends Thread {
         this.clusterName = clusterName;
         this.stream = stream;
     }
-
-    private long elementPerSecond = 10;
-    private long numOfElement = 0;
 
     public StreamingInserter elementPerSecond(long elements) {
         this.elementPerSecond = elements;
@@ -80,8 +81,9 @@ public class StreamingInserter extends Thread {
             System.out.println("****************************** STARTING StreamingInserter **********************");
             IStorageEngine storageEngine = streamingConnector.getStorageEngine();
             for (int i = 0; !finishThread; i++) {
-                if (numOfElement != 0 && numOfElement - 1 == i)
+                if (numOfElement != 0 && numOfElement - 1 == i) {
                     finishThread = true;
+                }
 
                 Row row = getRowToInsert(i);
 
@@ -91,8 +93,9 @@ public class StreamingInserter extends Thread {
                     e.printStackTrace();
                 }
 
-                if ((i % elementPerSecond) == 0)
+                if ((i % elementPerSecond) == 0) {
                     Thread.sleep(1000);
+                }
 
             }
         } catch (InterruptedException e) {
@@ -135,10 +138,6 @@ public class StreamingInserter extends Thread {
 
         return row;
     }
-
-    private String text = "Text";
-
-    private int integerChangeable = 10;
 
     public void changeStingColumn(String stringOutput) {
         this.text = stringOutput;
