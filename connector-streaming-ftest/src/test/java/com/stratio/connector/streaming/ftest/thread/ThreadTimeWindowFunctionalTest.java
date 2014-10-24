@@ -55,15 +55,13 @@ import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
 public class ThreadTimeWindowFunctionalTest extends GenericStreamingTest {
 
+    public static final int ELEMENTS_WRITE = 500;
+    private static final String OTHER_TEXT = "OTHER...... ";
+    private static final int WAIT_TIME = 15;
     /**
      * The Log.
      */
     final Logger logger = LoggerFactory.getLogger(this.getClass());
-    public static final int ELEMENTS_WRITE = 500;
-
-    private static final String OTHER_TEXT = "OTHER...... ";
-    private static final int WAIT_TIME = 15;
-
     boolean correctOrder = true;
     Set<Integer> returnSet = new HashSet<>();
 
@@ -85,8 +83,8 @@ public class ThreadTimeWindowFunctionalTest extends GenericStreamingTest {
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, ColumnType.VARCHAR)
-                        .addColumn(INTEGER_COLUMN, ColumnType.INT).addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
-                        .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT).build();
+                .addColumn(INTEGER_COLUMN, ColumnType.INT).addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
+                .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT).build();
         try {
             sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -112,7 +110,7 @@ public class ThreadTimeWindowFunctionalTest extends GenericStreamingTest {
         LogicalWorkflow logicalWokflow = createLogicalWorkFlow();
 
         StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata, logicalWokflow,
-                        new ResultHandler((Select) logicalWokflow.getLastStep()));
+                new ResultHandler((Select) logicalWokflow.getLastStep()));
 
         stremingRead.start();
         logger.debug("********************** Querying......");
@@ -146,7 +144,7 @@ public class ThreadTimeWindowFunctionalTest extends GenericStreamingTest {
 
         ResultHandler resultHandler = new ResultHandler((Select) logicalWokflow.getLastStep());
         StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata, logicalWokflow,
-                        resultHandler);
+                resultHandler);
 
         stremingRead.start();
         logger.debug("********************** Querying......");
@@ -175,7 +173,7 @@ public class ThreadTimeWindowFunctionalTest extends GenericStreamingTest {
         LogicalWorkflow logicalWokflow = createLogicalWorkFlow();
 
         StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata, logicalWokflow,
-                        new ResultHandler((Select) logicalWokflow.getLastStep()));
+                new ResultHandler((Select) logicalWokflow.getLastStep()));
 
         stremingRead.start();
         logger.debug("********************** Querying......");
@@ -203,37 +201,37 @@ public class ThreadTimeWindowFunctionalTest extends GenericStreamingTest {
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
-                        ColumnType.BOOLEAN));
+                ColumnType.BOOLEAN));
         return logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN)
-                        .addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns).addWindow(WindowType.TEMPORAL, 5)
-                        .getLogicalWorkflow();
+                .addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns).addWindow(WindowType.TEMPORAL, 5)
+                .getLogicalWorkflow();
     }
 
     @Test
     public void testManyThread() throws ConnectorException, InterruptedException {
         LogicalWorkflow logicalWokflow = new LogicalWorkFlowCreator(CATALOG, TABLE, getClusterName())
-                        .addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
-                        .addWindow(WindowType.TEMPORAL, 20).getLogicalWorkflow();
+                .addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN)
+                .addWindow(WindowType.TEMPORAL, 20).getLogicalWorkflow();
         sConnector.getQueryEngine().asyncExecute("query1", logicalWokflow,
-                        new ResultHandler((Select) logicalWokflow.getLastStep()));
+                new ResultHandler((Select) logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
         sConnector.getQueryEngine().asyncExecute("query2", logicalWokflow,
-                        new ResultHandler((Select) logicalWokflow.getLastStep()));
+                new ResultHandler((Select) logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
         sConnector.getQueryEngine().asyncExecute("query3", logicalWokflow,
-                        new ResultHandler((Select) logicalWokflow.getLastStep()));
+                new ResultHandler((Select) logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
         sConnector.getQueryEngine().stop("query3");
         sConnector.getQueryEngine().asyncExecute("query4", logicalWokflow,
-                        new ResultHandler((Select) logicalWokflow.getLastStep()));
+                new ResultHandler((Select) logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
         sConnector.getQueryEngine().stop("query2");
         sConnector.getQueryEngine().asyncExecute("query5", logicalWokflow,
-                        new ResultHandler((Select) logicalWokflow.getLastStep()));
+                new ResultHandler((Select) logicalWokflow.getLastStep()));
         Thread.sleep(WAIT_TIME);
         sConnector.getQueryEngine().stop("query1");
         sConnector.getQueryEngine().asyncExecute("query6", logicalWokflow,
-                        new ResultHandler((Select) logicalWokflow.getLastStep()));
+                new ResultHandler((Select) logicalWokflow.getLastStep()));
         sConnector.getQueryEngine().stop("query4");
 
         Thread.sleep(WAIT_TIME);
@@ -310,9 +308,9 @@ public class ThreadTimeWindowFunctionalTest extends GenericStreamingTest {
                 ColumnMetadata[] columnMetadata = columnMetadataList.toArray(new ColumnMetadata[0]);
 
                 if (!columnMetadata[0].getType().equals(ColumnType.VARCHAR)
-                                || !columnMetadata[1].getType().equals(ColumnType.DOUBLE) // All number types are
-                                // returned like double
-                                || !columnMetadata[2].getType().equals(ColumnType.BOOLEAN)) {
+                        || !columnMetadata[1].getType().equals(ColumnType.DOUBLE) // All number types are
+                        // returned like double
+                        || !columnMetadata[2].getType().equals(ColumnType.BOOLEAN)) {
                     correctType = false;
                 }
             }

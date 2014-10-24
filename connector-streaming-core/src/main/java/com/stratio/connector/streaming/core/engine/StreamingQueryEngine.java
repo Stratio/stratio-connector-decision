@@ -47,8 +47,9 @@ public class StreamingQueryEngine implements IQueryEngine {
 
     /**
      * Constructor.
+     *
      * @param connectionHandler the connection handler.
-     * @param processHandler the processor handler.
+     * @param processHandler    the processor handler.
      */
     public StreamingQueryEngine(ConnectionHandler connectionHandler, ConnectorProcessHandler processHandler) {
 
@@ -58,25 +59,26 @@ public class StreamingQueryEngine implements IQueryEngine {
 
     /**
      * Execute a query.
+     *
      * @param workflow the work flow witch represents the query.
      * @return the query result.
      * @throws UnsupportedException if aany operation is not supported.
-     * @throws ExecutionException if any error happens.
+     * @throws ExecutionException   if any error happens.
      */
     @Override
     public QueryResult execute(LogicalWorkflow workflow) throws UnsupportedException, ExecutionException {
         throw new UnsupportedException("execute not supported in Streaming connector");
     }
 
-
     /**
      * Execute a asynchronous query.
-     * @param queryId the queryId.
-     * @param workflow the work flow witch represents the query.
+     *
+     * @param queryId       the queryId.
+     * @param workflow      the work flow witch represents the query.
      * @param resultHandler the result handler.
      * @return the query result.
      * @throws UnsupportedException if aany operation is not supported.
-     * @throws ExecutionException if any error happens.
+     * @throws ExecutionException   if any error happens.
      */
     @Override
     public void asyncExecute(String queryId, LogicalWorkflow workflow, IResultHandler resultHandler)
@@ -96,10 +98,10 @@ public class StreamingQueryEngine implements IQueryEngine {
 
     /**
      * This method stop a query.
+     *
      * @param queryId the queryId.
      * @throws UnsupportedException if any operation is not supported.
-     *
-     * @throws ExecutionException if any error happens.
+     * @throws ExecutionException   if any error happens.
      */
     @Override
     public synchronized void stop(String queryId) throws UnsupportedException, ExecutionException {
@@ -114,8 +116,9 @@ public class StreamingQueryEngine implements IQueryEngine {
 
     /**
      * This method initialize a process.
-     * @param queryId the queryId.
-     * @param workflow the workflow.
+     *
+     * @param queryId       the queryId.
+     * @param workflow      the workflow.
      * @param resultHandler the result handler.
      * @return a query process.
      * @throws ConnectionProcessException if the connection fails.
@@ -135,8 +138,9 @@ public class StreamingQueryEngine implements IQueryEngine {
 
     /**
      * check if a exception happens.
-     * @param queryId the queryId.
-     * @param workflow the workflow,.
+     *
+     * @param queryId       the queryId.
+     * @param workflow      the workflow,.
      * @param resultHandler the resultHandler.
      */
     private void checkExceptions(String queryId, LogicalWorkflow workflow, IResultHandler resultHandler) {

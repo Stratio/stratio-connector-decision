@@ -30,6 +30,7 @@ public class ConnectionProcessException extends Exception {
 
     /**
      * Constructor.
+     *
      * @param msg the message.
      */
     public ConnectionProcessException(String msg) {

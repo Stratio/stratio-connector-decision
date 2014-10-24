@@ -111,10 +111,9 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
     /**
      * This method drop a index in Streaming.
      *
-     * @param indexName the index name
-     * @param  connection the connection.
-     *
-     * @throws  UnsupportedException if the operation is not supported.
+     * @param indexName  the index name
+     * @param connection the connection.
+     * @throws UnsupportedException if the operation is not supported.
      */
 
     @Override
@@ -127,11 +126,10 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
     /**
      * This method drop a type in Streaming.
      *
-     * @param stream the stream name.
-     * @param  connection the connection.
-     *
-     *  @throws  ExecutionException if any error happens.
-     * */
+     * @param stream     the stream name.
+     * @param connection the connection.
+     * @throws ExecutionException if any error happens.
+     */
     @Override
     protected void dropTable(TableName stream, Connection<IStratioStreamingAPI> connection) throws ExecutionException,
             UnsupportedException {
@@ -149,10 +147,11 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
 
     /**
      * This method create a index.
+     *
      * @param indexMetadata the index metadata.
-     * @param connection the conection.
+     * @param connection    the conection.
      * @throws UnsupportedException if the operation is not supported.
-     * @throws ExecutionException if any error happens.
+     * @throws ExecutionException   if any error happens.
      */
     @Override
     protected void createIndex(IndexMetadata indexMetadata, Connection<IStratioStreamingAPI> connection)
@@ -160,13 +159,13 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
         throw new UnsupportedException("Create Index not supported in Streaming connector");
     }
 
-
     /**
      * This method drop a index.
+     *
      * @param indexMetadata the index metadata.
-     * @param connection the conection.
+     * @param connection    the conection.
      * @throws UnsupportedException if the operation is not supported.
-     * @throws ExecutionException if any error happens.
+     * @throws ExecutionException   if any error happens.
      */
     @Override
     protected void dropIndex(IndexMetadata indexMetadata, Connection<IStratioStreamingAPI> connection)
@@ -176,6 +175,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
 
     /**
      * Turn cross data type into streaming types.
+     *
      * @param columnType the crossdata type.
      * @return the streaming type.
      * @throws UnsupportedException if columnType is not supported.

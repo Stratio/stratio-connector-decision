@@ -29,7 +29,6 @@ import com.stratio.crossdata.common.result.QueryResult;
 
 /**
  * @author david
- *
  */
 
 public class TestResultSet implements IResultHandler {

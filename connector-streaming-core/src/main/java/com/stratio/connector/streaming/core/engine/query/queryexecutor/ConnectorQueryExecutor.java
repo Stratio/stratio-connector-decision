@@ -18,8 +18,6 @@
 
 package com.stratio.connector.streaming.core.engine.query.queryexecutor;
 
-
-
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageprocess.ProcessMessage;
@@ -39,9 +37,6 @@ import kafka.consumer.KafkaStream;
  */
 public class ConnectorQueryExecutor {
 
-
-
-
     /**
      * The queryData.
      */
@@ -51,7 +46,6 @@ public class ConnectorQueryExecutor {
      */
     private IResultHandler resultHandler;
 
-
     /**
      * The streaming queryCreator.
      */
@@ -59,7 +53,8 @@ public class ConnectorQueryExecutor {
 
     /**
      * Constructor.
-     * @param queryData the query data.
+     *
+     * @param queryData     the query data.
      * @param resultHandler the result handler.
      * @throws UnsupportedException if an operation is not supported.
      */
@@ -72,9 +67,10 @@ public class ConnectorQueryExecutor {
 
     /**
      * This method execute a query.
-     * @param query the query.
+     *
+     * @param query      the query.
      * @param connection the connection.
-     * @throws ExecutionException if fail the execution.
+     * @throws ExecutionException   if fail the execution.
      * @throws InterruptedException when the asynchronous query stop.
      * @throws UnsupportedException if a operation is not supported.
      */
@@ -94,18 +90,18 @@ public class ConnectorQueryExecutor {
 
         streamingQueryCreator.readMessages(stream);
 
-
     }
 
     /**
      * This method finalize the query execution.
+     *
      * @param streamName the stream name.
      * @param connection the connection.
      * @throws ExecutionException if fail the operation.
      */
     public void endQuery(String streamName, Connection<IStratioStreamingAPI> connection) throws ExecutionException {
 
-             streamingQueryCreator.endQuery(streamName, connection);
+        streamingQueryCreator.endQuery(streamName, connection);
 
     }
 

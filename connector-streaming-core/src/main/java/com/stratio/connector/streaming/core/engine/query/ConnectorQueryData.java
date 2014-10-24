@@ -134,6 +134,7 @@ public class ConnectorQueryData {
 
     /**
      * return the queryID.
+     *
      * @return the queryID.
      */
     public String getQueryId() {
@@ -142,6 +143,7 @@ public class ConnectorQueryData {
 
     /**
      * Set the queryID.
+     *
      * @param queryId the query ID.
      */
     public void setQueryId(String queryId) {
@@ -150,6 +152,7 @@ public class ConnectorQueryData {
 
     /**
      * Return the window.
+     *
      * @return the window.
      */
     public Window getWindow() {
@@ -158,6 +161,7 @@ public class ConnectorQueryData {
 
     /**
      * Set the window.
+     *
      * @param window the window.
      */
     public void setWindow(Window window) {

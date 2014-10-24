@@ -34,7 +34,6 @@ import com.stratio.crossdata.common.metadata.structures.ColumnMetadata;
 import com.stratio.crossdata.common.result.QueryResult;
 
 /**
- *
  * This class creates the resultset.
  * Created by jmgomez on 16/10/14.
  */
@@ -59,6 +58,7 @@ public class ResultsetCreator {
 
     /**
      * Constructor.
+     *
      * @param queryData the query data.
      * @throws UnsupportedException if a operation is not supperted.
      */
@@ -69,6 +69,7 @@ public class ResultsetCreator {
 
     /**
      * Set the result handler.
+     *
      * @param resultHandler
      */
     public void setResultHandler(IResultHandler resultHandler) {
@@ -84,6 +85,7 @@ public class ResultsetCreator {
 
     /**
      * Create a resultset.
+     *
      * @param rows a row list.
      * @return a resultsetCreator.
      */
@@ -100,6 +102,7 @@ public class ResultsetCreator {
 
     /**
      * Create the column metadata.
+     *
      * @throws UnsupportedException if a type is not supported.
      */
     private void createColumnMetadata() throws UnsupportedException {
@@ -112,7 +115,7 @@ public class ResultsetCreator {
             ColumnType colType = select.getTypeMapFromColumnName().get(colName);
             colType = updateColumnType(colType);
             ColumnMetadata columnMetadata = new ColumnMetadata(projection.getTableName().getQualifiedName(),
-                            colName.getQualifiedName(), colType);
+                    colName.getQualifiedName(), colType);
             columnMetadata.setColumnAlias(select.getColumnMap().get(colName));
             columnsMetadata.add(columnMetadata);
         }
@@ -121,6 +124,7 @@ public class ResultsetCreator {
 
     /**
      * Actualice the column type.
+     *
      * @param colType the actual columnType.
      * @return the correct columnType.
      * @throws UnsupportedException if the actual columntype is not supported.

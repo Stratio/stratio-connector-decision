@@ -127,13 +127,13 @@ public class StreamingStorageEngineTest {
         Map<IndexName, IndexMetadata> index = Collections.EMPTY_MAP;
         Map<ColumnName, ColumnMetadata> columns = new LinkedHashMap<>();
         ColumnMetadata columnMetadata = new ColumnMetadata(new ColumnName(CATALOG, TABLE, COLUM), new Object[0],
-                        ColumnType.INT);
+                ColumnType.INT);
         columns.put(new ColumnName(CATALOG, TABLE, COLUM), columnMetadata);
 
         List<ColumnName> partitionKey = Collections.EMPTY_LIST;
         List<ColumnName> clusterKey = Collections.EMPTY_LIST;
         return new TableMetadata(new TableName(CATALOG, TABLE), options, columns, index, new ClusterName(CLUSTER_NAME),
-                        partitionKey, clusterKey);
+                partitionKey, clusterKey);
     }
 
 }

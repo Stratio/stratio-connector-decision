@@ -50,7 +50,8 @@ public class ElementNumberProcessMessage implements ProcessMessage {
 
     /**
      * constructor.
-     * @param queryData the querydata.
+     *
+     * @param queryData        the querydata.
      * @param resultsetCreator the resultSet creator.
      * @throws UnsupportedException if an error happens.
      */
@@ -64,6 +65,7 @@ public class ElementNumberProcessMessage implements ProcessMessage {
 
     /**
      * This method process a row.
+     *
      * @param row a row.
      */
     @Override

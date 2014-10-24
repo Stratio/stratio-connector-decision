@@ -28,7 +28,6 @@ import com.stratio.crossdata.common.logicalplan.Window;
 import com.stratio.crossdata.common.statements.structures.Operator;
 
 /**
- *
  * This class turn a logical workflow into a queryData.
  * Created by jmgomez on 15/09/14.
  */
@@ -36,8 +35,9 @@ public class ConnectorQueryParser {
 
     /**
      * Turn a logical workflow into a query data.
+     *
      * @param logicalWorkFlow the logical workflow.
-     * @param queryId the queryID.
+     * @param queryId         the queryID.
      * @return a queryData.
      * @throws UnsupportedException if any operation is not suppoerted.
      */
@@ -62,15 +62,16 @@ public class ConnectorQueryParser {
 
     /**
      * This method put a concrete logical step in the queryData.
+     *
      * @param queryData the queryData.
-     * @param lStep the logical Step.
+     * @param lStep     the logical Step.
      * @throws UnsupportedException if any logicalStep is not supported.
      */
     private void extractLogicalStep(ConnectorQueryData queryData, LogicalStep lStep) throws UnsupportedException {
         if (lStep instanceof Project) {
             processProject(queryData, (Project) lStep);
         } else if (lStep instanceof Filter) {
-            processFilter(queryData, (Filter)lStep);
+            processFilter(queryData, (Filter) lStep);
         } else if (lStep instanceof Select) {
             queryData.setSelect((Select) lStep);
 
@@ -87,8 +88,9 @@ public class ConnectorQueryParser {
 
     /**
      * This method process the filter logical step before to insert into the queryData.
+     *
      * @param queryData the queryData.
-     * @param filter the Filter
+     * @param filter    the Filter
      * @throws UnsupportedException if the filter type is not supported.
      */
     private void processFilter(ConnectorQueryData queryData, Filter filter) throws UnsupportedException {
@@ -97,18 +99,20 @@ public class ConnectorQueryParser {
             throw new UnsupportedException("LogicalStep [" + filter.getClass().getCanonicalName()
                     + " not supported");
         } else {
-            queryData.addFilter( filter);
+            queryData.addFilter(filter);
         }
     }
+
     /**
      * This method process the prject logical step before to insert into the queryData.
+     *
      * @param queryData the queryData.
-     * @param project the project
+     * @param project   the project
      * @throws UnsupportedException if other project exists.
      */
     private void processProject(ConnectorQueryData queryData, Project project) {
         if (!queryData.hasProjection()) {
-            queryData.setProjection( project);
+            queryData.setProjection(project);
         } else {
             throw new UnsupportedOperationException(" # Project > 1");
         }
@@ -116,8 +120,8 @@ public class ConnectorQueryParser {
 
     /**
      * Check if the query is correct.
-     * @param queryData the queryData representatio for the query.
      *
+     * @param queryData the queryData representatio for the query.
      * @throws UnsupportedException if the query is not supported.
      */
     private void checkSupportedQuery(ConnectorQueryData queryData) throws UnsupportedException {

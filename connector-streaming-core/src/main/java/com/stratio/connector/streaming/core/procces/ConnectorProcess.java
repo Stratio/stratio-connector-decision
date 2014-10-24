@@ -29,12 +29,14 @@ public interface ConnectorProcess extends Runnable {
 
     /**
      * End the query.
+     *
      * @throws ExecutionException if any error happens.
      */
     void endQuery() throws ExecutionException;
 
     /**
      * Get the query project.
+     *
      * @return the query project.
      */
     Project getProject();

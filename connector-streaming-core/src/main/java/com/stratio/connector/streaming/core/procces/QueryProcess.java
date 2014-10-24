@@ -74,10 +74,11 @@ public class QueryProcess implements ConnectorProcess {
 
     /**
      * Constructor.
-     * @param queryId the queryId.
-     * @param project the project.
+     *
+     * @param queryId       the queryId.
+     * @param project       the project.
      * @param resultHandler the result handler.
-     * @param connection the streaming connection.
+     * @param connection    the streaming connection.
      */
     public QueryProcess(String queryId, Project project, IResultHandler resultHandler,
             Connection<IStratioStreamingAPI> connection) {
@@ -117,15 +118,17 @@ public class QueryProcess implements ConnectorProcess {
 
     /**
      * End the process.
+     *
      * @throws ExecutionException in any error happens.
      */
     @Override
     public void endQuery() throws ExecutionException {
-            queryExecutor.endQuery(StreamUtil.createStreamName(project.getTableName()), connection);
-        }
+        queryExecutor.endQuery(StreamUtil.createStreamName(project.getTableName()), connection);
+    }
 
     /**
      * Return the query project.
+     *
      * @return the query project.
      */
     @Override

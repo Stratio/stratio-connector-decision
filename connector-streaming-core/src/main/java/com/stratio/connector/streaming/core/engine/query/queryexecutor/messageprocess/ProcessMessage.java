@@ -28,6 +28,7 @@ public interface ProcessMessage {
 
     /**
      * Process a row.
+     *
      * @param row a row.
      */
     void processMessage(Row row);

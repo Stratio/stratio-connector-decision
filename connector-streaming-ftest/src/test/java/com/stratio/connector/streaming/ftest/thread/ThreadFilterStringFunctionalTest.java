@@ -43,12 +43,10 @@ import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
 public class ThreadFilterStringFunctionalTest extends GenericStreamingTest {
 
-    private static final String TEXT = "Text";
     public static final int CORRECT_ELMENT_TO_FIND = 90; // Must be a time window
-
-    private static final int DEFAULT_INT_VALUE = 10;
     public static final int OTHER_INT_VALUE = 5; // Must be a time window
-
+    private static final String TEXT = "Text";
+    private static final int DEFAULT_INT_VALUE = 10;
     private static final String OTHER_TEXT = "OTHER...... ";
     private static final int WAIT_TIME = 20;
 
@@ -70,8 +68,8 @@ public class ThreadFilterStringFunctionalTest extends GenericStreamingTest {
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, ColumnType.VARCHAR)
-                        .addColumn(INTEGER_COLUMN, ColumnType.INT).addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
-                        .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT).build();
+                .addColumn(INTEGER_COLUMN, ColumnType.INT).addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
+                .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT).build();
         try {
             sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -85,7 +83,7 @@ public class ThreadFilterStringFunctionalTest extends GenericStreamingTest {
     public void testEqualFilter() throws InterruptedException, UnsupportedException {
 
         StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata,
-                        createEqualLogicalWorkFlow(), new ResultTextHandler());
+                createEqualLogicalWorkFlow(), new ResultTextHandler());
 
         stremingRead.start();
         System.out.println("TEST ********************** Querying......");
@@ -122,7 +120,7 @@ public class ThreadFilterStringFunctionalTest extends GenericStreamingTest {
     public void testDistinctFilter() throws InterruptedException, UnsupportedException {
 
         StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata,
-                        createDistinctLogicalWorkFlow(), new ResultTextHandler());
+                createDistinctLogicalWorkFlow(), new ResultTextHandler());
 
         stremingRead.start();
         System.out.println("TEST ********************** Querying......");
@@ -163,12 +161,12 @@ public class ThreadFilterStringFunctionalTest extends GenericStreamingTest {
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
-                        ColumnType.BOOLEAN));
+                ColumnType.BOOLEAN));
 
         return logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN)
-                        .addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
-                        .addEqualFilter(STRING_COLUMN, TEXT, false, false).addWindow(WindowType.TEMPORAL, 10)
-                        .getLogicalWorkflow();
+                .addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
+                .addEqualFilter(STRING_COLUMN, TEXT, false, false).addWindow(WindowType.TEMPORAL, 10)
+                .getLogicalWorkflow();
     }
 
     private LogicalWorkflow createDistinctLogicalWorkFlow() throws UnsupportedException {
@@ -178,12 +176,12 @@ public class ThreadFilterStringFunctionalTest extends GenericStreamingTest {
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.TEXT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
-                        ColumnType.BOOLEAN));
+                ColumnType.BOOLEAN));
 
         return logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN)
-                        .addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
-                        .addDistinctFilter(STRING_COLUMN, TEXT, false).addWindow(WindowType.TEMPORAL, 5)
-                        .getLogicalWorkflow();
+                .addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
+                .addDistinctFilter(STRING_COLUMN, TEXT, false).addWindow(WindowType.TEMPORAL, 5)
+                .getLogicalWorkflow();
     }
 
     private class ResultTextHandler implements IResultHandler {

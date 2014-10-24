@@ -45,7 +45,8 @@ public class ConnectorProcessHandler {
 
     /**
      * Start the process.
-     * @param queryId the query id.
+     *
+     * @param queryId          the query id.
      * @param connectorProcess a connector procces.
      * @throws ConnectionProcessException if the connection fail.
      */
@@ -62,6 +63,7 @@ public class ConnectorProcessHandler {
 
     /**
      * Return the query process.
+     *
      * @param queryId the query id.
      * @return the process.
      * @throws ConnectionProcessException if a error happens.
@@ -77,9 +79,10 @@ public class ConnectorProcessHandler {
 
     /**
      * Stop the process.
+     *
      * @param queryId the queryId.
      * @throws ConnectionProcessException if any error happens in the process.
-     * @throws ExecutionException if a execurion error happens.
+     * @throws ExecutionException         if a execurion error happens.
      */
     public void stopProcess(String queryId) throws ConnectionProcessException, ExecutionException {
         ThreadProcess threadProcess = processMap.get(queryId);
@@ -108,7 +111,8 @@ class ThreadProcess {
 
     /**
      * Constructor.
-     * @param thread the thread.
+     *
+     * @param thread  the thread.
      * @param process the process.
      */
     ThreadProcess(Thread thread, ConnectorProcess process) {
@@ -118,6 +122,7 @@ class ThreadProcess {
 
     /**
      * Return the thread.
+     *
      * @return the thread.
      */
     public Thread getThread() {
@@ -126,6 +131,7 @@ class ThreadProcess {
 
     /**
      * Return the process.
+     *
      * @return the preocess.
      */
     public ConnectorProcess getProcess() {

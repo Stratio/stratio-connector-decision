@@ -90,7 +90,8 @@ public class StreamingQueryTest {
     private static final String COLUMN_1 = "column_1";
     private static final com.stratio.streaming.commons.constants.ColumnType TYPE_1 = com.stratio.streaming.commons.constants.ColumnType.BOOLEAN;
     private static final Object VALUE_1_1 = "value_1_1";
-    private static final String COLUMN_2 = "column_2";;
+    private static final String COLUMN_2 = "column_2";
+    ;
     private static final com.stratio.streaming.commons.constants.ColumnType TYPE_2 = com.stratio.streaming.commons.constants.ColumnType.INTEGER;
     private static final Object VALUE_2_1 = "value_2_1";
     private static final Object VALUE_1_2 = "value_1_2";
@@ -136,7 +137,7 @@ public class StreamingQueryTest {
         when(stratioStreamingApi.listenStream(OUTPUT_STREAM)).thenReturn(kafkaSrteam);
 
         KafkaStream<String, StratioStreamingMessage> returnKafkaStream = streamingQuery.listenQuery(
-                        stratioStreamingApi, OUTPUT_STREAM);
+                stratioStreamingApi, OUTPUT_STREAM);
 
         assertEquals("The kafkastream is correct", kafkaSrteam, returnKafkaStream);
 
@@ -153,9 +154,9 @@ public class StreamingQueryTest {
         List<ColumnNameTypeValue> columns2 = createColumns(VALUE_1_2, VALUE_2_2);
 
         StratioStreamingMessage message1 = new StratioStreamingMessage(OPERATION, STREAM_NAME, SESION_ID, REQUEST_ID,
-                        REQUEST, TIMESTAMP, columns1, QUERIES, USERDEFINED);
+                REQUEST, TIMESTAMP, columns1, QUERIES, USERDEFINED);
         StratioStreamingMessage message2 = new StratioStreamingMessage(OPERATION, STREAM_NAME, SESION_ID, REQUEST_ID,
-                        REQUEST, TIMESTAMP, columns2, QUERIES, USERDEFINED);
+                REQUEST, TIMESTAMP, columns2, QUERIES, USERDEFINED);
 
         MessageAndMetadata messageAndMetadata1 = mock(MessageAndMetadata.class);
         when(messageAndMetadata1.message()).thenReturn(message1);

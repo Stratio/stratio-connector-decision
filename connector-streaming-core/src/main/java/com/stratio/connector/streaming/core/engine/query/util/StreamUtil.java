@@ -45,7 +45,7 @@ public final class StreamUtil {
     /**
      * The Log.
      */
-    private  static final Logger LOGGER = LoggerFactory.getLogger(StreamUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StreamUtil.class);
     /**
      * A random generator.
      */
@@ -66,6 +66,7 @@ public final class StreamUtil {
 
     /**
      * Create a streamName with a project.
+     *
      * @param project the project.
      * @return the StreamName.
      */
@@ -75,6 +76,7 @@ public final class StreamUtil {
 
     /**
      * Create a streamName with a tableNAme.
+     *
      * @param tableName the table name.
      * @return the StreamName.
      */
@@ -82,11 +84,11 @@ public final class StreamUtil {
         return createStreamName(tableName.getCatalogName().getName(), tableName.getName());
     }
 
-
     /**
      * Create a streamName with a catalog and table.
+     *
      * @param catalog the catalog name.
-     * @param table the table name.
+     * @param table   the table name.
      * @return the StreamName.
      */
     private static String createStreamName(String catalog, String table) {
@@ -95,7 +97,8 @@ public final class StreamUtil {
 
     /**
      * Create an stream outgoing name.
-     * @param streamName the stream name.
+     *
+     * @param streamName  the stream name.
      * @param metaQueryId the queryId.
      * @return the outgoing name.
      */
@@ -105,9 +108,10 @@ public final class StreamUtil {
 
     /**
      * Insert a random message in a stream.
+     *
      * @param stratioStreamingAPI the stream api.
-     * @param streamName the stream name.
-     * @param select the select.
+     * @param streamName          the stream name.
+     * @param select              the select.
      * @throws UnsupportedException if any option is no supported.
      */
     public static void insertRandomData(IStratioStreamingAPI stratioStreamingAPI, String streamName, Select select)
@@ -130,9 +134,9 @@ public final class StreamUtil {
 
     /**
      * Recovered a rondom type for a columntype.
+     *
      * @param type the column type.
      * @return the random value.
-     *
      * @throws UnsupportedException if any error happens.
      */
     private static Object getRandomValue(ColumnType type) throws UnsupportedException {
@@ -168,6 +172,7 @@ public final class StreamUtil {
 
     /**
      * Return a random text.
+     *
      * @return a random text.
      */
     private static String getRandonText() {
@@ -184,6 +189,7 @@ public final class StreamUtil {
 
     /**
      * Get a random letter.
+     *
      * @return a letter.
      */
     private static String getRandonLetter() {

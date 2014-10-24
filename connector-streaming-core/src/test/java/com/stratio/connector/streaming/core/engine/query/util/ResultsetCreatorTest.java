@@ -80,7 +80,7 @@ public class ResultsetCreatorTest {
 
         resultsetCreator = new ResultsetCreator(createQueryData());
         List<ColumnMetadata> columnMetadata = (List<ColumnMetadata>) Whitebox.getInternalState(resultsetCreator,
-                        "columnsMetadata");
+                "columnsMetadata");
 
         valiateMetadata(columnMetadata);
     }

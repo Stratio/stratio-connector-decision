@@ -37,23 +37,15 @@ import com.stratio.crossdata.common.connector.ConnectorClusterConfig;
 import com.stratio.crossdata.common.connector.IConfiguration;
 import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.data.TableName;
-import com.stratio.crossdata.common.exceptions.ConnectionException;
 import com.stratio.crossdata.common.exceptions.ConnectorException;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
-import com.stratio.crossdata.common.exceptions.InitializationException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.security.ICredentials;
 
 /**
  * @author david
- *
  */
 public abstract class GenericStreamingTest {
-
-    protected String SERVER_KAFKA = "10.200.0.58";// "192.168.0.2";
-    protected String PORT_KAFKA = "9092";
-    protected String SERVER_ZOOKEEPER = "10.200.0.58"; // "192.168.0.2";
-    protected String PORT_ZOOKEEPER = "2181";
 
     public static String STRING_COLUMN = "string_column";
     public static String INTEGER_COLUMN = "integer_column";
@@ -62,19 +54,18 @@ public abstract class GenericStreamingTest {
     public static String FLOAT_COLUMN = "float_column";
     public static String DOUBLE_COLUMN = "double_column";
     public static String LONG_COLUMN = "long_column";
-
-    public String CATALOG = "catalog_functional_test";
-
     public final String TABLE = this.getClass().getSimpleName() + UUID.randomUUID().toString().replaceAll("-", "_");
-
-    protected Random random;
-
-    protected StreamingConnector sConnector;
     /**
      * The Log.
      */
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    public String CATALOG = "catalog_functional_test";
+    protected String SERVER_KAFKA = "10.200.0.58";// "192.168.0.2";
+    protected String PORT_KAFKA = "9092";
+    protected String SERVER_ZOOKEEPER = "10.200.0.58"; // "192.168.0.2";
+    protected String PORT_ZOOKEEPER = "2181";
+    protected Random random;
+    protected StreamingConnector sConnector;
     protected boolean deleteBeteweenTest = true;
 
     protected ClusterName getClusterName() {

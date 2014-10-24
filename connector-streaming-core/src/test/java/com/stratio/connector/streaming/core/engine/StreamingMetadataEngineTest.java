@@ -98,13 +98,13 @@ public class StreamingMetadataEngineTest {
         Map<IndexName, IndexMetadata> index = Collections.EMPTY_MAP;
         Map<ColumnName, ColumnMetadata> columns = new LinkedHashMap<>();
         ColumnMetadata columnMetadata = new ColumnMetadata(new ColumnName(CATALOG, TABLE, COLUM), new Object[0],
-                        ColumnType.INT);
+                ColumnType.INT);
         columns.put(new ColumnName(CATALOG, TABLE, COLUM), columnMetadata);
 
         List<ColumnName> partitionKey = Collections.EMPTY_LIST;
         List<ColumnName> clusterKey = Collections.EMPTY_LIST;
         TableMetadata tableMetadata = new TableMetadata(new TableName(CATALOG, TABLE), options, columns, index,
-                        new ClusterName(CLUSTER_NAME), partitionKey, clusterKey);
+                new ClusterName(CLUSTER_NAME), partitionKey, clusterKey);
         streamingMetadataEngine.createTable(tableMetadata, connection);
 
         verify(streamingApi, times(1)).createStream(eq(CATALOG + "_" + TABLE), anyList());

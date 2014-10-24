@@ -25,6 +25,11 @@ package com.stratio.connector.streaming.core.engine.query.util;
 public class Constants {
 
     /**
+     * Constructor.
+     */
+    private Constants(){}
+
+    /**
      * The number of byte for a random big integer.
      */
     public static final Integer NUM_BITE_RANDOM_BIG_INTEGER = 500;
