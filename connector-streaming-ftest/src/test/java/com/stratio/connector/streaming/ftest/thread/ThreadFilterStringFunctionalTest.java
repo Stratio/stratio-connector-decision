@@ -182,7 +182,7 @@ public class ThreadFilterStringFunctionalTest extends GenericStreamingTest {
 
         return logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addColumnName(INTEGER_COLUMN)
                         .addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
-                        .addDistinctFilter(STRING_COLUMN, TEXT, false).addWindow(WindowType.TEMPORAL, 5)
+                        .addDistinctFilter(STRING_COLUMN, TEXT, false, false).addWindow(WindowType.TEMPORAL, 5)
                         .getLogicalWorkflow();
     }
 

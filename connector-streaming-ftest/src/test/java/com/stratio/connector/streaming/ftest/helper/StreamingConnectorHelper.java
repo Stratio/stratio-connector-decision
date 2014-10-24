@@ -44,8 +44,8 @@ import com.stratio.crossdata.common.security.ICredentials;
 public class StreamingConnectorHelper implements IConnectorHelper {
 
     private static final String ZOOKEEPER_PORT = "2181";
-    private static final String ZOOKEEPER_SERVER = "10.200.0.58"; //"192.168.0.2";
-    protected String KAFKA_SERVER = "10.200.0.58";//"192.168.0.2"; //;
+    private static final String ZOOKEEPER_SERVER = "10.200.0.58"; // "192.168.0.2";
+    protected String KAFKA_SERVER = "10.200.0.58";// "192.168.0.2"; //;
     private String KAFKA_PORT = "9092";
     private ClusterName clusterName;
 
@@ -79,7 +79,8 @@ public class StreamingConnectorHelper implements IConnectorHelper {
 
     @Override
     public ICredentials getICredentials() {
-        return mock(ICredentials.class);
+        return null;
+        // TODO mock(ICredentials.class);
     }
 
     @Override

@@ -78,42 +78,12 @@ public class ResultsetCreator {
         for (ColumnName colName : select.getColumnMap().keySet()) {
 
             ColumnType colType = select.getTypeMapFromColumnName().get(colName);
-            colType = updateColumnType(colType);
             ColumnMetadata columnMetadata = new ColumnMetadata(projection.getTableName().getQualifiedName(),
                             colName.getQualifiedName(), colType);
             columnMetadata.setColumnAlias(select.getColumnMap().get(colName));
             columnsMetadata.add(columnMetadata);
         }
 
-    }
-
-    private ColumnType updateColumnType(ColumnType colType) throws UnsupportedException {
-        ColumnType columnReturn;
-        switch (colType) {
-
-        case BIGINT:
-            columnReturn = ColumnType.DOUBLE;
-            break;
-        case BOOLEAN:
-            columnReturn = ColumnType.BOOLEAN;
-            break;
-        case DOUBLE:
-            columnReturn = ColumnType.DOUBLE;
-            break;
-        case FLOAT:
-            columnReturn = ColumnType.DOUBLE;
-            break;
-        case INT:
-            columnReturn = ColumnType.DOUBLE;
-            break;
-        case TEXT:
-        case VARCHAR:
-            columnReturn = ColumnType.VARCHAR;
-            break;
-        default:
-            throw new UnsupportedException("Column type " + colType.name() + " not supported in Streaming");
-        }
-        return columnReturn;
     }
 
 }

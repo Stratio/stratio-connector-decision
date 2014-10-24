@@ -64,7 +64,7 @@ public class StreamingConnector extends CommonsConnector {
 
     @Override
     public String getConnectorName() {
-        return "Streaming";
+        return "StreamingConnector";
     }
 
     /**

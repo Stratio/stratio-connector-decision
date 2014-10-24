@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.commons.connection.Connection;
+import com.stratio.connector.commons.util.ColumnTypeHelper;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageprocess.ProcessMessage;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
@@ -42,8 +43,7 @@ import kafka.consumer.KafkaStream;
 import kafka.message.MessageAndMetadata;
 
 /**
- * This class represents a query creator.
- * Created by jmgomez on 15/10/14.
+ * This class represents a query creator. Created by jmgomez on 15/10/14.
  */
 public class StreamingQueryCreator {
 
@@ -66,8 +66,11 @@ public class StreamingQueryCreator {
 
     /**
      * Constructor.
-     * @param queryData the query data.
-     * @param processMessage the message processor.
+     * 
+     * @param queryData
+     *            the query data.
+     * @param processMessage
+     *            the message processor.
      */
     public StreamingQueryCreator(ConnectorQueryData queryData, ProcessMessage processMessage) {
         this.processMessage = processMessage;
@@ -76,15 +79,20 @@ public class StreamingQueryCreator {
     }
 
     /**
-     * This method send a  query in streaming.
-     * @param query the query to send.
-     * @param stratioStreamingAPI the streaming api.
+     * This method send a query in streaming.
+     * 
+     * @param query
+     *            the query to send.
+     * @param stratioStreamingAPI
+     *            the streaming api.
      * @return the query id.
-     * @throws ExecutionException if the execution fail.
-     * @throws UnsupportedException if a operation is not supported.
+     * @throws ExecutionException
+     *             if the execution fail.
+     * @throws UnsupportedException
+     *             if a operation is not supported.
      */
-    public String createQuery(String query, IStratioStreamingAPI stratioStreamingAPI)
-            throws UnsupportedException, ExecutionException {
+    public String createQuery(String query, IStratioStreamingAPI stratioStreamingAPI) throws UnsupportedException,
+                    ExecutionException {
         String streamOutgoingName = "";
         try {
             String streamName = StreamUtil.createStreamName(queryData.getProjection());
@@ -92,7 +100,7 @@ public class StreamingQueryCreator {
             logger.info("add query...");
             logger.debug(query);
             queryId = stratioStreamingAPI.addQuery(streamName, query);
-        }catch( StratioEngineOperationException | StratioEngineStatusException  | StratioAPISecurityException e)   {
+        } catch (StratioEngineOperationException | StratioEngineStatusException | StratioAPISecurityException e) {
             String msg = "Streaming query creation fail." + e.getMessage();
             logger.error(msg);
             throw new ExecutionException(msg, e);
@@ -103,36 +111,42 @@ public class StreamingQueryCreator {
 
     /**
      * This method listen a streami query.
-     * @param stratioStreamingAPI the stratio straming api.
-     * @param streamOutgoingName the query name.
+     * 
+     * @param stratioStreamingAPI
+     *            the stratio straming api.
+     * @param streamOutgoingName
+     *            the query name.
      * @return the query result.
-     * @throws UnsupportedException if an operation is not supported.
-     * @throws ExecutionException  if a error happen.
+     * @throws UnsupportedException
+     *             if an operation is not supported.
+     * @throws ExecutionException
+     *             if a error happen.
      */
     public KafkaStream<String, StratioStreamingMessage> listenQuery(IStratioStreamingAPI stratioStreamingAPI,
-            String streamOutgoingName) throws UnsupportedException, ExecutionException {
+                    String streamOutgoingName) throws UnsupportedException, ExecutionException {
         KafkaStream<String, StratioStreamingMessage> messageAndMetadatas = null;
         try {
             logger.info("Listening stream..." + streamOutgoingName);
-             messageAndMetadatas = stratioStreamingAPI
-                    .listenStream(streamOutgoingName);
+            messageAndMetadatas = stratioStreamingAPI.listenStream(streamOutgoingName);
             StreamUtil.insertRandomData(stratioStreamingAPI, streamOutgoingName, queryData.getSelect());
-        }catch( StratioAPISecurityException | StratioEngineStatusException e)   {
-                String msg = "Streaming listen query creation fail." + e.getMessage();
-                logger.error(msg);
-                throw new ExecutionException(msg, e);
-            }
-
+        } catch (StratioAPISecurityException | StratioEngineStatusException e) {
+            String msg = "Streaming listen query creation fail." + e.getMessage();
+            logger.error(msg);
+            throw new ExecutionException(msg, e);
+        }
 
         return messageAndMetadatas;
     }
 
     /**
      * This metod read a message.
+     * 
      * @param streams
      * @throws UnsupportedException
+     * @throws ExecutionException
      */
-    public void readMessages(KafkaStream<String, StratioStreamingMessage> streams) throws UnsupportedException {
+    public void readMessages(KafkaStream<String, StratioStreamingMessage> streams) throws UnsupportedException,
+                    ExecutionException {
         logger.info("Waiting a message...");
         for (MessageAndMetadata stream : streams) {
             StratioStreamingMessage theMessage = (StratioStreamingMessage) stream.message();
@@ -145,8 +159,11 @@ public class StreamingQueryCreator {
 
     /**
      * This method finish the streaming query.
-     * @param streamName the stream name.
-     * @param connection the connection.
+     * 
+     * @param streamName
+     *            the stream name.
+     * @param connection
+     *            the connection.
      * @throws StratioEngineStatusException
      * @throws StratioAPISecurityException
      * @throws StratioEngineOperationException
@@ -162,7 +179,7 @@ public class StreamingQueryCreator {
             if (processMessage != null) {
                 processMessage.end();
             }
-        }catch( StratioAPISecurityException | StratioEngineOperationException  | StratioEngineStatusException e){
+        } catch (StratioAPISecurityException | StratioEngineOperationException | StratioEngineStatusException e) {
             String msg = "Streaming end query creation fail." + e.getMessage();
             logger.error(msg);
             throw new ExecutionException(msg, e);
@@ -170,11 +187,13 @@ public class StreamingQueryCreator {
 
     }
 
-    private Row getRow(List<ColumnNameTypeValue> columns) {
+    private Row getRow(List<ColumnNameTypeValue> columns) throws ExecutionException {
 
         Row row = new Row();
         for (ColumnNameTypeValue column : columns) {
-            row.addCell(column.getColumn(), new Cell(column.getValue()));
+            Object value = ColumnTypeHelper.getCastingValue(queryData.getSelect().getTypeMap().get(column.getColumn()),
+                            column.getValue());
+            row.addCell(column.getColumn(), new Cell(value));
         }
         return row;
 
