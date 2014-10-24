@@ -43,7 +43,8 @@ import kafka.consumer.KafkaStream;
 import kafka.message.MessageAndMetadata;
 
 /**
- * This class represents a query creator. Created by jmgomez on 15/10/14.
+ * This class represents a query creator.
+ * Created by jmgomez on 15/10/14.
  */
 public class StreamingQueryCreator {
 
@@ -65,17 +66,12 @@ public class StreamingQueryCreator {
     private ProcessMessage processMessage;
 
     /**
-     * Constructor. <<<<<<< HEAD
+     * Constructor.
      * 
      * @param queryData
      *            the query data.
      * @param processMessage
-     *            the message processor. =======
-     *
-     * @param queryData
-     *            the query data.
-     * @param processMessage
-     *            the message processor. >>>>>>> d2834cefc00164cbe89d40a527d27c11ab45093d
+     *            the message processor.
      */
     public StreamingQueryCreator(ConnectorQueryData queryData, ProcessMessage processMessage) {
         this.processMessage = processMessage;
@@ -116,7 +112,7 @@ public class StreamingQueryCreator {
 
     /**
      * This method listen a streami query.
-     * 
+     *
      * @param stratioStreamingAPI
      *            the stratio straming api.
      * @param streamOutgoingName
@@ -147,8 +143,8 @@ public class StreamingQueryCreator {
     }
 
     /**
-     * This method read a message. <<<<<<< HEAD
-     *
+
+     * This method read a message.
      * 
      * @param streams
      * @throws UnsupportedException
@@ -167,23 +163,14 @@ public class StreamingQueryCreator {
     }
 
     /**
-     * This method finish the streaming query. <<<<<<< HEAD
-     * 
-     * @param streamName
-     *            the stream name.
-     * @param connection
-     *            the connection.
-     * @throws StratioEngineStatusException
-     * @throws StratioAPISecurityException
-     * @throws StratioEngineOperationException
-     *             =======
+     * This method finish the streaming query.
      *
      * @param streamName
      *            the stream name.
      * @param connection
      *            the connection.
      * @throws ExecutionException
-     *             if a fail happens. >>>>>>> d2834cefc00164cbe89d40a527d27c11ab45093d
+     *             if a fail happens.
      */
     public void endQuery(String streamName, Connection<IStratioStreamingAPI> connection) throws ExecutionException {
         try {
@@ -204,6 +191,12 @@ public class StreamingQueryCreator {
 
     }
 
+    /**
+     * create a row.
+     * @param columns the columns values.
+     * @return the row.
+     * @throws ExecutionException if any error happens.
+     */
     private Row getRow(List<ColumnNameTypeValue> columns) throws ExecutionException {
 
         Row row = new Row();
