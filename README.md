@@ -43,11 +43,11 @@ To stop the connector execute:
    > target/connector-streaming-core-0.4.0/bin/connector-streaming-core-0.4.0 stop
 ```
 
-## How to use Cassandra Streaming ##
+## How to use Connector Streaming ##
 
  1. Start [crossdata-server and then crossdata-shell](https://github.com/Stratio/crossdata).  
  2. https://github.com/Stratio/crossdata
- 3. Start Cassandra Connector as it is explained before
+ 3. Start Streaming Connector as it is explained before
  4. In crossdata-shell:
     
     Add a datastore with this command:
@@ -82,7 +82,7 @@ To stop the connector execute:
         
             xdsh:user> USE catalogTest;
         
-            xdsh:user> CREATE TABLE tableTest ON CLUSTER cassandra_prod (id int PRIMARY KEY, name text);
+            xdsh:user> CREATE TABLE tableTest ON CLUSTER streaming_prod (id int PRIMARY KEY, name text);
     
             xdsh:user> INSERT INTO tableTest(id, name) VALUES (1, 'stratio');
     
