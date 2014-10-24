@@ -64,8 +64,8 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
      *
      * @param targetStream the targetName.
      * @param row          the row.
-     * @throws com.stratio.meta.common.exceptions.ExecutionException   in case of failure during the execution.
-     * @throws com.stratio.meta.common.exceptions.UnsupportedException it the operation is not supported.
+     * @throws ExecutionException   in case of failure during the execution.
+     * @throws UnsupportedException it the operation is not supported.
      */
 
     @Override
@@ -91,8 +91,8 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
      * Insert a set of documents in Streaming.
      *
      * @param rows the set of rows.
-     * @throws com.stratio.meta.common.exceptions.ExecutionException   in case of failure during the execution.
-     * @throws com.stratio.meta.common.exceptions.UnsupportedException if the operation is not supported.
+     * @throws ExecutionException   in case of failure during the execution.
+     * @throws UnsupportedException if the operation is not supported.
      */
     @Override
     protected void insert(TableMetadata targetStream, Collection<Row> rows, Connection<IStratioStreamingAPI> connection)
