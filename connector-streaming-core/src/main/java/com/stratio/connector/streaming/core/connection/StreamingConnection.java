@@ -20,6 +20,7 @@ package com.stratio.connector.streaming.core.connection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.util.ConnectorParser;
 import com.stratio.crossdata.common.connector.ConnectorClusterConfig;

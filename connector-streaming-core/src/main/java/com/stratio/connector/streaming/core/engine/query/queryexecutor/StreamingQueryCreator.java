@@ -67,11 +67,9 @@ public class StreamingQueryCreator {
 
     /**
      * Constructor.
-     * 
-     * @param queryData
-     *            the query data.
-     * @param processMessage
-     *            the message processor.
+     *
+     * @param queryData      the query data.
+     * @param processMessage the message processor.
      */
     public StreamingQueryCreator(ConnectorQueryData queryData, ProcessMessage processMessage) {
         this.processMessage = processMessage;
@@ -80,20 +78,16 @@ public class StreamingQueryCreator {
     }
 
     /**
-     *  This method send a query in streaming.
-     * 
-     * @param query
-     *            the query to send.
-     * @param stratioStreamingAPI
-     *            the streaming api.
+     * This method send a query in streaming.
+     *
+     * @param query               the query to send.
+     * @param stratioStreamingAPI the streaming api.
      * @return the query id.
-     * @throws ExecutionException
-     *             if the execution fail.
-     * @throws UnsupportedException
-     *             if a operation is not supported.
+     * @throws ExecutionException   if the execution fail.
+     * @throws UnsupportedException if a operation is not supported.
      */
     public String createQuery(String query, IStratioStreamingAPI stratioStreamingAPI) throws UnsupportedException,
-                    ExecutionException {
+            ExecutionException {
         String streamOutgoingName = "";
         try {
             String streamName = StreamUtil.createStreamName(queryData.getProjection());
@@ -113,19 +107,14 @@ public class StreamingQueryCreator {
     /**
      * This method listen a streami query.
      *
-     * @param stratioStreamingAPI
-     *            the stratio straming api.
-     * @param streamOutgoingName
-     *            the query name.
+     * @param stratioStreamingAPI the stratio straming api.
+     * @param streamOutgoingName  the query name.
      * @return the query result.
-     * @throws UnsupportedException
-     *             if an operation is not supported.
-     * @throws ExecutionException
-     *             if a error happen.
-     *
+     * @throws UnsupportedException if an operation is not supported.
+     * @throws ExecutionException   if a error happen.
      */
     public KafkaStream<String, StratioStreamingMessage> listenQuery(IStratioStreamingAPI stratioStreamingAPI,
-                    String streamOutgoingName) throws UnsupportedException, ExecutionException {
+            String streamOutgoingName) throws UnsupportedException, ExecutionException {
         KafkaStream<String, StratioStreamingMessage> messageAndMetadatas = null;
         try {
             logger.info("Listening stream..." + streamOutgoingName);
@@ -143,15 +132,14 @@ public class StreamingQueryCreator {
     }
 
     /**
-
      * This method read a message.
-     * 
+     *
      * @param streams
      * @throws UnsupportedException
      * @throws ExecutionException
      */
     public void readMessages(KafkaStream<String, StratioStreamingMessage> streams) throws UnsupportedException,
-                    ExecutionException {
+            ExecutionException {
         logger.info("Waiting a message...");
         for (MessageAndMetadata stream : streams) {
             StratioStreamingMessage theMessage = (StratioStreamingMessage) stream.message();
@@ -165,12 +153,9 @@ public class StreamingQueryCreator {
     /**
      * This method finish the streaming query.
      *
-     * @param streamName
-     *            the stream name.
-     * @param connection
-     *            the connection.
-     * @throws ExecutionException
-     *             if a fail happens.
+     * @param streamName the stream name.
+     * @param connection the connection.
+     * @throws ExecutionException if a fail happens.
      */
     public void endQuery(String streamName, Connection<IStratioStreamingAPI> connection) throws ExecutionException {
         try {
@@ -193,6 +178,7 @@ public class StreamingQueryCreator {
 
     /**
      * create a row.
+     *
      * @param columns the columns values.
      * @return the row.
      * @throws ExecutionException if any error happens.
@@ -202,7 +188,7 @@ public class StreamingQueryCreator {
         Row row = new Row();
         for (ColumnNameTypeValue column : columns) {
             Object value = ColumnTypeHelper.getCastingValue(queryData.getSelect().getTypeMap().get(column.getColumn()),
-                            column.getValue());
+                    column.getValue());
             row.addCell(column.getColumn(), new Cell(value));
         }
         return row;

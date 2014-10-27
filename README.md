@@ -35,7 +35,7 @@ To generate the executable execute the following command:
 To run Connector Streaming execute:
 
 ```
-  > cd connector-streaming-core
+   > cd connector-streaming-core
    > target/connector-streaming-core-0.4.0/bin/connector-streaming-core-0.4.0 start
 ```
 

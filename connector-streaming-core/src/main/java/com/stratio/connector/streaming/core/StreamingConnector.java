@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.commons.CommonsConnector;
+import com.stratio.connector.commons.util.ManifestUtil;
 import com.stratio.connector.streaming.core.connection.StreamingConnectionHandler;
 import com.stratio.connector.streaming.core.engine.StreamingMetadataEngine;
 import com.stratio.connector.streaming.core.engine.StreamingQueryEngine;
@@ -32,6 +33,7 @@ import com.stratio.crossdata.common.connector.IMetadataEngine;
 import com.stratio.crossdata.common.connector.IQueryEngine;
 import com.stratio.crossdata.common.connector.IStorageEngine;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
+import com.stratio.crossdata.common.exceptions.InitializationException;
 import com.stratio.crossdata.connectors.ConnectorApp;
 
 /**
@@ -43,9 +45,37 @@ public class StreamingConnector extends CommonsConnector {
      * The Log.
      */
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    /**
+     * The process handler.
+     */
     private transient ConnectorProcessHandler processHandler;
+    /**
+     * The connector name.
+     */
+    private String connectorName;
+    /**
+     * The datastore name.
+     */
+    private String[] datastoreName;
+    /**
+     * Constructor.
+     *
+     * @throws InitializationException if an error happens in the init.
+     */
+    public StreamingConnector() throws InitializationException {
 
-    public static void main(String[] args) {
+        connectorName = ManifestUtil.getConectorName("StreamingConnector.xml");
+        datastoreName = ManifestUtil.getDatastoreName("StreamingConnector.xml");
+
+    }
+
+    /**
+     * The main for the agent.
+     *
+     * @param args init arguments.
+     * @throws InitializationException in an error happens in init.
+     */
+    public static void main(String[] args) throws InitializationException {
         StreamingConnector streamingConnector = new StreamingConnector();
         ConnectorApp connectorApp = new ConnectorApp();
         connectorApp.startup(streamingConnector);
@@ -70,7 +100,7 @@ public class StreamingConnector extends CommonsConnector {
 
     @Override
     public String getConnectorName() {
-        return "StreamingConnector";
+        return connectorName;
     }
 
     /**
@@ -80,7 +110,7 @@ public class StreamingConnector extends CommonsConnector {
      */
     @Override
     public String[] getDatastoreName() {
-        return new String[] { "Streaming" };
+        return datastoreName;
     }
 
     /**

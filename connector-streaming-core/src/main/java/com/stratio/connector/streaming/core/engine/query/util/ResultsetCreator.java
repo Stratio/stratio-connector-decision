@@ -58,10 +58,8 @@ public class ResultsetCreator {
     /**
      * Constructor.
      *
-     * @param queryData
-     *            the query data.
-     * @throws UnsupportedException
-     *             if a operation is not supperted.
+     * @param queryData the query data.
+     * @throws UnsupportedException if a operation is not supperted.
      */
     public ResultsetCreator(ConnectorQueryData queryData) throws UnsupportedException {
         this.queryData = queryData;
@@ -87,8 +85,7 @@ public class ResultsetCreator {
     /**
      * Create a resultset.
      *
-     * @param rows
-     *            a row list.
+     * @param rows a row list.
      * @return a resultsetCreator.
      */
     public ResultsetCreator create(List<Row> rows) {
@@ -105,8 +102,7 @@ public class ResultsetCreator {
     /**
      * Create the column metadata.
      *
-     * @throws UnsupportedException
-     *             if a type is not supported.
+     * @throws UnsupportedException if a type is not supported.
      */
     private void createColumnMetadata() throws UnsupportedException {
         columnsMetadata = new ArrayList<>();
@@ -117,7 +113,7 @@ public class ResultsetCreator {
 
             ColumnType colType = select.getTypeMapFromColumnName().get(colName);
             ColumnMetadata columnMetadata = new ColumnMetadata(projection.getTableName().getQualifiedName(),
-                            colName.getQualifiedName(), colType);
+                    colName.getQualifiedName(), colType);
             columnMetadata.setColumnAlias(select.getColumnMap().get(colName));
             columnsMetadata.add(columnMetadata);
         }

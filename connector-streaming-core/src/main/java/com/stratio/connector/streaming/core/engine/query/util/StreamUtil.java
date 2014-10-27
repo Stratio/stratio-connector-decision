@@ -54,9 +54,9 @@ public final class StreamUtil {
      * A set of letters.
      */
     private static final String[] TEXT = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
-                    "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i",
-                    "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "!", "_", "1",
-                    "2", "3", "4", "5", "6", "7", "8", "9" };
+            "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i",
+            "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "!", "_", "1",
+            "2", "3", "4", "5", "6", "7", "8", "9" };
 
     /**
      * Constructor.
@@ -115,7 +115,7 @@ public final class StreamUtil {
      * @throws UnsupportedException if any option is no supported.
      */
     public static void insertRandomData(IStratioStreamingAPI stratioStreamingAPI, String streamName, Select select)
-                    throws UnsupportedException {
+            throws UnsupportedException {
         try {
 
             List<ColumnNameValue> streamData = new LinkedList<>();
@@ -180,9 +180,9 @@ public final class StreamUtil {
         String randomObject;
 
         randomObject = getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter()
-                        + getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter()
-                        + getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter()
-                        + getRandonLetter() + getRandonLetter();
+                + getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter()
+                + getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter()
+                + getRandonLetter() + getRandonLetter();
 
         return randomObject;
     }
