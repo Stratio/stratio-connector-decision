@@ -6,6 +6,7 @@ Stratio Connector Streaming is a crossdata connector interface implementation fo
 ## Requirements ##
 
 Install [Stratio Streaming] (http://docs.openstratio.org/getting-started.html#stratio-streaming) and run it. 
+[Crossdata] (https://github.com/Stratio/crossdata) is needed to interact with this connector.
 
 ## Compiling Stratio Connector Streaming ##
 
