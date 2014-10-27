@@ -16,14 +16,6 @@ To automatically build execute the following command:
    > mvn clean compile install
 ```
 
-## Running the Stratio Connector Streaming ##
-
-```
-   > cd connector-streaming-core
-   > mvn exec:java -Dexec.mainClass="com.stratio.connector.streaming.core.StreamingConnector"
-```
-
-
 ## Build an executable Connector Streaming ##
 
 To generate the executable execute the following command:
@@ -31,6 +23,8 @@ To generate the executable execute the following command:
 ```
    > mvn crossdata-connector:install
 ```
+
+## Running the Stratio Connector Streaming ##
 
 To run Connector Streaming execute:
 
@@ -52,6 +46,8 @@ To stop the connector execute:
  3. In crossdata-shell:
     
     Add a datastore with this command:
+
+    Add a data store. We need to specified the XML manifest that defines the data store. The XML manifest can be found in the path of the Streaming Connector in target/stratio-connector-streaming-0.4.0/conf/StreamingDataStore.xml
       
       ```
          xdsh:user>  ADD DATASTORE <Absolute path to Streaming Datastore manifest>;
@@ -63,20 +59,19 @@ To stop the connector execute:
          xdsh:user>  ATTACH CLUSTER <cluster_name> ON DATASTORE <datastore_name> WITH OPTIONS {'KafkaServer': '[<kafkaServer>]', 'KafkaPort': '[<kafkaPort>]', 'zooKeeperServer':'[<zooKeeperServer>]','zooKeeperPort':'[<zooKeeperPort>]'};
       ```
 
-    Add the connector manifest.
+    Add the connector manifest. The XML with the manifest can be found in the path of the Streaming Connector in target/stratio-connector-streaming-0.4.0/conf/StreamingConnector.xml
 
        ```
          xdsh:user>  ADD CONNECTOR <Path to Streaming Connector Manifest>
        ```
     
     Attach the connector to the previously defined cluster. The connector name must match the one defined in the 
-    Connector Manifest.
-    
+    Connector Manifest, and the cluster name must match with the previously defined in the ATTACH CLUSTER command.    
         ```
             xdsh:user>  ATTACH CONNECTOR <connector name> TO <cluster name> WITH OPTIONS {};
         ```
     
-    At this point, we can start to send queries.
+    At this point, we can start to send queries, that Crossdata execute with the connector specified..
     
         ...
             xdsh:user> CREATE CATALOG catalogTest;
