@@ -35,6 +35,7 @@ To generate the executable execute the following command:
 To run Connector Streaming execute:
 
 ```
+  > cd connector-streaming-core
    > target/connector-streaming-core-0.4.0/bin/connector-streaming-core-0.4.0 start
 ```
 
@@ -47,9 +48,8 @@ To stop the connector execute:
 ## How to use Connector Streaming ##
 
  1. Start [crossdata-server and then crossdata-shell](https://github.com/Stratio/crossdata).  
- 2. https://github.com/Stratio/crossdata
- 3. Start Streaming Connector as it is explained before
- 4. In crossdata-shell:
+ 2. Start Streaming Connector as it is explained before
+ 3. In crossdata-shell:
     
     Add a datastore with this command:
       
@@ -83,7 +83,7 @@ To stop the connector execute:
         
             xdsh:user> USE catalogTest;
         
-            xdsh:user> CREATE TABLE tableTest ON CLUSTER streaming_prod (id int PRIMARY KEY, name text);
+            xdsh:user> CREATE TABLE tableTest ON CLUSTER <cluster_name> (id int PRIMARY KEY, name text);
     
             xdsh:user> INSERT INTO tableTest(id, name) VALUES (1, 'stratio');
     

@@ -87,10 +87,10 @@ public class StreamingQueryTest {
     private static final Long TIMESTAMP = new Long(123);
     private static final List<StreamQuery> QUERIES = Collections.EMPTY_LIST;
     private static final Boolean USERDEFINED = true;
-    private static final String COLUMN_1 = "column_1";
+
     private static final com.stratio.streaming.commons.constants.ColumnType TYPE_1 = com.stratio.streaming.commons.constants.ColumnType.BOOLEAN;
     private static final Object VALUE_1_1 = "value_1_1";
-    private static final String COLUMN_2 = "column_2";
+    private static final String COLUMN2 = "column_2";
     ;
     private static final com.stratio.streaming.commons.constants.ColumnType TYPE_2 = com.stratio.streaming.commons.constants.ColumnType.INTEGER;
     private static final Object VALUE_2_1 = "value_2_1";
@@ -185,8 +185,8 @@ public class StreamingQueryTest {
 
     private List<ColumnNameTypeValue> createColumns(Object value1, Object value2) {
         List<ColumnNameTypeValue> columns = new LinkedList<>();
-        columns.add(new ColumnNameTypeValue(COLUMN_1, TYPE_1, value1));
-        columns.add(new ColumnNameTypeValue(COLUMN_2, TYPE_2, value2));
+        columns.add(new ColumnNameTypeValue(COLUMN1, TYPE_1, value1));
+        columns.add(new ColumnNameTypeValue(COLUMN2, TYPE_2, value2));
         return columns;
     }
 
@@ -197,9 +197,11 @@ public class StreamingQueryTest {
         Map<ColumnName, String> columnMap = new LinkedHashMap<>();
         columnMap.put(new ColumnName(CATALOG, TABLE, COLUMN1), ALIAS1);
         Map<String, ColumnType> typemap = new LinkedHashMap<>();
-        typemap.put(CATALOG + "." + TABLE + "." + COLUMN1, ColumnType.INT);
+        typemap.put(COLUMN1, ColumnType.TEXT);
+        typemap.put(COLUMN2, ColumnType.TEXT);
         Map<ColumnName, ColumnType> typemapColumnName = new LinkedHashMap<>();
-        typemapColumnName.put(new ColumnName(CATALOG, TABLE, COLUMN1), ColumnType.INT);
+        typemapColumnName.put(new ColumnName(CATALOG, TABLE, COLUMN1), ColumnType.TEXT);
+        typemapColumnName.put(new ColumnName(CATALOG, TABLE, COLUMN2), ColumnType.TEXT);
         Select select = new Select(Operations.SELECT_OPERATOR, columnMap, typemap, typemapColumnName);
         queryData.setSelect(select);
         return queryData;
