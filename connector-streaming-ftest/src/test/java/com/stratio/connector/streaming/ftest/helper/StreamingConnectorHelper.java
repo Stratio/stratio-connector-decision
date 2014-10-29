@@ -27,6 +27,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.junit.Assert;
+
 import com.stratio.connector.commons.ftest.helper.IConnectorHelper;
 import com.stratio.connector.streaming.core.StreamingConnector;
 import com.stratio.crossdata.common.connector.ConnectorClusterConfig;
@@ -56,7 +58,13 @@ public class StreamingConnectorHelper implements IConnectorHelper {
 
     @Override
     public IConnector getConnector() {
-        return new StreamingConnector();
+        try {
+            return new StreamingConnector();
+        } catch (InitializationException e) {
+            // TODO Auto-generated catch block
+            Assert.fail("Cannot retrieve the connector");
+            return null;
+        }
 
     }
 

@@ -57,10 +57,12 @@ public class StreamingConnector extends CommonsConnector {
      * The datastore name.
      */
     private String[] datastoreName;
+
     /**
      * Constructor.
      *
-     * @throws InitializationException if an error happens in the init.
+     * @throws InitializationException
+     *             if an error happens in the init.
      */
     public StreamingConnector() throws InitializationException {
 
@@ -72,8 +74,10 @@ public class StreamingConnector extends CommonsConnector {
     /**
      * The main for the agent.
      *
-     * @param args init arguments.
-     * @throws InitializationException in an error happens in init.
+     * @param args
+     *            init arguments.
+     * @throws InitializationException
+     *             in an error happens in init.
      */
     public static void main(String[] args) throws InitializationException {
         StreamingConnector streamingConnector = new StreamingConnector();
@@ -86,7 +90,8 @@ public class StreamingConnector extends CommonsConnector {
      * Create a connection to Streaming. The client will be a transportClient by default unless stratio nodeClient is
      * specified.
      *
-     * @param configuration the connection configuration. It must be not null.
+     * @param configuration
+     *            the connection configuration. It must be not null.
      */
 
     @Override
@@ -110,7 +115,7 @@ public class StreamingConnector extends CommonsConnector {
      */
     @Override
     public String[] getDatastoreName() {
-        return datastoreName;
+        return datastoreName.clone();
     }
 
     /**
@@ -146,6 +151,9 @@ public class StreamingConnector extends CommonsConnector {
         return new StreamingMetadataEngine(connectionHandler);
     }
 
+    /**
+     * Attach shut down hook.
+     */
     public void attachShutDownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
