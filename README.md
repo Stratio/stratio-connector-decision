@@ -80,9 +80,9 @@ To stop the connector execute:
         
             xdsh:user> CREATE TABLE tableTest ON CLUSTER <cluster_name> (id int PRIMARY KEY, name text);
     
+            xdsh:user> SELECT * FROM tableTest WITH WINDOW 2 sec;
+
             xdsh:user> INSERT INTO tableTest(id, name) VALUES (1, 'stratio');
-    
-            xdsh:user> SELECT * FROM tableTest;
         ...
 
 
