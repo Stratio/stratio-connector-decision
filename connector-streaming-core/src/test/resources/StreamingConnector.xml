@@ -46,5 +46,6 @@
         <operation>FILTER_INDEXED_GET</operation>
         <operation>FILTER_INDEXED_LET</operation>
         <operation>FILTER_INDEXED_DISTINCT</operation>
+        <operation>ALTER_TABLE</operation>
     </SupportedOperations>
 </Connector>

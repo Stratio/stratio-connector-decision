@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import com.stratio.connector.commons.ftest.schema.TableMetadataBuilder;
 import com.stratio.connector.commons.ftest.workFlow.LogicalWorkFlowCreator;
 import com.stratio.connector.streaming.ftest.GenericStreamingTest;
+import com.stratio.connector.streaming.ftest.helper.StreamingConnectorHelper;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
 import com.stratio.crossdata.common.connector.IResultHandler;
@@ -74,7 +75,7 @@ public class ThreadNumberElementWindowFunctionalTest extends GenericStreamingTes
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, ColumnType.VARCHAR)
                 .addColumn(INTEGER_COLUMN, ColumnType.INT).addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
-                .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT).build();
+                .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT).build(new StreamingConnectorHelper(getClusterName()));
         try {
             sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -104,7 +105,7 @@ public class ThreadNumberElementWindowFunctionalTest extends GenericStreamingTes
                 .addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
                 .addWindow(WindowType.NUM_ROWS, WINDOW_ELEMENTS).getLogicalWorkflow();
 
-        StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata, logicalWokflow,
+        StreamingRead stremingRead = new StreamingRead(sConnector, logicalWokflow,
                 new ResultHandler());
 
         stremingRead.start();

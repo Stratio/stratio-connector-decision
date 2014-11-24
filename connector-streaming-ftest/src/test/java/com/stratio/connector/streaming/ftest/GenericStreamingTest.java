@@ -118,7 +118,7 @@ public abstract class GenericStreamingTest {
         optionsNode.put(StreamingConnection.KAFKA_PORT, PORT_KAFKA);
         optionsNode.put(StreamingConnection.ZOOKEEPER_SERVER, SERVER_ZOOKEEPER);
         optionsNode.put(StreamingConnection.ZOOKEEPER_PORT, PORT_ZOOKEEPER);
-        return new ConnectorClusterConfig(getClusterName(), optionsNode);
+        return new ConnectorClusterConfig(getClusterName(),null, optionsNode);
     }
 
     protected ICredentials getICredentials() {

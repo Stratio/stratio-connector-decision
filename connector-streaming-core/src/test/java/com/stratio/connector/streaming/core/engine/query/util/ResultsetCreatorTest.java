@@ -41,9 +41,9 @@ import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.data.TableName;
 import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.crossdata.common.logicalplan.Select;
+import com.stratio.crossdata.common.metadata.ColumnMetadata;
 import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.metadata.Operations;
-import com.stratio.crossdata.common.metadata.structures.ColumnMetadata;
 import com.stratio.crossdata.common.result.QueryResult;
 
 /**
@@ -88,11 +88,10 @@ public class ResultsetCreatorTest {
     private void valiateMetadata(List<ColumnMetadata> columnMetadata) {
         int i = 0;
         for (ColumnMetadata metadata : columnMetadata) {
-            assertEquals("the alias is correct", ALIAS[i], metadata.getColumnAlias());
-            assertEquals("the name is correct", CATALOG + "." + TABLE + "." + NAME[i], metadata.getColumnName());
-            assertEquals("the type is correct", TYPE[i], metadata.getType());
+            assertEquals("the alias is correct", ALIAS[i], metadata.getName().getAlias());
+            assertEquals("the name is correct", CATALOG + "." + TABLE + "." + NAME[i], metadata.getName().getQualifiedName());
+            assertEquals("the type is correct", TYPE[i], metadata.getColumnType());
             i++;
-
         }
     }
 

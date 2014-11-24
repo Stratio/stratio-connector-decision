@@ -33,6 +33,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -44,6 +45,7 @@ import com.stratio.crossdata.common.data.ColumnName;
 import com.stratio.crossdata.common.data.IndexName;
 import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.data.TableName;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.metadata.ColumnMetadata;
 import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.metadata.IndexMetadata;
@@ -113,6 +115,31 @@ public class StreamingStorageEngineTest {
         verify(streamingApi, times(2)).insertData(eq(CATALOG + "_" + TABLE), anyList());
 
     }
+    
+    /**
+     * Method: delete(TableName tableName, Collection<Filter> whereClauses, Connection<IStratioStreamingAPI> connection)
+     */
+    @Test(expected = UnsupportedException.class)
+    public void deleteTest() throws Exception {
+        streamingStorageEngine.delete(Matchers.any(TableName.class),null, connection);
+    }
+    
+    /**
+     * Method: update(TableName tableName, Collection<Relation> assignments, Collection<Filter> whereClauses, 
+     * Connection<IStratioStreamingAPI> connection)
+     */
+    @Test(expected = UnsupportedException.class)
+    public void updateTest() throws Exception {
+        streamingStorageEngine.update(Matchers.any(TableName.class),Matchers.anyCollection(), Matchers.anyCollection(), connection);
+    }
+    
+    /**
+     * Method: truncate(TableName tableName,Connection<IStratioStreamingAPI> connection)
+     */
+    @Test(expected = UnsupportedException.class)
+    public void truncateTest() throws Exception {
+        streamingStorageEngine.truncate(Matchers.any(TableName.class), connection);
+    }
 
     private Row createRow(Object value) {
         Row row = new Row();
@@ -136,4 +163,5 @@ public class StreamingStorageEngineTest {
                 partitionKey, clusterKey);
     }
 
+    
 }

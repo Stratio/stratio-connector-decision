@@ -29,8 +29,8 @@ import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.crossdata.common.logicalplan.Select;
+import com.stratio.crossdata.common.metadata.ColumnMetadata;
 import com.stratio.crossdata.common.metadata.ColumnType;
-import com.stratio.crossdata.common.metadata.structures.ColumnMetadata;
 import com.stratio.crossdata.common.result.QueryResult;
 
 /**
@@ -112,9 +112,8 @@ public class ResultsetCreator {
         for (ColumnName colName : select.getColumnMap().keySet()) {
 
             ColumnType colType = select.getTypeMapFromColumnName().get(colName);
-            ColumnMetadata columnMetadata = new ColumnMetadata(projection.getTableName().getQualifiedName(),
-                    colName.getQualifiedName(), colType);
-            columnMetadata.setColumnAlias(select.getColumnMap().get(colName));
+            colName.setAlias(select.getColumnMap().get(colName));
+            ColumnMetadata columnMetadata = new ColumnMetadata(colName, null, colType);
             columnsMetadata.add(columnMetadata);
         }
 

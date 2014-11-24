@@ -27,18 +27,13 @@ import com.stratio.crossdata.common.metadata.TableMetadata;
 public class StreamingRead extends Thread {
 
     private StreamingConnector streamingConnector;
-    private ClusterName clusterName;
-    private TableMetadata tableMetadata;
     private LogicalWorkflow logicalWorkFlow;
     private IResultHandler resultHandler;
     private String queryId;
 
-    public StreamingRead(StreamingConnector sC, ClusterName clusterName, TableMetadata tableMetadata,
-            LogicalWorkflow logicalWorkFlow, IResultHandler resultHandler) {
+    public StreamingRead(StreamingConnector sC, LogicalWorkflow logicalWorkFlow, IResultHandler resultHandler) {
         super("[StreamingRead]");
         this.streamingConnector = sC;
-        this.clusterName = clusterName;
-        this.tableMetadata = tableMetadata;
         this.logicalWorkFlow = logicalWorkFlow;
         this.resultHandler = resultHandler;
         queryId = "queryId";

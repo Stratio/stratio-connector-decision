@@ -31,15 +31,15 @@ public class StreamingCreateMetadataFunctionalTest extends GenericMetadataCreate
 
     @Override
     protected IConnectorHelper getConnectorHelper() {
-        StreamingConnectorHelper esConnectorHelper = null;
+        StreamingConnectorHelper sConnectorHelper = null;
         try {
-            esConnectorHelper = new StreamingConnectorHelper(getClusterName());
-            return esConnectorHelper;
+            sConnectorHelper = new StreamingConnectorHelper(getClusterName());
+            return sConnectorHelper;
         } catch (ConnectionException e) {
             e.printStackTrace();
         } catch (InitializationException e) {
             e.printStackTrace();
         }
-        return esConnectorHelper;
+        return sConnectorHelper;
     }
 }

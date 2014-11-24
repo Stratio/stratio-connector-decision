@@ -18,6 +18,7 @@
 package com.stratio.connector.streaming.core.engine;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -27,6 +28,8 @@ import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.connection.ConnectionHandler;
 import com.stratio.connector.commons.engine.CommonsMetadataEngine;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
+import com.stratio.crossdata.common.data.AlterOperation;
+import com.stratio.crossdata.common.data.AlterOptions;
 import com.stratio.crossdata.common.data.CatalogName;
 import com.stratio.crossdata.common.data.ColumnName;
 import com.stratio.crossdata.common.data.TableName;
@@ -209,6 +212,43 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
 
         }
         return returnType;
+    }
+
+    /**
+     * Allow add columns to an existing stream.
+     *
+     * @param name
+     *            the stream name
+     * @param alterOptions
+     *            the alter options
+     * @param connection
+     *            the connection
+     * @throws UnsupportedException
+     *             if the operation is not supported
+     */
+    @Override
+    protected void alterTable(TableName name, AlterOptions alterOptions, Connection<IStratioStreamingAPI> connection)
+                    throws UnsupportedException, ExecutionException {
+
+        if (alterOptions.getOption() == AlterOperation.ADD_COLUMN) {
+
+            String streamName = StreamUtil.createStreamName(name);
+
+            com.stratio.streaming.commons.constants.ColumnType columnType = convertType(alterOptions
+                            .getColumnMetadata().getColumnType());
+            ColumnNameType column = new ColumnNameType(alterOptions.getColumnMetadata().getName().getName(), columnType);
+
+            try {
+                connection.getNativeConnection().alterStream(streamName, Arrays.asList(column));
+            } catch (StratioEngineOperationException | StratioEngineStatusException | StratioAPISecurityException e) {
+                String msg = "Fail altering the Stream [" + streamName + "]. " + e.getMessage();
+                logger.error(msg);
+                throw new ExecutionException(msg, e);
+            }
+
+        } else
+            throw new UnsupportedException("Alter table is not supported");
+
     }
 
 }

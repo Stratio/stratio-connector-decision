@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import com.stratio.connector.commons.ftest.schema.TableMetadataBuilder;
 import com.stratio.connector.commons.ftest.workFlow.LogicalWorkFlowCreator;
 import com.stratio.connector.streaming.ftest.GenericStreamingTest;
+import com.stratio.connector.streaming.ftest.helper.StreamingConnectorHelper;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
 import com.stratio.crossdata.common.connector.IResultHandler;
@@ -47,9 +48,9 @@ import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.logicalplan.LogicalWorkflow;
 import com.stratio.crossdata.common.logicalplan.Select;
+import com.stratio.crossdata.common.metadata.ColumnMetadata;
 import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.metadata.TableMetadata;
-import com.stratio.crossdata.common.metadata.structures.ColumnMetadata;
 import com.stratio.crossdata.common.result.QueryResult;
 import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
@@ -84,7 +85,7 @@ public class ThreadTimeWindowFunctionalTest extends GenericStreamingTest {
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, ColumnType.VARCHAR)
                         .addColumn(INTEGER_COLUMN, ColumnType.INT).addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
-                        .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT).build();
+                        .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT).build(new StreamingConnectorHelper(getClusterName()));
         try {
             sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -109,7 +110,7 @@ public class ThreadTimeWindowFunctionalTest extends GenericStreamingTest {
 
         LogicalWorkflow logicalWokflow = createLogicalWorkFlow();
 
-        StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata, logicalWokflow,
+        StreamingRead stremingRead = new StreamingRead(sConnector, logicalWokflow,
                         new ResultHandler((Select) logicalWokflow.getLastStep()));
 
         stremingRead.start();
@@ -143,7 +144,7 @@ public class ThreadTimeWindowFunctionalTest extends GenericStreamingTest {
         LogicalWorkflow logicalWokflow = createLogicalWorkFlow();
 
         ResultHandler resultHandler = new ResultHandler((Select) logicalWokflow.getLastStep());
-        StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata, logicalWokflow,
+        StreamingRead stremingRead = new StreamingRead(sConnector, logicalWokflow,
                         resultHandler);
 
         stremingRead.start();
@@ -172,7 +173,7 @@ public class ThreadTimeWindowFunctionalTest extends GenericStreamingTest {
 
         LogicalWorkflow logicalWokflow = createLogicalWorkFlow();
 
-        StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata, logicalWokflow,
+        StreamingRead stremingRead = new StreamingRead(sConnector,  logicalWokflow,
                         new ResultHandler((Select) logicalWokflow.getLastStep()));
 
         stremingRead.start();
@@ -307,9 +308,9 @@ public class ThreadTimeWindowFunctionalTest extends GenericStreamingTest {
             } else {
                 ColumnMetadata[] columnMetadata = columnMetadataList.toArray(new ColumnMetadata[0]);
 
-                if (!columnMetadata[0].getType().equals(ColumnType.TEXT)
-                                || !columnMetadata[1].getType().equals(ColumnType.INT)
-                                || !columnMetadata[2].getType().equals(ColumnType.BOOLEAN)) {
+                if (!columnMetadata[0].getColumnType().equals(ColumnType.TEXT)
+                                || !columnMetadata[1].getColumnType().equals(ColumnType.INT)
+                                || !columnMetadata[2].getColumnType().equals(ColumnType.BOOLEAN)) {
                     correctType = false;
                 }
             }

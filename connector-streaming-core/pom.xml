@@ -22,7 +22,7 @@
     <parent>
         <groupId>com.stratio.connector</groupId>
         <artifactId>stratio-connector-streaming</artifactId>
-        <version>0.1.0</version>
+        <version>0.2.0-SNAPSHOT</version>
     </parent>
     <artifactId>connector-streaming-core</artifactId>
     <packaging>jar</packaging>
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>com.stratio.streaming</groupId>
             <artifactId>streaming-api</artifactId>
-            <version>0.4.0</version>
+            <version>0.5.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.datastax.cassandra</groupId>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>com.stratio.connector</groupId>
             <artifactId>connector-commons-core</artifactId>
-            <version>0.1.0</version>
+            <version>0.2.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -84,7 +84,7 @@
         <dependency>
             <groupId>com.stratio.crossdata</groupId>
             <artifactId>crossdata-connector</artifactId>
-            <version>0.1.0</version>
+            <version>0.1.1-RC1</version>
             <type>jar</type>
         </dependency>
 
@@ -117,7 +117,7 @@
             <plugin>
                 <artifactId>crossdata-connector-maven-plugin</artifactId>
                 <groupId>com.stratio.crossdata</groupId>
-                <version>0.1.0</version>
+                <version>0.1.1-SNAPSHOT</version>
                 <configuration>
                     <mainClass>com.stratio.connector.streaming.core.StreamingConnector</mainClass>
                     <jmxPort>7188</jmxPort>

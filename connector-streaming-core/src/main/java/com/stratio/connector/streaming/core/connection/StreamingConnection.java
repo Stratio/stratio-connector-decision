@@ -70,11 +70,11 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
             throw new StratioEngineConnectionException("Credentials are not supported");
         }
 
-        String kafkaServer = ConnectorParser.hosts(config.getOptions().get(KAFKA_SERVER))[0];
-        int kafkaPort = Integer.parseInt(ConnectorParser.ports(config.getOptions().get(KAFKA_PORT))[0]);
+        String kafkaServer = ConnectorParser.hosts(config.getClusterOptions().get(KAFKA_SERVER))[0];
+        int kafkaPort = Integer.parseInt(ConnectorParser.ports(config.getClusterOptions().get(KAFKA_PORT))[0]);
 
-        String zooKeeperServer = ConnectorParser.hosts(config.getOptions().get(ZOOKEEPER_SERVER))[0];
-        int zooKeeperPort = Integer.parseInt(ConnectorParser.ports(config.getOptions().get(ZOOKEEPER_PORT))[0]);
+        String zooKeeperServer = ConnectorParser.hosts(config.getClusterOptions().get(ZOOKEEPER_SERVER))[0];
+        int zooKeeperPort = Integer.parseInt(ConnectorParser.ports(config.getClusterOptions().get(ZOOKEEPER_PORT))[0]);
 
         stratioStreamingAPI = StratioStreamingAPIFactory.create().initializeWithServerConfig(kafkaServer, kafkaPort,
                 zooKeeperServer, zooKeeperPort);

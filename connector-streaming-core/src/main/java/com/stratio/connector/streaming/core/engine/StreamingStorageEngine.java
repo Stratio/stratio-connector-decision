@@ -31,9 +31,12 @@ import com.stratio.connector.commons.engine.CommonsStorageEngine;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.crossdata.common.data.Cell;
 import com.stratio.crossdata.common.data.Row;
+import com.stratio.crossdata.common.data.TableName;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.logicalplan.Filter;
 import com.stratio.crossdata.common.metadata.TableMetadata;
+import com.stratio.crossdata.common.statements.structures.Relation;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.api.messaging.ColumnNameValue;
 import com.stratio.streaming.commons.exceptions.StratioStreamingException;
@@ -108,5 +111,30 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
             throw new ExecutionException(msg, e);
         }
     }
+
+	@Override
+	protected void truncate(TableName tableName,
+			Connection<IStratioStreamingAPI> connection)
+			throws UnsupportedException, ExecutionException {
+		throw new UnsupportedException("Truncate is not supported");
+		
+	}
+
+	@Override
+	protected void delete(TableName tableName, Collection<Filter> whereClauses,
+			Connection<IStratioStreamingAPI> connection)
+			throws UnsupportedException, ExecutionException {
+		throw new UnsupportedException("Delete is not supported");
+		
+	}
+
+	@Override
+	protected void update(TableName tableName,
+			Collection<Relation> assignments, Collection<Filter> whereClauses,
+			Connection<IStratioStreamingAPI> connection)
+			throws UnsupportedException, ExecutionException {
+		throw new UnsupportedException("Update is not supported");
+		
+	}
 
 }

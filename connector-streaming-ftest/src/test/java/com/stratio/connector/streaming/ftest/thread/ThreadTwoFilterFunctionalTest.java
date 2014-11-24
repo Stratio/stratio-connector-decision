@@ -29,6 +29,7 @@ import org.junit.Test;
 import com.stratio.connector.commons.ftest.schema.TableMetadataBuilder;
 import com.stratio.connector.commons.ftest.workFlow.LogicalWorkFlowCreator;
 import com.stratio.connector.streaming.ftest.GenericStreamingTest;
+import com.stratio.connector.streaming.ftest.helper.StreamingConnectorHelper;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
 import com.stratio.crossdata.common.connector.IResultHandler;
@@ -67,7 +68,7 @@ public class ThreadTwoFilterFunctionalTest extends GenericStreamingTest {
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, ColumnType.VARCHAR)
                         .addColumn(INTEGER_COLUMN, ColumnType.INT).addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
-                        .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT).build();
+                        .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT).build(new StreamingConnectorHelper(getClusterName()));
         try {
             sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -80,7 +81,7 @@ public class ThreadTwoFilterFunctionalTest extends GenericStreamingTest {
     @Test
     public void testTwoFilter() throws InterruptedException, UnsupportedException {
 
-        StreamingRead stremingRead = new StreamingRead(sConnector, getClusterName(), tableMetadata,
+        StreamingRead stremingRead = new StreamingRead(sConnector,
                         createTwoFilterWorkFlow(), new ResultNumberHandler());
 
         stremingRead.start();

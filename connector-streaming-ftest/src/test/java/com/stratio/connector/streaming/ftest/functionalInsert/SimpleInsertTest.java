@@ -30,6 +30,7 @@ import com.stratio.connector.commons.ftest.schema.TableMetadataBuilder;
 import com.stratio.connector.commons.ftest.workFlow.LogicalWorkFlowCreator;
 import com.stratio.connector.streaming.ftest.GenericStreamingTest;
 import com.stratio.connector.streaming.ftest.TestResultSet;
+import com.stratio.connector.streaming.ftest.helper.StreamingConnectorHelper;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
 import com.stratio.crossdata.common.data.ClusterName;
@@ -37,9 +38,10 @@ import com.stratio.crossdata.common.data.ResultSet;
 import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.exceptions.ConnectorException;
 import com.stratio.crossdata.common.logicalplan.LogicalWorkflow;
+import com.stratio.crossdata.common.metadata.ColumnMetadata;
 import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.metadata.TableMetadata;
-import com.stratio.crossdata.common.metadata.structures.ColumnMetadata;
+
 
 /**
  * @author david
@@ -54,7 +56,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         TableMetadata tableMetadata = tableMetadataBuilder.addColumn(INTEGER_COLUMN, ColumnType.INT)
-                .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build();
+                .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(new StreamingConnectorHelper(getClusterName()));
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -68,7 +70,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
                 .addColumnName(STRING_COLUMN).addSelect(selectColumns).getLogicalWorkflow();
 
         TestResultSet resultSet = new TestResultSet();
-        StreamingRead reader = new StreamingRead(sConnector, clusterName, tableMetadata, logicalWorkFlow, resultSet);
+        StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultSet);
 
         String queryId = String.valueOf(Math.abs(random.nextLong()));
         reader.setQueryId(queryId);
@@ -98,14 +100,14 @@ public class SimpleInsertTest extends GenericStreamingTest {
         assertEquals(10, numsRecovered.size());
 
         List<ColumnMetadata> columnMetadata = resSet.getColumnMetadata();
-        assertEquals(INTEGER_COLUMN, columnMetadata.get(0).getColumnName());
+        assertEquals(INTEGER_COLUMN, columnMetadata.get(0).getName().getName());
 
         for (int i = 0; i < 10; i++) {
             assertTrue(numsRecovered.contains(new Double(i)));
         }
 
         assertTrue(columnMetadata.size() == 2);
-        assertEquals(ColumnType.DOUBLE, columnMetadata.get(0).getType());
+        assertEquals(ColumnType.DOUBLE, columnMetadata.get(0).getColumnType());
         assertTrue(resSet.getRows().get(0).getCell(INTEGER_COLUMN).getValue() instanceof Double);
 
     }
@@ -118,7 +120,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         TableMetadata tableMetadata = tableMetadataBuilder.addColumn(LONG_COLUMN, ColumnType.BIGINT)
-                .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build();
+                .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(new StreamingConnectorHelper(getClusterName()));
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -132,7 +134,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
                 .addColumnName(STRING_COLUMN).addSelect(selectColumns).getLogicalWorkflow();
 
         TestResultSet resultSet = new TestResultSet();
-        StreamingRead reader = new StreamingRead(sConnector, clusterName, tableMetadata, logicalWorkFlow, resultSet);
+        StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultSet);
 
         String queryId = String.valueOf(Math.abs(random.nextLong()));
         reader.setQueryId(queryId);
@@ -153,7 +155,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
         ResultSet resSet = resultSet.getResultSet(queryId);
 
         List<ColumnMetadata> columnMetadata = resSet.getColumnMetadata();
-        assertEquals(LONG_COLUMN, columnMetadata.get(0).getColumnName());
+        assertEquals(LONG_COLUMN, columnMetadata.get(0).getName().getName());
 
         // TODO double
         List<Double> numsRecovered = new ArrayList<Double>(10);
@@ -170,7 +172,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
         }
 
         assertTrue(columnMetadata.size() == 2);
-        assertEquals(ColumnType.DOUBLE, columnMetadata.get(0).getType());
+        assertEquals(ColumnType.DOUBLE, columnMetadata.get(0).getColumnType());
         assertTrue(resSet.getRows().get(0).getCell(LONG_COLUMN).getValue() instanceof Double);
 
     }
@@ -183,7 +185,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         TableMetadata tableMetadata = tableMetadataBuilder.addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
-                .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build();
+                .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(new StreamingConnectorHelper(getClusterName()));
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -198,7 +200,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
                 .addSelect(selectColumns).getLogicalWorkflow();
 
         TestResultSet resultSet = new TestResultSet();
-        StreamingRead reader = new StreamingRead(sConnector, clusterName, tableMetadata, logicalWorkFlow, resultSet);
+        StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultSet);
 
         String queryId = String.valueOf(Math.abs(random.nextLong()));
         reader.setQueryId(queryId);
@@ -218,7 +220,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
         ResultSet resSet = resultSet.getResultSet(queryId);
 
         List<ColumnMetadata> columnMetadata = resSet.getColumnMetadata();
-        assertEquals(BOOLEAN_COLUMN, columnMetadata.get(0).getColumnName());
+        assertEquals(BOOLEAN_COLUMN, columnMetadata.get(0).getName().getName());
 
         // TODO double
         List<Boolean> numsRecovered = new ArrayList<Boolean>(10);
@@ -232,7 +234,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
         assertEquals(10, numsRecovered.size());
 
         assertTrue(columnMetadata.size() == 2);
-        assertEquals(ColumnType.BOOLEAN, columnMetadata.get(0).getType());
+        assertEquals(ColumnType.BOOLEAN, columnMetadata.get(0).getColumnType());
         assertTrue(resSet.getRows().get(0).getCell(BOOLEAN_COLUMN).getValue() instanceof Boolean);
     }
 
@@ -244,7 +246,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         TableMetadata tableMetadata = tableMetadataBuilder.addColumn(FLOAT_COLUMN, ColumnType.FLOAT)
-                .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build();
+                .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(new StreamingConnectorHelper(getClusterName()));
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -258,7 +260,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
                 .addSelect(selectColumns).getLogicalWorkflow();
 
         TestResultSet resultSet = new TestResultSet();
-        StreamingRead reader = new StreamingRead(sConnector, clusterName, tableMetadata, logicalWorkFlow, resultSet);
+        StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultSet);
 
         String queryId = String.valueOf(Math.abs(random.nextLong()));
         reader.setQueryId(queryId);
@@ -278,7 +280,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
         ResultSet resSet = resultSet.getResultSet(queryId);
 
         List<ColumnMetadata> columnMetadata = resSet.getColumnMetadata();
-        assertEquals(FLOAT_COLUMN, columnMetadata.get(0).getColumnName());
+        assertEquals(FLOAT_COLUMN, columnMetadata.get(0).getName().getName());
 
         // TODO double
         List<Double> numsRecovered = new ArrayList<Double>(10);
@@ -295,7 +297,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
         }
 
         assertTrue(columnMetadata.size() == 2);
-        assertEquals(ColumnType.DOUBLE, columnMetadata.get(0).getType());
+        assertEquals(ColumnType.DOUBLE, columnMetadata.get(0).getColumnType());
         assertTrue(resSet.getRows().get(0).getCell(FLOAT_COLUMN).getValue() instanceof Double);
 
     }
@@ -308,7 +310,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         TableMetadata tableMetadata = tableMetadataBuilder.addColumn(DOUBLE_COLUMN, ColumnType.DOUBLE)
-                .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build();
+                .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(new StreamingConnectorHelper(getClusterName()));
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -322,7 +324,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
                 .addSelect(selectColumns).getLogicalWorkflow();
 
         TestResultSet resultSet = new TestResultSet();
-        StreamingRead reader = new StreamingRead(sConnector, clusterName, tableMetadata, logicalWorkFlow, resultSet);
+        StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultSet);
 
         String queryId = String.valueOf(Math.abs(random.nextLong()));
         reader.setQueryId(queryId);
@@ -342,7 +344,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
         ResultSet resSet = resultSet.getResultSet(queryId);
 
         List<ColumnMetadata> columnMetadata = resSet.getColumnMetadata();
-        assertEquals(DOUBLE_COLUMN, columnMetadata.get(0).getColumnName());
+        assertEquals(DOUBLE_COLUMN, columnMetadata.get(0).getName().getName());
 
         // TODO double
         List<Double> numsRecovered = new ArrayList<Double>(10);
@@ -359,7 +361,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
         }
 
         assertTrue(columnMetadata.size() == 2);
-        assertEquals(ColumnType.DOUBLE, columnMetadata.get(0).getType());
+        assertEquals(ColumnType.DOUBLE, columnMetadata.get(0).getColumnType());
         assertTrue(resSet.getRows().get(0).getCell(DOUBLE_COLUMN).getValue() instanceof Double);
 
     }
@@ -371,7 +373,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
                 + clusterName.getName() + " ***********************************");
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
-        TableMetadata tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, ColumnType.VARCHAR).build();
+        TableMetadata tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(new StreamingConnectorHelper(getClusterName()));
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -384,7 +386,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
                 .getLogicalWorkflow();
 
         TestResultSet resultSet = new TestResultSet();
-        StreamingRead reader = new StreamingRead(sConnector, clusterName, tableMetadata, logicalWorkFlow, resultSet);
+        StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultSet);
 
         String queryId = String.valueOf(Math.abs(random.nextLong()));
         reader.setQueryId(queryId);
@@ -406,7 +408,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
         assertEquals(10, resSet.size());
 
         List<ColumnMetadata> columnMetadata = resSet.getColumnMetadata();
-        assertEquals(STRING_COLUMN, columnMetadata.get(0).getColumnName());
+        assertEquals(STRING_COLUMN, columnMetadata.get(0).getName().getName());
 
         // TODO double
         List<String> numsRecovered = new ArrayList<String>(10);
@@ -417,7 +419,7 @@ public class SimpleInsertTest extends GenericStreamingTest {
         }
 
         assertTrue(columnMetadata.size() == 1);
-        assertEquals(ColumnType.VARCHAR, columnMetadata.get(0).getType());
+        assertEquals(ColumnType.VARCHAR, columnMetadata.get(0).getColumnType());
         assertTrue(resSet.getRows().get(0).getCell(STRING_COLUMN).getValue() instanceof String);
 
     }

@@ -82,7 +82,7 @@ public class StreamingConnectorHelper implements IConnectorHelper {
         optionsNode.put("zooKeeperServer", ZOOKEEPER_SERVER);
         optionsNode.put("zooKeeperPort", ZOOKEEPER_PORT);
 
-        return new ConnectorClusterConfig(clusterName, optionsNode);
+        return new ConnectorClusterConfig(clusterName, null, optionsNode);
     }
 
     @Override
@@ -147,5 +147,11 @@ public class StreamingConnectorHelper implements IConnectorHelper {
         // TODO Auto-generated method stub
         return false;
     }
+
+	@Override
+	public boolean isPKMandatory() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

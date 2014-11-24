@@ -31,11 +31,14 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.connection.ConnectionHandler;
+import com.stratio.crossdata.common.data.AlterOperation;
+import com.stratio.crossdata.common.data.AlterOptions;
 import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.data.ColumnName;
 import com.stratio.crossdata.common.data.IndexName;
@@ -111,6 +114,32 @@ public class StreamingMetadataEngineTest {
     }
 
     /**
+     * Method: alterTable(TableMetadata streamMetadata, Connection<IStratioStreamingAPI> connection)
+     */
+    @Test
+    public void alterTableAddColumnTest() throws Exception {
+
+        ColumnMetadata columnMetadata = new ColumnMetadata(new ColumnName(CATALOG, TABLE, COLUM), new Object[0],
+                ColumnType.INT);
+        TableName tableName = new TableName(CATALOG, TABLE);
+        AlterOptions alterOptions = new AlterOptions(AlterOperation.ADD_COLUMN, null, columnMetadata);
+        streamingMetadataEngine.alterTable(tableName, alterOptions, connection);
+
+        verify(streamingApi, times(1)).alterStream(eq(CATALOG + "_" + TABLE), Matchers.anyList());
+    }
+    
+    /**
+     * Method: alterTableNotSupportedTest(TableMetadata streamMetadata, Connection<IStratioStreamingAPI> connection)
+     */
+    @Test(expected = UnsupportedException.class)
+    public void alterTableNotSupportedTest() throws Exception {
+        TableName tableName = new TableName(CATALOG, TABLE);
+        AlterOptions alterOptions = new AlterOptions(AlterOperation.DROP_COLUMN, null, null);
+        streamingMetadataEngine.alterTable(tableName, alterOptions, connection);
+    }
+    
+    
+    /**
      * Method: dropCatalog(CatalogName indexName, Connection<IStratioStreamingAPI> connection)
      */
     @Test(expected = UnsupportedException.class)
@@ -145,5 +174,7 @@ public class StreamingMetadataEngineTest {
     public void testDropIndex() throws Exception {
         streamingMetadataEngine.dropIndex(null, (Connection) null);
     }
+    
+   
 
 }
