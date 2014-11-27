@@ -84,7 +84,7 @@
         <dependency>
             <groupId>com.stratio.crossdata</groupId>
             <artifactId>crossdata-connector</artifactId>
-            <version>0.1.1-RC1</version>
+            <version>0.1.1-RC2</version>
             <type>jar</type>
         </dependency>
 
@@ -117,7 +117,7 @@
             <plugin>
                 <artifactId>crossdata-connector-maven-plugin</artifactId>
                 <groupId>com.stratio.crossdata</groupId>
-                <version>0.1.1-SNAPSHOT</version>
+                <version>0.1.1-RC2</version>
                 <configuration>
                     <mainClass>com.stratio.connector.streaming.core.StreamingConnector</mainClass>
                     <jmxPort>7188</jmxPort>

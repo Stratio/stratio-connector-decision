@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.stratio.crossdata</groupId>
             <artifactId>crossdata-connector</artifactId>
-            <version>0.1.1-RC1</version>
+            <version>0.1.1-RC2</version>
             <type>jar</type>
         </dependency>
         <dependency>
