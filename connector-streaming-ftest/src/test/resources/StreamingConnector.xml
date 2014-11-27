@@ -30,6 +30,7 @@
         <operation>DROP_TABLE</operation>
         <operation>INSERT</operation>
         <operation>PROJECT</operation>
+        <operation>ALTER_TABLE</operation>
         <operation>SELECT_OPERATOR</operation>
         <operation>ASYNC_QUERY</operation>
         <operation>SELECT_WINDOW</operation>
@@ -46,6 +47,11 @@
         <operation>FILTER_INDEXED_GET</operation>
         <operation>FILTER_INDEXED_LET</operation>
         <operation>FILTER_INDEXED_DISTINCT</operation>
-        <operation>ALTER_TABLE</operation>
+        <operation>FILTER_NON_INDEXED_EQ</operation>
+        <operation>FILTER_NON_INDEXED_GT</operation>
+        <operation>FILTER_NON_INDEXED_LT</operation>
+        <operation>FILTER_NON_INDEXED_GET</operation>
+        <operation>FILTER_NON_INDEXED_LET</operation>
+       
     </SupportedOperations>
 </Connector>
