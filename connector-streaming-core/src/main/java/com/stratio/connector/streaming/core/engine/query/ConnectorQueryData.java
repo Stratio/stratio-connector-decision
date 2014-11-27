@@ -27,7 +27,7 @@ import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.logicalplan.Window;
 
 /**
- * This class is a representation of a ElasticSearch query. Created by jmgomez on 15/09/14.
+ * This class is a representation of a Streaming query. Created by jmgomez on 15/09/14.
  */
 public class ConnectorQueryData {
 
@@ -56,16 +56,6 @@ public class ConnectorQueryData {
     private Window window;
 
     /**
-     * Add a filter.
-     *
-     * @param filter the filter.
-     */
-    public void addFilter(Filter filter) {
-
-        filterList.add(filter);
-    }
-
-    /**
      * This method ask query if has projection.
      *
      * @return true if the query has projection. False in other case.
@@ -88,7 +78,8 @@ public class ConnectorQueryData {
     /**
      * Set the projection.
      *
-     * @param projection the projection.
+     * @param projection
+     *            the projection.
      */
     public void setProjection(Project projection) {
 
@@ -114,6 +105,17 @@ public class ConnectorQueryData {
     }
 
     /**
+     * Add a filter.
+     *
+     * @param filter
+     *            the filter.
+     */
+    public void addFilter(Filter filter) {
+
+        filterList.add(filter);
+    }
+
+    /**
      * return the select.
      *
      * @return the select.
@@ -125,7 +127,8 @@ public class ConnectorQueryData {
     /**
      * Add a select type.
      *
-     * @param select the select.
+     * @param select
+     *            the select.
      */
     public void setSelect(Select select) {
         this.select = select;
@@ -144,7 +147,8 @@ public class ConnectorQueryData {
     /**
      * Set the queryID.
      *
-     * @param queryId the query ID.
+     * @param queryId
+     *            the query ID.
      */
     public void setQueryId(String queryId) {
         this.queryId = queryId;
@@ -162,7 +166,8 @@ public class ConnectorQueryData {
     /**
      * Set the window.
      *
-     * @param window the window.
+     * @param window
+     *            the window.
      */
     public void setWindow(Window window) {
         this.window = window;

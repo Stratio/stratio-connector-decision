@@ -27,7 +27,6 @@ import com.stratio.crossdata.common.data.ColumnName;
 import com.stratio.crossdata.common.data.ResultSet;
 import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
-import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.metadata.ColumnMetadata;
 import com.stratio.crossdata.common.metadata.ColumnType;
@@ -58,8 +57,10 @@ public class ResultsetCreator {
     /**
      * Constructor.
      *
-     * @param queryData the query data.
-     * @throws UnsupportedException if a operation is not supperted.
+     * @param queryData
+     *            the query data.
+     * @throws UnsupportedException
+     *             if a operation is not supperted.
      */
     public ResultsetCreator(ConnectorQueryData queryData) throws UnsupportedException {
         this.queryData = queryData;
@@ -85,7 +86,8 @@ public class ResultsetCreator {
     /**
      * Create a resultset.
      *
-     * @param rows a row list.
+     * @param rows
+     *            a row list.
      * @return a resultsetCreator.
      */
     public ResultsetCreator create(List<Row> rows) {
@@ -102,12 +104,12 @@ public class ResultsetCreator {
     /**
      * Create the column metadata.
      *
-     * @throws UnsupportedException if a type is not supported.
+     * @throws UnsupportedException
+     *             if a type is not supported.
      */
     private void createColumnMetadata() throws UnsupportedException {
         columnsMetadata = new ArrayList<>();
         Select select = queryData.getSelect();
-        Project projection = queryData.getProjection();
 
         for (ColumnName colName : select.getColumnMap().keySet()) {
 

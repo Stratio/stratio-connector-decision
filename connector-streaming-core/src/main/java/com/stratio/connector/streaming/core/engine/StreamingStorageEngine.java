@@ -55,25 +55,31 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
     /**
      * Constructor.
      *
-     * @param connectionHandler the connection handler.
+     * @param connectionHandler
+     *            the connection handler.
      */
     public StreamingStorageEngine(ConnectionHandler connectionHandler) {
 
         super(connectionHandler);
+
     }
 
     /**
      * Insert a document in Streaming.
      *
-     * @param targetStream the targetName.
-     * @param row          the row.
-     * @throws ExecutionException   in case of failure during the execution.
-     * @throws UnsupportedException it the operation is not supported.
+     * @param targetStream
+     *            the targetName.
+     * @param row
+     *            the row.
+     * @throws ExecutionException
+     *             in case of failure during the execution.
+     * @throws UnsupportedException
+     *             it the operation is not supported.
      */
 
     @Override
     protected void insert(TableMetadata targetStream, Row row, Connection<IStratioStreamingAPI> connection)
-            throws UnsupportedException, ExecutionException {
+                    throws UnsupportedException, ExecutionException {
         String streamName = StreamUtil.createStreamName(targetStream.getName());
         try {
             List<ColumnNameValue> streamData = new ArrayList<ColumnNameValue>();
@@ -93,13 +99,16 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
     /**
      * Insert a set of documents in Streaming.
      *
-     * @param rows the set of rows.
-     * @throws ExecutionException   in case of failure during the execution.
-     * @throws UnsupportedException if the operation is not supported.
+     * @param rows
+     *            the set of rows.
+     * @throws ExecutionException
+     *             in case of failure during the execution.
+     * @throws UnsupportedException
+     *             if the operation is not supported.
      */
     @Override
     protected void insert(TableMetadata targetStream, Collection<Row> rows, Connection<IStratioStreamingAPI> connection)
-            throws UnsupportedException, ExecutionException {
+                    throws UnsupportedException, ExecutionException {
         String streamName = targetStream.getName().getName();
         try {
             for (Row row : rows) {
@@ -112,29 +121,25 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
         }
     }
 
-	@Override
-	protected void truncate(TableName tableName,
-			Connection<IStratioStreamingAPI> connection)
-			throws UnsupportedException, ExecutionException {
-		throw new UnsupportedException("Truncate is not supported");
-		
-	}
+    @Override
+    protected void truncate(TableName tableName, Connection<IStratioStreamingAPI> connection)
+                    throws UnsupportedException, ExecutionException {
+        throw new UnsupportedException("Truncate is not supported");
 
-	@Override
-	protected void delete(TableName tableName, Collection<Filter> whereClauses,
-			Connection<IStratioStreamingAPI> connection)
-			throws UnsupportedException, ExecutionException {
-		throw new UnsupportedException("Delete is not supported");
-		
-	}
+    }
 
-	@Override
-	protected void update(TableName tableName,
-			Collection<Relation> assignments, Collection<Filter> whereClauses,
-			Connection<IStratioStreamingAPI> connection)
-			throws UnsupportedException, ExecutionException {
-		throw new UnsupportedException("Update is not supported");
-		
-	}
+    @Override
+    protected void delete(TableName tableName, Collection<Filter> whereClauses,
+                    Connection<IStratioStreamingAPI> connection) throws UnsupportedException, ExecutionException {
+        throw new UnsupportedException("Delete is not supported");
+
+    }
+
+    @Override
+    protected void update(TableName tableName, Collection<Relation> assignments, Collection<Filter> whereClauses,
+                    Connection<IStratioStreamingAPI> connection) throws UnsupportedException, ExecutionException {
+        throw new UnsupportedException("Update is not supported");
+
+    }
 
 }
