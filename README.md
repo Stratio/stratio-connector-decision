@@ -25,6 +25,12 @@ To generate the executable execute the following command:
    > mvn crossdata-connector:install
 ```
 
+The user and the group of the service are setted up to root by default. It could be changed in the following file:
+
+```
+   > target/connector-streaming-core-0.2.0/bin/connector-streaming-core-0.2.0
+```
+
 ## Running the Stratio Connector Streaming ##
 
 To run Connector Streaming execute:
