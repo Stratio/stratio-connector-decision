@@ -183,7 +183,7 @@ Now we can execute one of the following queries before inserting data. The queri
 ### Select with several where clauses
 
 ```
-  >  SELECT * FROM students WHERE age > 19 AND enrolled = true WITH WINDOW 20 sec;
+  >  SELECT * FROM students WITH WINDOW 20 sec WHERE age > 19 AND enrolled = true ;
 
 ```
 
@@ -230,7 +230,7 @@ Now we will alter the table structure.
 After the alter operation we can execute a new query:
 
 ```
-  > SELECT * FROM students where surname = 'Smith' WITH 1 ROWS;
+  > SELECT * FROM students WITH WINDOW 1 ROWS WHERE surname = 'Smith';
 
 ```
 
