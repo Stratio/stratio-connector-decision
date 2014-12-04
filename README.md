@@ -21,6 +21,7 @@ To automatically build execute the following command:
 To generate the executable execute the following command:
 
 ```
+   > cd connector-streaming-core
    > mvn crossdata-connector:install
 ```
 
@@ -29,7 +30,6 @@ To generate the executable execute the following command:
 To run Connector Streaming execute:
 
 ```
-   > cd connector-streaming-core
    > target/connector-streaming-core-0.2.0/bin/connector-streaming-core-0.2.0 start
 ```
 
