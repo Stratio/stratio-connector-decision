@@ -16,14 +16,13 @@ Table of Contents
         -   [Select all row window](#select-row-window)
         -   [Select all time window](#select-time-window)
         -   [Select with alias](#select-with-alias)
-        -   [Select with limit](#select-with-limit)
         -   [Select with several where clauses](#select-with-several-where-clauses)
 -   [Inserting Data](#inserting-data)
     -   [Step 4: Insert into table students](#step-4-insert-into-table-students)
 -   [Altering schemas](#altering-schemas)
     -   [Step 5: Alter table](#step-5-alter-table)
         -   [Add column](#add-column)
--   [Delete Data and Remove schemas](#delete-data-and-remove-schemas)
+-   [Remove schemas](#delete-data-and-remove-schemas)
     -   [Step 6: Drop table](#step-6-drop-table)
     -   [Step 7: Drop catalog](#step-7-drop-catalog)
 -   [Where to go from here](#where-to-go-from-here)
@@ -47,7 +46,7 @@ Configuration
 In the Crossdata Shell we need to add the Datastore Manifest.
 
 ```
-   > add datastore "<path_to_manifest_folder>/MongoDataStore.xml";
+   > add datastore "<path_to_manifest_folder>/StreamingDataStore.xml";
 ```
 
 The output must be:
@@ -60,7 +59,7 @@ The output must be:
 Now we need to add the ConnectorManifest.
 
 ```
-   > add connector "<path_to_manifest_folder>/MongoConnector.xml";  
+   > add connector "<path_to_manifest_folder>/StreamingConnector.xml";  
 ```
 The output must be:
 
@@ -74,8 +73,7 @@ At this point we have reported to Crossdata the connector options and operations
 datastore cluster.
 
 ```
-> ATTACH CLUSTER mongoCluster ON DATASTORE Mongo WITH OPTIONS {'Hosts': '[Ip1, Ip2,..,Ipn]', 
-'Port': '[Port1,Port2,...,Portn]'};
+> ATTACH CLUSTER streamingCluster ON DATASTORE Streaming WITH OPTIONS {'KafkaServer': '[<ip>]', 'KafkaPort': '[<port>]', 'zooKeeperServer':'[<ip>','zooKeeperPort':'[2181]'};
 ```
 
 The output must be similar to:
@@ -84,7 +82,6 @@ The output must be similar to:
   Cluster attached successfully
 ```
 
-It is possible to add options like the read preference, write concern, etc... All options available are described in the MongoDataStore.xml (e.g. 'mongo.readPreference' : 'secondaryPreferred')
 
 Now we must run the connector.
 
@@ -92,7 +89,7 @@ Now we must run the connector.
 The last step is to attach the connector to the cluster created before.
 
 ```
-  >  ATTACH CONNECTOR MongoConnector TO mongoCluster  WITH OPTIONS {};
+  >  ATTACH CONNECTOR StreamingConnector TO streamingCluster  WITH OPTIONS {};
 ```
 
 The output must be:
@@ -109,14 +106,14 @@ To ensure that the connector is online we can execute the Crossdata Shell comman
 And the output must show a message similar to:
 
 ```
-Connector: connector.mongoconnector	ONLINE	[]	[datastore.mongo]	akka.tcp://CrossdataServerCluster@127.0.0.1:46646/user/ConnectorActor/
+Connector: connector.streamingconnector	ONLINE	[]	[datastore.streaming]	akka.tcp://CrossdataServerCluster@127.0.0.1:46646/user/ConnectorActor/
 ```
 
 
-Creating the database and collection
+Creating the catalog and table
 ===============================
 
-Step 1: Create the database
+Step 1: Create the catalog
 ---------------------------
 
 Now we will create the catalog and the table which we will use later in the next steps.
@@ -132,7 +129,7 @@ The output must be:
 CATALOG created successfully;
 ```
 
-Step 2: Create the collection
+Step 2: Create the table
 --------------------------------
 
 We switch to the database we have just created.
@@ -141,10 +138,10 @@ We switch to the database we have just created.
   > USE highschool;
 ```
 
-To create the table we must execute the next command.
+To create the table we must execute the next command. The stream is actually created at this point.
 
 ```
-  > CREATE TABLE students ON CLUSTER mongoCluster (id int PRIMARY KEY, name text, age int, 
+  > CREATE TABLE students ON CLUSTER streamingCluster (id int PRIMARY KEY, name text, age int, 
 enrolled boolean);
 ```
 
@@ -153,37 +150,49 @@ And the output must show:
 ```
 TABLE created successfully
 ```
-Step 3: Create Indexes
-----------------------
-
-### Create a default index
 
 
-```
-  > CREATE DEFAULT INDEX indexname ON students (age);
-```
+Querying Data
+=============
 
-The shell shows:
+Step 3: Select Window
+-------------------
 
-```
-INDEX created successfully
-```
+Now we can execute one of the following queries before inserting data. The queries are asynchronous, so it is possible to know the matched result with the query id.
 
-It is possible to specify some MongoDB index options. e.g. => CREATE DEFAULT INDEX uniqueindex ON students (id) WITH {'sparse': true, 'unique' : true};
-
-### Create a custom index
+### Select row window
 
 ```
-  > CREATE CUSTOM INDEX hashedindex ON students (name) WITH {'index_type' : 'hashed'};
+  > SELECT * FROM students WITH WINDOW 2 ROWS;
+ 
+```
+
+### Select time window
+```
+  > SELECT * FROM students WITH WINDOW 10 sec;
+  
+```
+
+### Select with alias
+
+```
+   >  SELECT name as the_name, enrolled  as is_enrolled FROM students WITH WINDOW 20 sec;
+
+```
+
+### Select with several where clauses
+
+```
+  >  SELECT * FROM students WHERE age > 19 AND enrolled = true WITH WINDOW 20 sec;
+
 ```
 
 Inserting Data
 ==============
 
-Step 4: Insert into collection students
+Step 4: Insert into table students
 -------------------------------
 
-At first we must insert some rows in the table created before.
 ```
   >  INSERT INTO students(id, name,age,enrolled) VALUES (1, 'Jhon', 16,true);
   >  INSERT INTO students(id, name,age,enrolled) VALUES (2, 'Eva',20,true);
@@ -203,143 +212,11 @@ For each row the output must be:
 STORED successfully
 ```
 
-Updating Data
-==============
-
-Step 5: Update collection students
--------------------------------
-
-```
-  >  UPDATE students SET name = 'Tommy' WHERE id=9;
-```
-
-```
-  >  UPDATE students SET age = age + 1 WHERE name='Betty';
-```
-
-For each row the output must be:
-
-```
-STORED successfully
-```
-
-Querying Data
-=============
-
-Step 6: Select From
--------------------
-
-Now we execute a set of queries and we will show the expected results.
-
-### Select all
-
-```
- > SELECT * FROM students;
- 
-  Partial result: true
-  ----------------------------------
-  | age | name     | id | enrolled | 
-  ----------------------------------
-  | 16  | Jhon     | 1  | true     | 
-  | 20  | Eva      | 2  | true     | 
-  | 18  | Lucie    | 3  | true     | 
-  | 16  | Cole     | 4  | true     | 
-  | 17  | Finn     | 5  | false    | 
-  | 21  | Violet   | 6  | false    | 
-  | 18  | Beatrice | 7  | true     | 
-  | 16  | Henry    | 8  | false    | 
-  | 17  | Tommy    | 9  | true     | 
-  | 20  | Betty    | 10 | true     | 
-  ----------------------------------
-```
-
-### Select with primary key
-```
-  > SELECT name, enrolled FROM students where id = 1;
-  
-  Partial result: true
-  -------------------
-  | name | enrolled | 
-  -------------------
-  | Jhon | true     | 
-  -------------------
-```
-
-### Select with alias
-
-```
-   >  SELECT name as the_name, enrolled  as is_enrolled FROM students;
-   
-  Partial result: true
-  --------------------------
-  | the_name | is_enrolled | 
-  --------------------------
-  | Jhon     | true        | 
-  | Eva      | true        | 
-  | Lucie    | true        | 
-  | Cole     | true        | 
-  | Finn     | false       | 
-  | Violet   | false       | 
-  | Beatrice | true        | 
-  | Henry    | false       | 
-  | Tommy    | true        | 
-  | Betty    | true        | 
---------------------------
-
-
-```
-
-### Select with limit
-
-```
-  Partial result: true
-  -------------------------------
-  | age | name  | id | enrolled | 
-  -------------------------------
-  | 16  | Jhon  | 1  | true     | 
-  | 20  | Eva   | 2  | true     | 
-  | 18  | Lucie | 3  | true     | 
-  -------------------------------
-
-```
-### Select with several where clauses
-
-```
-  >  SELECT * FROM students WHERE age > 19 AND enrolled = true;
-  
-  Partial result: true
-  -------------------------------
-  | age | name  | id | enrolled | 
-  -------------------------------
-  | 20  | Eva   | 2  | true     | 
-  | 20  | Betty | 10 | true     | 
-  -------------------------------
-
-```
-
-### Select with groupby
-
-```
-  >  SELECT age FROM students GROUP BY age;
-
-  Partial result: true
-  -------
-  | age | 
-  -------
-  | 21  | 
-  | 17  | 
-  | 18  | 
-  | 20  | 
-  | 16  | 
-  -------
-  
-```
-
 
 Altering Schemas
 =============
 
-Step 7: Alter collection
+Step 5: Alter table
 -------------------
 
 ### Add column
@@ -350,14 +227,23 @@ Now we will alter the table structure.
   OK
 ```
 
-After the alter operation we can insert the surname field in the table.
+After the alter operation we can execute a new query:
+
+```
+  > SELECT * FROM students where surname = 'Smith' WITH 1 ROWS;
+
+```
+
+Then, insert the surname field in the table.
+
 ```
 	> INSERT INTO students(id, name,age,enrolled,surname) VALUES (10, 'Betty',19,true, 'Smith');
 ```
-And table must contain the row correctly. 
-```
-  > SELECT * FROM students where surname = 'Smith';
+
+And the result must contain the row correctly. 
+
   
+```
   -----------------------------------------
   | age | name  | id | surname | enrolled | 
   -----------------------------------------
@@ -366,111 +252,11 @@ And table must contain the row correctly.
 
 ```
 
-### Drop column
-
-Now we will alter the table structure:
-```
-  > ALTER TABLE students DROP surname;
-  OK
-```
-
-After the alter operation we can check:
-```
-  > SELECT * FROM students where name = 'Betty';
-  
-  -------------------------------
-  | age | name  | id | enrolled | 
-  -------------------------------
-  | 19  | Betty | 10 | true     | 
-  -------------------------------
-```
-
-Delete Data and Remove Schemas
+Remove Schemas
 ==============================
 
-Step 8: Delete Data
--------------------
 
-For these examples we will execute many delete instructions and we will show the table evolution. 
-
-
-```
-  ----------------------------------
-  | age | name     | id | enrolled | 
-  ----------------------------------
-  | 16  | Jhon     | 1  | true     | 
-  | 20  | Eva      | 2  | true     | 
-  | 18  | Lucie    | 3  | true     | 
-  | 16  | Cole     | 4  | true     | 
-  | 17  | Finn     | 5  | false    | 
-  | 21  | Violet   | 6  | false    | 
-  | 18  | Beatrice | 7  | true     | 
-  | 16  | Henry    | 8  | false    | 
-  | 17  | Tommy    | 9  | true     | 
-  | 19  | Betty    | 10 | true     | 
-  ----------------------------------
-
- 
-  >  DELETE FROM students WHERE id = 1;
-  
-  ----------------------------------
-  | age | name     | id | enrolled | 
-  ----------------------------------
-  | 20  | Eva      | 2  | true     | 
-  | 18  | Lucie    | 3  | true     | 
-  | 16  | Cole     | 4  | true     | 
-  | 17  | Finn     | 5  | false    | 
-  | 21  | Violet   | 6  | false    | 
-  | 18  | Beatrice | 7  | true     | 
-  | 16  | Henry    | 8  | false    | 
-  | 17  | Tommy    | 9  | true     | 
-  | 19  | Betty    | 10 | true     | 
-  ----------------------------------
-
-  
-  > DELETE FROM students  WHERE age <= 17;
-  
-  ----------------------------------
-  | age | name     | id | enrolled | 
-  ----------------------------------
-  | 20  | Eva      | 2  | true     | 
-  | 18  | Lucie    | 3  | true     | 
-  | 21  | Violet   | 6  | false    | 
-  | 18  | Beatrice | 7  | true     | 
-  | 19  | Betty    | 10 | true     | 
-  ----------------------------------
-
-  
-  >  DELETE FROM students  WHERE id > 6;
-  
-  --------------------------------
-  | age | name   | id | enrolled | 
-  --------------------------------
-  | 20  | Eva    | 2  | true     | 
-  | 18  | Lucie  | 3  | true     | 
-  | 21  | Violet | 6  | false    | 
-  --------------------------------
-
-  
-  > TRUNCATE students;
-```
-
-At this point the table must be empty. The sentence select * from highschool.students returns:
-
-```
-OK
-Result page: 0
-```
-
-Step 9: Drop Index
--------------------
-
-```
-  > DROP INDEX students.indexname;
-  INDEX dropped successfully
-```
-
-Step 10: Drop Collection
+Step 6: Drop table
 -------------------
 
 To drop the table we must execute:
@@ -480,7 +266,7 @@ To drop the table we must execute:
 
 ```
 
-Step 11: Drop database
+Step 7: Drop catalog
 ----------------------
 
 ```

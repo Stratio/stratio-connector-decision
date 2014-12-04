@@ -34,7 +34,6 @@
         <operation>SELECT_OPERATOR</operation>
         <operation>ASYNC_QUERY</operation>
         <operation>SELECT_WINDOW</operation>
-        <operation>SELECT_LIMIT</operation>
         <operation>FILTER_PK_EQ</operation>
         <operation>FILTER_PK_GT</operation>
         <operation>FILTER_PK_LT</operation>
