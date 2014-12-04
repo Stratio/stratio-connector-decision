@@ -73,7 +73,7 @@ At this point we have reported to Crossdata the connector options and operations
 datastore cluster.
 
 ```
-> ATTACH CLUSTER streamingCluster ON DATASTORE Streaming WITH OPTIONS {'KafkaServer': '[<ip>]', 'KafkaPort': '[<port>]', 'zooKeeperServer':'[<ip>','zooKeeperPort':'[2181]'};
+> ATTACH CLUSTER streamingCluster ON DATASTORE Streaming WITH OPTIONS {'KafkaServer': '[<ip>]', 'KafkaPort': '[9092]', 'zooKeeperServer':'[<ip>]','zooKeeperPort':'[2181]'};
 ```
 
 The output must be similar to:
