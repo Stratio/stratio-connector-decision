@@ -30,16 +30,18 @@ To run Connector Streaming execute:
 
 ```
    > cd connector-streaming-core
-   > target/connector-streaming-core-0.1.0/bin/connector-streaming-core-0.1.0 start
+   > target/connector-streaming-core-0.2.0/bin/connector-streaming-core-0.2.0 start
 ```
 
 To stop the connector execute:
 
 ```
-   > target/connector-streaming-core-0.1.0/bin/connector-streaming-core-0.1.0 stop
+   > target/connector-streaming-core-0.2.0/bin/connector-streaming-core-0.2.0 stop
 ```
 
 ## How to use Connector Streaming ##
+
+A complete tutorial is available [here](_doc/FirstSteps.md). The basic commands are described below.
 
  1. Start [crossdata-server and then crossdata-shell](https://github.com/Stratio/crossdata).  
  2. Start Streaming Connector as it is explained before
@@ -47,7 +49,7 @@ To stop the connector execute:
     
     Add a datastore with this command:
 
-    Add a data store. We need to specified the XML manifest that defines the data store. The XML manifest can be found in the path of the Streaming Connector in target/stratio-connector-streaming-0.1.0/conf/StreamingDataStore.xml
+    Add a data store. We need to specified the XML manifest that defines the data store. The XML manifest can be found in the path of the Streaming Connector in target/stratio-connector-streaming-0.2.0/conf/StreamingDataStore.xml
       
       ```
          xdsh:user>  ADD DATASTORE <Absolute path to Streaming Datastore manifest>;
@@ -59,7 +61,7 @@ To stop the connector execute:
          xdsh:user>  ATTACH CLUSTER <cluster_name> ON DATASTORE <datastore_name> WITH OPTIONS {'KafkaServer': '[<kafkaServer>]', 'KafkaPort': '[<kafkaPort>]', 'zooKeeperServer':'[<zooKeeperServer>]','zooKeeperPort':'[<zooKeeperPort>]'};
       ```
 
-    Add the connector manifest. The XML with the manifest can be found in the path of the Streaming Connector in target/connector-streaming-core-0.1.0/conf/StreamingConnector.xml
+    Add the connector manifest. The XML with the manifest can be found in the path of the Streaming Connector in target/connector-streaming-core-0.2.0/conf/StreamingConnector.xml
 
        ```
          xdsh:user>  ADD CONNECTOR <Path to Streaming Connector Manifest>

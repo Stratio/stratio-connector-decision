@@ -270,7 +270,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
             }
 
         } else {
-            throw new UnsupportedException("Alter table is not supported");
+            throw new UnsupportedException("Alter table is not supported except for add column");
         }
 
     }
