@@ -18,7 +18,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.stratio.connector</groupId>
 	<artifactId>stratio-connector-streaming</artifactId>
-	<version>0.2.0-RC2</version>
+	<version>0.2.0</version>
 	<description>Connector for Stratio Streaming</description>
 	<url>http://www.stratio.com</url>
 	<name>Streaming Connector</name>
@@ -29,9 +29,9 @@
 	</modules>
 
 	<properties>
-		<streaming.connector.version>0.2.0-RC2</streaming.connector.version>
-		<crossdata.version>0.1.1-RC2</crossdata.version>
-		<commons.connector.version>0.2.0-RC2</commons.connector.version>
+		<streaming.connector.version>0.2.0</streaming.connector.version>
+		<crossdata.version>0.1.1</crossdata.version>
+		<commons.connector.version>0.2.0</commons.connector.version>
 		<streaming.api.version>0.5.0</streaming.api.version>
 	</properties>
 
@@ -167,15 +167,4 @@
 		</plugins>
 	</build>
 
-
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.6</version>
-			</plugin>
-		</plugins>
-	</reporting>
 </project>
