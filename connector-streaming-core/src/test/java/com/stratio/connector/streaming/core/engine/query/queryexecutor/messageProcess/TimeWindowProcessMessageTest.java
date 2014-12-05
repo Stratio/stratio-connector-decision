@@ -29,6 +29,7 @@ import java.util.Timer;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -86,6 +87,7 @@ public class TimeWindowProcessMessageTest {
      * Method: processMessage(Row row)
      */
     @Test
+    @Ignore
     public void testProcessMessage() throws Exception {
 
         time = System.currentTimeMillis();
