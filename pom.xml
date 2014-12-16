@@ -19,16 +19,15 @@
 	
 	<groupId>com.stratio.connector</groupId>
 	<artifactId>stratio-connector-streaming</artifactId>
-	<version>0.2.1-SNAPSHOT</version>
+	<version>0.3.0-SNAPSHOT</version>
 	<description>Connector for Stratio Streaming</description>
 	<url>http://www.stratio.com</url>
 	<name>Streaming Connector</name>
 
 	<properties>
-		<streaming.connector.version>0.2.1-SNAPSHOT</streaming.connector.version>
 		<crossdata.version>0.1.1</crossdata.version>
 		<commons.connector.version>0.3.0-SNAPSHOT</commons.connector.version>
-		<streaming.api.version>0.6.0</streaming.api.version>
+		<streaming.api.version>0.6.1</streaming.api.version>
 	</properties>
 
 	<licenses>
