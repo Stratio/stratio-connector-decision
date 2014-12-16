@@ -202,8 +202,6 @@ public class StreamingQueryCreator {
         Row row = new Row();
         for (ColumnNameTypeValue column : columns) {
 
-            logger.warn("************ORIGINALTYPE" + column.getType() + "VALOR" + column.getValue() + "tipoReal"
-                            + column.getValue().getClass().getSimpleName());
             Object value = ColumnTypeHelper.getCastingValue(queryData.getSelect().getTypeMap().get(column.getColumn()),
                             column.getValue());
             row.addCell(column.getColumn(), new Cell(value));

@@ -16,7 +16,7 @@
 	xmlns="http://maven.apache.org/POM/4.0.0"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<groupId>com.stratio.connector</groupId>
 	<artifactId>stratio-connector-streaming</artifactId>
 	<version>0.3.0-SNAPSHOT</version>
@@ -28,6 +28,8 @@
 		<crossdata.version>0.1.1</crossdata.version>
 		<commons.connector.version>0.3.0-SNAPSHOT</commons.connector.version>
 		<streaming.api.version>0.6.1</streaming.api.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<licenses>
@@ -84,96 +86,131 @@
 		</snapshotRepository>
 
 	</distributionManagement>
-	
-	   <dependencies>
 
-        <dependency>
-            <groupId>com.stratio.streaming</groupId>
-            <artifactId>streaming-api</artifactId>
-            <version>${streaming.api.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.datastax.cassandra</groupId>
-                    <artifactId>cassandra-driver-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.mongodb</groupId>
-                    <artifactId>mongo-java-driver</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.mockito</groupId>
-                    <artifactId>mockito-all</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.scalamock</groupId>
-                    <artifactId>scalamock-scalatest-support_2.10</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.netty</groupId>
-                    <artifactId>netty</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+	<dependencies>
 
-        <dependency>
-            <groupId>com.stratio.connector</groupId>
-            <artifactId>stratio-connector-commons</artifactId>
-            <version>${commons.connector.version}</version>
-             <!--  <type>jar</type>-->
-        </dependency>
-        
-         <dependency>
-            <groupId>com.stratio.connector</groupId>
-            <artifactId>stratio-connector-commons</artifactId>
-            <version>${commons.connector.version}</version>
-        </dependency>
-        
-           <dependency>
-            <groupId>com.stratio.connector</groupId>
-            <artifactId>stratio-connector-commons</artifactId>
-            <version>${commons.connector.version}</version>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
-        
-        
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.7</version>
-        </dependency>
+		<dependency>
+			<groupId>com.stratio.streaming</groupId>
+			<artifactId>streaming-api</artifactId>
+			<version>${streaming.api.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.datastax.cassandra</groupId>
+					<artifactId>cassandra-driver-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.mongodb</groupId>
+					<artifactId>mongo-java-driver</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.mockito</groupId>
+					<artifactId>mockito-all</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.scalamock</groupId>
+					<artifactId>scalamock-scalatest-support_2.10</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.jboss.netty</groupId>
+					<artifactId>netty</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.stratio.connector</groupId>
+			<artifactId>stratio-connector-commons</artifactId>
+			<version>${commons.connector.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.stratio.crossdata</groupId>
+			<artifactId>crossdata-connector</artifactId>
+			<version>${crossdata.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.7</version>
+		</dependency>
 
 
-        <dependency>
-            <groupId>com.stratio.crossdata</groupId>
-            <artifactId>crossdata-connector</artifactId>
-            <version>${crossdata.version}</version>
-            <type>jar</type>
-        </dependency>
+		<dependency>
+			<groupId>com.stratio.connector</groupId>
+			<artifactId>stratio-connector-commons</artifactId>
+			<version>${commons.connector.version}</version>
+			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
 
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
 
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>1.5.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>1.5.5</version>
-            <scope>test</scope>
-        </dependency>
 
-    </dependencies>
-	
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
+			<version>1.5.5</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>1.5.5</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.8.8</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+
+	<profiles>
+		<profile>
+			<id>FT</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<version>2.18</version>
+						<configuration>
+							<includes>
+								<include>**/*FT.java</include>
+							</includes>
+							<argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>integration-test</goal>
+								</goals>
+								<configuration>
+									<includes>
+										<include>**/*FT.class</include>
+									</includes>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 
 	<build>
 		<plugins>
@@ -218,9 +255,15 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.17</version>
+				<version>2.18</version>
 				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+					</includes>
+					<argLine>${jacocoUT-argline}</argLine>
 					<argLine>-noverify</argLine>
+					<skip></skip>
+					<testFailureIgnore>true</testFailureIgnore>
 				</configuration>
 			</plugin>
 
@@ -238,17 +281,47 @@
 					</archive>
 				</configuration>
 			</plugin>
-			
-	
-            <plugin>
-                <artifactId>crossdata-connector-maven-plugin</artifactId>
-                <groupId>com.stratio.crossdata</groupId>
-                <version>${crossdata.version}</version>
-                <configuration>
-                    <mainClass>com.stratio.connector.streaming.core.StreamingConnector</mainClass>
-                    <jmxPort>7188</jmxPort>
-                </configuration>
-            </plugin>
+
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.7.1.201405082137</version>
+				<configuration>
+					<destFile>${basedir}/target/jacoco.exec</destFile>
+				</configuration>
+				<executions>
+					<execution>
+						<id>jacoco-initialize</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<aggregate>true</aggregate>
+					<formats>
+						<format>xml</format>
+					</formats>
+				</configuration>
+			</plugin>
+
+
+			<plugin>
+				<artifactId>crossdata-connector-maven-plugin</artifactId>
+				<groupId>com.stratio.crossdata</groupId>
+				<version>${crossdata.version}</version>
+				<configuration>
+					<mainClass>com.stratio.connector.streaming.core.StreamingConnector</mainClass>
+					<jmxPort>7188</jmxPort>
+				</configuration>
+			</plugin>
 
 		</plugins>
 	</build>
