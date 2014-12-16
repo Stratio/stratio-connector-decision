@@ -33,3 +33,4 @@ target/
 *.class
 .orig
 *~
+/target/
