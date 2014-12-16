@@ -27,10 +27,6 @@ import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.result.QueryResult;
 
-/**
- * @author david
- */
-
 public class ResultSetTest implements IResultHandler {
 
     List<QueryResult> resultSetList = new ArrayList<QueryResult>();

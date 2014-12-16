@@ -29,7 +29,6 @@ import com.stratio.crossdata.common.exceptions.UnsupportedException;
 
 /**
  * This class represent a message processor by element number.
- * Created by jmgomez on 7/10/14.
  */
 public class ElementNumberProcessMessage implements ProcessMessage {
 
@@ -51,12 +50,15 @@ public class ElementNumberProcessMessage implements ProcessMessage {
     /**
      * constructor.
      *
-     * @param queryData        the querydata.
-     * @param resultsetCreator the resultSet creator.
-     * @throws UnsupportedException if an error happens.
+     * @param queryData
+     *            the querydata.
+     * @param resultsetCreator
+     *            the resultSet creator.
+     * @throws UnsupportedException
+     *             if an error happens.
      */
     public ElementNumberProcessMessage(ConnectorQueryData queryData, ResultsetCreator resultsetCreator)
-            throws UnsupportedException {
+                    throws UnsupportedException {
 
         this.resultsetCreator = resultsetCreator;
         windowLength = queryData.getWindow().getNumRows();
@@ -66,7 +68,8 @@ public class ElementNumberProcessMessage implements ProcessMessage {
     /**
      * This method process a row.
      *
-     * @param row a row.
+     * @param row
+     *            a row.
      */
     @Override
     public void processMessage(Row row) {

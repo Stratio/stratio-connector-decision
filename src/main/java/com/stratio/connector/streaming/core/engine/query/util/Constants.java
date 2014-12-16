@@ -20,7 +20,6 @@ package com.stratio.connector.streaming.core.engine.query.util;
 
 /**
  * This class contains the constants.
- * Created by jmgomez on 23/10/14.
  */
 public final class Constants {
 

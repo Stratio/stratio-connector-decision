@@ -20,7 +20,6 @@ package com.stratio.connector.streaming.core.procces.exception;
 
 /**
  * A connection process exception.
- * Created by jmgomez on 3/10/14.
  */
 public class ConnectionProcessException extends Exception {
     /**
@@ -31,7 +30,8 @@ public class ConnectionProcessException extends Exception {
     /**
      * Constructor.
      *
-     * @param msg the message.
+     * @param msg
+     *            the message.
      */
     public ConnectionProcessException(String msg) {
         super(msg);

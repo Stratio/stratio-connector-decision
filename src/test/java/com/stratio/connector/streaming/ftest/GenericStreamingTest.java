@@ -42,9 +42,6 @@ import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.security.ICredentials;
 
-/**
- * @author david
- */
 public abstract class GenericStreamingTest {
 
     public static String STRING_COLUMN = "string_column";

@@ -27,7 +27,7 @@ import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.logicalplan.Window;
 
 /**
- * This class is a representation of a Streaming query. Created by jmgomez on 15/09/14.
+ * This class is a representation of a Streaming query.
  */
 public class ConnectorQueryData {
 

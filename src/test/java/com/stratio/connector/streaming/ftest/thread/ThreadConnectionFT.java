@@ -41,9 +41,6 @@ import com.stratio.streaming.api.StratioStreamingAPI;
 import com.stratio.streaming.api.StratioStreamingAPIFactory;
 import com.stratio.streaming.commons.exceptions.StratioEngineConnectionException;
 
-/**
- * @author david
- */
 public class ThreadConnectionFT {
 
     public final String TABLE = this.getClass().getSimpleName() + UUID.randomUUID().toString().replaceAll("-", "_");

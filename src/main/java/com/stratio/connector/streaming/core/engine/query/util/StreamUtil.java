@@ -38,7 +38,7 @@ import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
 import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
 
 /**
- * Created by jmgomez on 1/10/14.
+ * Streaming connector utilities.
  */
 public final class StreamUtil {
 
@@ -54,9 +54,9 @@ public final class StreamUtil {
      * A set of letters.
      */
     private static final String[] TEXT = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
-            "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i",
-            "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "!", "_", "1",
-            "2", "3", "4", "5", "6", "7", "8", "9" };
+                    "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i",
+                    "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "!", "_", "1",
+                    "2", "3", "4", "5", "6", "7", "8", "9" };
 
     /**
      * Constructor.
@@ -67,7 +67,8 @@ public final class StreamUtil {
     /**
      * Create a streamName with a project.
      *
-     * @param project the project.
+     * @param project
+     *            the project.
      * @return the StreamName.
      */
     public static String createStreamName(Project project) {
@@ -77,7 +78,8 @@ public final class StreamUtil {
     /**
      * Create a streamName with a tableNAme.
      *
-     * @param tableName the table name.
+     * @param tableName
+     *            the table name.
      * @return the StreamName.
      */
     public static String createStreamName(TableName tableName) {
@@ -87,8 +89,10 @@ public final class StreamUtil {
     /**
      * Create a streamName with a catalog and table.
      *
-     * @param catalog the catalog name.
-     * @param table   the table name.
+     * @param catalog
+     *            the catalog name.
+     * @param table
+     *            the table name.
      * @return the StreamName.
      */
     private static String createStreamName(String catalog, String table) {
@@ -98,8 +102,10 @@ public final class StreamUtil {
     /**
      * Create an stream outgoing name.
      *
-     * @param streamName  the stream name.
-     * @param metaQueryId the queryId.
+     * @param streamName
+     *            the stream name.
+     * @param metaQueryId
+     *            the queryId.
      * @return the outgoing name.
      */
     public static String createOutgoingName(String streamName, String metaQueryId) {
@@ -109,13 +115,17 @@ public final class StreamUtil {
     /**
      * Insert a random message in a stream.
      *
-     * @param stratioStreamingAPI the stream api.
-     * @param streamName          the stream name.
-     * @param select              the select.
-     * @throws UnsupportedException if any option is no supported.
+     * @param stratioStreamingAPI
+     *            the stream api.
+     * @param streamName
+     *            the stream name.
+     * @param select
+     *            the select.
+     * @throws UnsupportedException
+     *             if any option is no supported.
      */
     public static void insertRandomData(IStratioStreamingAPI stratioStreamingAPI, String streamName, Select select)
-            throws UnsupportedException {
+                    throws UnsupportedException {
         try {
 
             List<ColumnNameValue> streamData = new LinkedList<>();
@@ -126,8 +136,7 @@ public final class StreamUtil {
             }
 
             stratioStreamingAPI.insertData(streamName, streamData);
-        } catch (
-                StratioEngineStatusException | StratioAPISecurityException e) {
+        } catch (StratioEngineStatusException | StratioAPISecurityException e) {
             LOGGER.error("Error inserting data in stream", e);
         }
     }
@@ -135,9 +144,11 @@ public final class StreamUtil {
     /**
      * Recovered a rondom type for a columntype.
      *
-     * @param type the column type.
+     * @param type
+     *            the column type.
      * @return the random value.
-     * @throws UnsupportedException if any error happens.
+     * @throws UnsupportedException
+     *             if any error happens.
      */
     private static Object getRandomValue(ColumnType type) throws UnsupportedException {
         Object randomObject;
@@ -180,9 +191,9 @@ public final class StreamUtil {
         String randomObject;
 
         randomObject = getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter()
-                + getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter()
-                + getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter()
-                + getRandonLetter() + getRandonLetter();
+                        + getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter()
+                        + getRandonLetter() + getRandonLetter() + getRandonLetter() + getRandonLetter()
+                        + getRandonLetter() + getRandonLetter();
 
         return randomObject;
     }

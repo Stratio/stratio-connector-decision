@@ -100,13 +100,13 @@ public class StreamingQueryEngine implements IQueryEngine {
     @Override
     public void asyncExecute(String queryId, LogicalWorkflow workflow, IResultHandler resultHandler)
                     throws UnsupportedException, ExecutionException {
-        checkExceptions(queryId, workflow, resultHandler);
+        validateLogicalWorkflow(queryId, workflow, resultHandler);
         try {
-            connectorProcessHandler.strartProcess(queryId, initProcess(queryId, workflow, resultHandler));
+            connectorProcessHandler.startProcess(queryId, initProcess(queryId, workflow, resultHandler));
 
         } catch (ConnectionProcessException | HandlerConnectionException e) {
             logger.error("Error while executing the query: " + e.getMessage());
-            resultHandler.processException(queryId, new ExecutionException("Fail process creation", e));
+            resultHandler.processException(queryId, new ExecutionException("Failure during the process creation", e));
         } finally {
             // TODO ensure to end all threads.
 
@@ -156,10 +156,8 @@ public class StreamingQueryEngine implements IQueryEngine {
         Project project = (Project) workflow.getInitialSteps().get(0);
         String clusterName = project.getClusterName().getName();
         connectionHandler.startWork(clusterName);
-        QueryProcess queryProcess = new QueryProcess(queryId, project, resultHandler,
-                        connectionHandler.getConnection(clusterName));
 
-        return queryProcess;
+        return new QueryProcess(queryId, project, resultHandler, connectionHandler.getConnection(clusterName));
     }
 
     /**
@@ -172,7 +170,7 @@ public class StreamingQueryEngine implements IQueryEngine {
      * @param resultHandler
      *            the resultHandler.
      */
-    private void checkExceptions(String queryId, LogicalWorkflow workflow, IResultHandler resultHandler) {
+    private void validateLogicalWorkflow(String queryId, LogicalWorkflow workflow, IResultHandler resultHandler) {
         if (workflow.getInitialSteps().size() != 1) {
             resultHandler.processException(queryId, new ExecutionException("Only one project can be executed in "
                             + "Streaming"));

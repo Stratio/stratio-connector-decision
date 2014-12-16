@@ -43,7 +43,7 @@ import kafka.consumer.KafkaStream;
 import kafka.message.MessageAndMetadata;
 
 /**
- * This class represents a query creator. Created by jmgomez on 15/10/14.
+ * This class represents a query creator.
  */
 public class StreamingQueryCreator {
 

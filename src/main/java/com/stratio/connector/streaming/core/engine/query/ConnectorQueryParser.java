@@ -31,7 +31,7 @@ import com.stratio.crossdata.common.logicalplan.Window;
 import com.stratio.crossdata.common.statements.structures.Operator;
 
 /**
- * This class turn a logical workflow into a queryData. Created by jmgomez on 15/09/14.
+ * This class turn a logical workflow into a queryData.
  */
 public class ConnectorQueryParser {
 
@@ -49,7 +49,7 @@ public class ConnectorQueryParser {
      *            the queryID.
      * @return a queryData.
      * @throws UnsupportedException
-     *             if any operation is not suppoerted.
+     *             if any operation is not supported.
      */
     public ConnectorQueryData transformLogicalWorkFlow(Project logicalWorkFlow, String queryId)
                     throws UnsupportedException {

@@ -49,11 +49,6 @@ import com.stratio.crossdata.common.result.QueryResult;
 /**
  * ResultsetCreator Tester.
  *
- * @author <Authors name>
- * @version 1.0
- * @since <pre>
- * oct 16, 2014
- * </pre>
  */
 @RunWith(PowerMockRunner.class)
 public class ResultsetCreatorTest {

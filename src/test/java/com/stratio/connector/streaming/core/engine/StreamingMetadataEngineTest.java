@@ -54,11 +54,6 @@ import com.stratio.streaming.api.IStratioStreamingAPI;
 /**
  * StreamingMetadataEngine Tester.
  *
- * @author <Authors name>
- * @version 1.0
- * @since <pre>
- * oct 16, 2014
- * </pre>
  */
 @RunWith(PowerMockRunner.class)
 public class StreamingMetadataEngineTest {

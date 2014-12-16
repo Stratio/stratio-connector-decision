@@ -40,9 +40,6 @@ import com.stratio.crossdata.common.exceptions.InitializationException;
 import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.security.ICredentials;
 
-/**
- * Created by jmgomez on 4/09/14.
- */
 public class StreamingConnectorHelper implements IConnectorHelper {
 
     private static final String ZOOKEEPER_PORT = "2181";

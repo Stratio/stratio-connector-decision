@@ -35,7 +35,6 @@ import com.stratio.streaming.api.IStratioStreamingAPI;
 
 /**
  * This class represents a query processor.
- * Created by jmgomez on 3/10/14.
  */
 public class QueryProcess implements ConnectorProcess {
     /**
@@ -75,13 +74,17 @@ public class QueryProcess implements ConnectorProcess {
     /**
      * Constructor.
      *
-     * @param queryId       the queryId.
-     * @param project       the project.
-     * @param resultHandler the result handler.
-     * @param connection    the streaming connection.
+     * @param queryId
+     *            the queryId.
+     * @param project
+     *            the project.
+     * @param resultHandler
+     *            the result handler.
+     * @param connection
+     *            the streaming connection.
      */
     public QueryProcess(String queryId, Project project, IResultHandler resultHandler,
-            Connection<IStratioStreamingAPI> connection) {
+                    Connection<IStratioStreamingAPI> connection) {
         this.project = project;
         this.resultHandler = resultHandler;
         this.connection = connection;
@@ -119,7 +122,8 @@ public class QueryProcess implements ConnectorProcess {
     /**
      * End the process.
      *
-     * @throws ExecutionException in any error happens.
+     * @throws ExecutionException
+     *             in any error happens.
      */
     @Override
     public void endQuery() throws ExecutionException {

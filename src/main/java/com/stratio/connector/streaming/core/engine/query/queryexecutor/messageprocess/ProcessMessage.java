@@ -22,14 +22,14 @@ import com.stratio.crossdata.common.data.Row;
 
 /**
  * Interface to process messages.
- * Created by jmgomez on 16/10/14.
  */
 public interface ProcessMessage {
 
     /**
      * Process a row.
      *
-     * @param row a row.
+     * @param row
+     *            a row.
      */
     void processMessage(Row row);
 

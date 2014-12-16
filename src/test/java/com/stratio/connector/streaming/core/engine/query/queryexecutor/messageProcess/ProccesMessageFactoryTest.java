@@ -39,11 +39,6 @@ import com.stratio.crossdata.common.statements.structures.window.WindowType;
 /**
  * ProccesMessageFactory Tester.
  *
- * @author <Authors name>
- * @version 1.0
- * @since <pre>
- * oct 16, 2014
- * </pre>
  */
 @RunWith(PowerMockRunner.class)
 public class ProccesMessageFactoryTest {

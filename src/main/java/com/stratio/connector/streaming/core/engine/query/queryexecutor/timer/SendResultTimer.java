@@ -24,7 +24,6 @@ import com.stratio.connector.streaming.core.engine.query.queryexecutor.messagepr
 
 /**
  * A timer to send the message.
- * Created by jmgomez on 9/10/14.
  */
 public class SendResultTimer extends TimerTask {
 
@@ -36,7 +35,8 @@ public class SendResultTimer extends TimerTask {
     /**
      * Constructor.
      *
-     * @param timeWindowQueryExecutor a time window executor.
+     * @param timeWindowQueryExecutor
+     *            a time window executor.
      */
     public SendResultTimer(TimeWindowProcessMessage timeWindowQueryExecutor) {
         this.timeWindowQueryExecutor = timeWindowQueryExecutor;

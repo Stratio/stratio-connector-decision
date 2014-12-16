@@ -33,7 +33,7 @@ import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.result.QueryResult;
 
 /**
- * This class creates the resultset. Created by jmgomez on 16/10/14.
+ * This class creates the resultset.
  */
 public class ResultsetCreator {
 

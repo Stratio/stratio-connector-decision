@@ -42,11 +42,6 @@ import com.stratio.crossdata.common.statements.structures.StringSelector;
 /**
  * ConnectorQueryBuilder Tester.
  *
- * @author <Authors name>
- * @version 1.0
- * @since <pre>
- * oct 16, 2014
- * </pre>
  */
 public class ConnectorQueryBuilderTest {
 

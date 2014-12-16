@@ -33,7 +33,6 @@ import kafka.consumer.KafkaStream;
 
 /**
  * This class responsibility is to control the process to execute a query.
- * Created by jmgomez on 30/09/14.
  */
 public class ConnectorQueryExecutor {
 
@@ -54,12 +53,15 @@ public class ConnectorQueryExecutor {
     /**
      * Constructor.
      *
-     * @param queryData     the query data.
-     * @param resultHandler the result handler.
-     * @throws UnsupportedException if an operation is not supported.
+     * @param queryData
+     *            the query data.
+     * @param resultHandler
+     *            the result handler.
+     * @throws UnsupportedException
+     *             if an operation is not supported.
      */
     public ConnectorQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler)
-            throws UnsupportedException {
+                    throws UnsupportedException {
         this.queryData = queryData;
         this.resultHandler = resultHandler;
 
@@ -68,14 +70,19 @@ public class ConnectorQueryExecutor {
     /**
      * This method execute a query.
      *
-     * @param query      the query.
-     * @param connection the connection.
-     * @throws ExecutionException   if fail the execution.
-     * @throws InterruptedException when the asynchronous query stop.
-     * @throws UnsupportedException if a operation is not supported.
+     * @param query
+     *            the query.
+     * @param connection
+     *            the connection.
+     * @throws ExecutionException
+     *             if fail the execution.
+     * @throws InterruptedException
+     *             when the asynchronous query stop.
+     * @throws UnsupportedException
+     *             if a operation is not supported.
      */
-    public void executeQuery(String query, Connection<IStratioStreamingAPI> connection)
-            throws InterruptedException, UnsupportedException, ExecutionException {
+    public void executeQuery(String query, Connection<IStratioStreamingAPI> connection) throws InterruptedException,
+                    UnsupportedException, ExecutionException {
 
         IStratioStreamingAPI stratioStreamingAPI = connection.getNativeConnection();
         ResultsetCreator resultSetCreator = new ResultsetCreator(queryData);
@@ -86,7 +93,7 @@ public class ConnectorQueryExecutor {
         String streamOutgoingName = streamingQueryCreator.createQuery(query, stratioStreamingAPI);
 
         KafkaStream<String, StratioStreamingMessage> stream = streamingQueryCreator.listenQuery(stratioStreamingAPI,
-                streamOutgoingName);
+                        streamOutgoingName);
 
         streamingQueryCreator.readMessages(stream);
 
@@ -95,9 +102,12 @@ public class ConnectorQueryExecutor {
     /**
      * This method finalize the query execution.
      *
-     * @param streamName the stream name.
-     * @param connection the connection.
-     * @throws ExecutionException if fail the operation.
+     * @param streamName
+     *            the stream name.
+     * @param connection
+     *            the connection.
+     * @throws ExecutionException
+     *             if fail the operation.
      */
     public void endQuery(String streamName, Connection<IStratioStreamingAPI> connection) throws ExecutionException {
 

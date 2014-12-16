@@ -56,11 +56,6 @@ import com.stratio.streaming.api.IStratioStreamingAPI;
 /**
  * StreamingStorageEngine Tester.
  *
- * @author <Authors name>
- * @version 1.0
- * @since <pre>
- * oct 17, 2014
- * </pre>
  */
 @RunWith(PowerMockRunner.class)
 public class StreamingStorageEngineTest {

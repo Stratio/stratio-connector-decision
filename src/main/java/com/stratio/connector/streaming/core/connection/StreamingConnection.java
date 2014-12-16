@@ -30,7 +30,7 @@ import com.stratio.streaming.api.StratioStreamingAPIFactory;
 import com.stratio.streaming.commons.exceptions.StratioEngineConnectionException;
 
 /**
- * This class represents a logic connection to streaming. Created by jmgomez on 28/08/14.
+ * This class represents a logic connection to streaming.
  */
 public class StreamingConnection extends Connection<IStratioStreamingAPI> {
 

@@ -43,9 +43,6 @@ import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.metadata.TableMetadata;
 import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
-/**
- * @author david
- */
 public class SimpleInsertFT extends GenericStreamingTest {
 
     @Test
@@ -171,7 +168,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
         assertEquals(10, numsRecovered.size());
 
         for (int i = 0; i < 10; i++) {
-            assertTrue("The value " + new Long(i + new Long(Long.MAX_VALUE / 2)) + " has not been received",
+            assertTrue("The value " + new Long(i + new Long(Long.MAX_VALUE / 2)) + " git has not been received",
                             numsRecovered.contains(new Long(i + new Long(Long.MAX_VALUE / 2))));
         }
 

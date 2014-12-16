@@ -28,8 +28,7 @@ import com.stratio.connector.streaming.core.procces.exception.ConnectionProcessE
 import com.stratio.crossdata.common.exceptions.ExecutionException;
 
 /**
- * This clas handle a process.
- * Created by jmgomez on 3/10/14.
+ * This class handle a process.
  */
 public class ConnectorProcessHandler {
 
@@ -46,11 +45,14 @@ public class ConnectorProcessHandler {
     /**
      * Start the process.
      *
-     * @param queryId          the query id.
-     * @param connectorProcess a connector procces.
-     * @throws ConnectionProcessException if the connection fail.
+     * @param queryId
+     *            the query id.
+     * @param connectorProcess
+     *            a connector procces.
+     * @throws ConnectionProcessException
+     *             if the connection fail.
      */
-    public void strartProcess(String queryId, ConnectorProcess connectorProcess) throws ConnectionProcessException {
+    public void startProcess(String queryId, ConnectorProcess connectorProcess) throws ConnectionProcessException {
         if (processMap.containsKey(queryId)) {
             String msg = "The processMap with id " + queryId + " already exists ";
             logger.error(msg);
@@ -64,9 +66,11 @@ public class ConnectorProcessHandler {
     /**
      * Return the query process.
      *
-     * @param queryId the query id.
+     * @param queryId
+     *            the query id.
      * @return the process.
-     * @throws ConnectionProcessException if a error happens.
+     * @throws ConnectionProcessException
+     *             if a error happens.
      */
     public ConnectorProcess getProcess(String queryId) throws ConnectionProcessException {
         if (!processMap.containsKey(queryId)) {
@@ -80,9 +84,12 @@ public class ConnectorProcessHandler {
     /**
      * Stop the process.
      *
-     * @param queryId the queryId.
-     * @throws ConnectionProcessException if any error happens in the process.
-     * @throws ExecutionException         if a execurion error happens.
+     * @param queryId
+     *            the queryId.
+     * @throws ConnectionProcessException
+     *             if any error happens in the process.
+     * @throws ExecutionException
+     *             if a execurion error happens.
      */
     public void stopProcess(String queryId) throws ConnectionProcessException, ExecutionException {
         ThreadProcess threadProcess = processMap.get(queryId);
@@ -96,7 +103,7 @@ public class ConnectorProcessHandler {
 }
 
 /**
- * A class to envelope the tread and the connectorProcess.
+ * A class to envelope the thread and the connectorProcess.
  */
 class ThreadProcess {
 
@@ -112,8 +119,10 @@ class ThreadProcess {
     /**
      * Constructor.
      *
-     * @param thread  the thread.
-     * @param process the process.
+     * @param thread
+     *            the thread.
+     * @param process
+     *            the process.
      */
     ThreadProcess(Thread thread, ConnectorProcess process) {
         this.thread = thread;

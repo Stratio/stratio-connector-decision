@@ -44,11 +44,6 @@ import com.stratio.streaming.api.IStratioStreamingAPI;
 /**
  * QueryProcess Tester.
  *
- * @author <Authors name>
- * @version 1.0
- * @since <pre>
- * oct 17, 2014
- * </pre>
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ ConnectorQueryExecutor.class, QueryProcess.class })

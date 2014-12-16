@@ -28,9 +28,6 @@ import com.stratio.crossdata.common.exceptions.ConnectionException;
 import com.stratio.crossdata.common.exceptions.ConnectorException;
 import com.stratio.crossdata.common.exceptions.InitializationException;
 
-/**
- * Created by jmgomez on 5/09/14.
- */
 public class StreamingCreateMetadataFunctionalFT extends GenericMetadataCreateFT {
 
     @Override

@@ -23,14 +23,14 @@ import com.stratio.crossdata.common.logicalplan.Project;
 
 /**
  * A connecror procces.
- * Created by jmgomez on 3/10/14.
  */
 public interface ConnectorProcess extends Runnable {
 
     /**
      * End the query.
      *
-     * @throws ExecutionException if any error happens.
+     * @throws ExecutionException
+     *             if any error happens.
      */
     void endQuery() throws ExecutionException;
 

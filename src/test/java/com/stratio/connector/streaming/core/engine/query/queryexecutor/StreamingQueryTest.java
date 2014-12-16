@@ -61,11 +61,6 @@ import kafka.serializer.Decoder;
 /**
  * StreamingQuery Tester.
  *
- * @author <Authors name>
- * @version 1.0
- * @since <pre>
- * oct 15, 2014
- * </pre>
  */
 @RunWith(PowerMockRunner.class)
 public class StreamingQueryTest {

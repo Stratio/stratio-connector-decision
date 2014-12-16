@@ -38,7 +38,6 @@ import com.stratio.crossdata.common.statements.structures.StringSelector;
 
 /**
  * This class builds the queries.
- * Created by jmgomez on 30/09/14.
  */
 public class ConnectorQueryBuilder {
 
@@ -55,10 +54,13 @@ public class ConnectorQueryBuilder {
     /**
      * This method create a query.
      *
-     * @param queryData the query data.
+     * @param queryData
+     *            the query data.
      * @return the string query representation.
-     * @throws ExecutionException   in any error happens.
-     * @throws UnsupportedException if any operation is not supported.
+     * @throws ExecutionException
+     *             in any error happens.
+     * @throws UnsupportedException
+     *             if any operation is not supported.
      */
     public String createQuery(ConnectorQueryData queryData) throws ExecutionException, UnsupportedException {
 
@@ -72,11 +74,12 @@ public class ConnectorQueryBuilder {
     /**
      * Create the query output part.
      *
-     * @param queryData the query data.
+     * @param queryData
+     *            the query data.
      */
     private void createOutputQuery(ConnectorQueryData queryData) {
         String outgoing = StreamUtil.createOutgoingName(StreamUtil.createStreamName(queryData.getProjection()),
-                queryData.getQueryId());
+                        queryData.getQueryId());
         querySb.append(" insert into ");
         querySb.append(outgoing);
     }
@@ -84,8 +87,10 @@ public class ConnectorQueryBuilder {
     /**
      * Create the query projection part.
      *
-     * @param queryData the query data.
-     * @throws UnsupportedException if any operation is not supported.
+     * @param queryData
+     *            the query data.
+     * @throws UnsupportedException
+     *             if any operation is not supported.
      */
     private void createProjection(ConnectorQueryData queryData) throws UnsupportedException {
 
@@ -108,7 +113,7 @@ public class ConnectorQueryBuilder {
         for (ColumnName colName : columnMetadataList) {
 
             querySb.append(StreamUtil.createStreamName(queryData.getProjection())).append(".")
-                    .append(colName.getName()).append(" as ").append(aliasMapping.get(colName));
+                            .append(colName.getName()).append(" as ").append(aliasMapping.get(colName));
             if (++i < numFields) {
                 querySb.append(",");
             }
@@ -119,9 +124,12 @@ public class ConnectorQueryBuilder {
     /**
      * Create the query input part.
      *
-     * @param queryData the query data.
-     * @throws UnsupportedException if any operation is not supported.
-     * @throws ExecutionException   in any error happens.
+     * @param queryData
+     *            the query data.
+     * @throws UnsupportedException
+     *             if any operation is not supported.
+     * @throws ExecutionException
+     *             in any error happens.
      */
     private void createInputQuery(ConnectorQueryData queryData) throws UnsupportedException, ExecutionException {
         querySb.append("from ");
@@ -136,11 +144,14 @@ public class ConnectorQueryBuilder {
     }
 
     /**
-     * Create the condition query  part.
+     * Create the condition query part.
      *
-     * @param queryData the query data.
-     * @throws UnsupportedException if any operation is not supported.
-     * @throws ExecutionException   in any error happens.
+     * @param queryData
+     *            the query data.
+     * @throws UnsupportedException
+     *             if any operation is not supported.
+     * @throws ExecutionException
+     *             in any error happens.
      */
     private void createConditionList(ConnectorQueryData queryData) throws UnsupportedException, ExecutionException {
 
@@ -149,12 +160,10 @@ public class ConnectorQueryBuilder {
         while (filterIter.hasNext()) {
             Relation rel = filterIter.next().getRelation();
 
-            String value = SelectorHelper.getValue(String.class,
-                    rel.getRightTerm());
+            String value = SelectorHelper.getValue(String.class, rel.getRightTerm());
 
             querySb.append(SelectorHelper.getValue(String.class, rel.getLeftTerm())).append(" ")
-                    .append(getSiddhiOperator(rel.getOperator()))
-                    .append(" ");
+                            .append(getSiddhiOperator(rel.getOperator())).append(" ");
 
             if (rel.getRightTerm() instanceof StringSelector) {
                 querySb.append("'").append(value).append("'");
@@ -173,9 +182,11 @@ public class ConnectorQueryBuilder {
     /**
      * Turn a crossdata operator into a shiddhi operator.
      *
-     * @param operator the crossdata operator.
+     * @param operator
+     *            the crossdata operator.
      * @return a the siddhi operator.
-     * @throws UnsupportedException if any operation is not supported.
+     * @throws UnsupportedException
+     *             if any operation is not supported.
      */
     private String getSiddhiOperator(Operator operator) throws UnsupportedException {
 

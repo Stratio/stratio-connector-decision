@@ -32,7 +32,6 @@ import com.stratio.crossdata.common.exceptions.UnsupportedException;
 
 /**
  * This class represent a message processor by element time.
- * Created by jmgomez on 7/10/14.
  */
 public class TimeWindowProcessMessage implements ProcessMessage {
 
@@ -57,26 +56,30 @@ public class TimeWindowProcessMessage implements ProcessMessage {
     /**
      * constructor.
      *
-     * @param queryData        the querydata.
-     * @param resultsetCreator the resultSet creator.
-     * @throws UnsupportedException if an error happens.
+     * @param queryData
+     *            the querydata.
+     * @param resultsetCreator
+     *            the resultSet creator.
+     * @throws UnsupportedException
+     *             if an error happens.
      */
     public TimeWindowProcessMessage(ConnectorQueryData queryData, ResultsetCreator resultsetCreator)
-            throws UnsupportedException {
+                    throws UnsupportedException {
 
         TimerTask timerTask = new SendResultTimer(this);
 
         this.resultsetCreator = resultsetCreator;
         timer = new Timer("[Timer_" + queryData.getQueryId() + "]", true);
         timer.scheduleAtFixedRate(timerTask, queryData.getWindow().getDurationInMilliseconds(), queryData.getWindow()
-                .getDurationInMilliseconds());
+                        .getDurationInMilliseconds());
 
     }
 
     /**
      * This method process a row.
      *
-     * @param row a row.
+     * @param row
+     *            a row.
      */
     @Override
     public void processMessage(Row row) {
