@@ -208,4 +208,18 @@ public final class StreamUtil {
         return TEXT[Math.abs(RANDOM.nextInt() % TEXT.length)];
     }
 
+    public static String getStreamingAddressFormat(String[] host, String[] ports) {
+
+        int numServers = Math.min(host.length, ports.length);
+        StringBuilder strBuilder = new StringBuilder();
+
+        for (int i = 0; i < numServers; i++) {
+            strBuilder.append(host[i]).append(":").append(ports[i]);
+            if (i < numServers - 1) {
+                strBuilder.append(",");
+            }
+        }
+        return strBuilder.toString();
+    }
+
 }

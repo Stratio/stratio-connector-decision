@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.util.ConnectorParser;
+import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.crossdata.common.connector.ConnectorClusterConfig;
 import com.stratio.crossdata.common.exceptions.ConnectionException;
 import com.stratio.crossdata.common.security.ICredentials;
@@ -70,17 +71,26 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
     public StreamingConnection(ICredentials credentials, ConnectorClusterConfig config) throws ConnectionException {
 
         if (credentials != null) {
-            throw new ConnectionException("Credentials are not supported");
+            final String msg = "Credentials are not supported";
+            logger.error(msg);
+            throw new ConnectionException(msg);
         }
 
-        String kafkaServer = ConnectorParser.hosts(config.getClusterOptions().get(KAFKA_SERVER))[0];
-        int kafkaPort = Integer.parseInt(ConnectorParser.ports(config.getClusterOptions().get(KAFKA_PORT))[0]);
+        String[] kafkaServer = ConnectorParser.hosts(config.getClusterOptions().get(KAFKA_SERVER));
+        String[] kafkaPort = ConnectorParser.ports(config.getClusterOptions().get(KAFKA_PORT));
 
-        String zooKeeperServer = ConnectorParser.hosts(config.getClusterOptions().get(ZOOKEEPER_SERVER))[0];
-        int zooKeeperPort = Integer.parseInt(ConnectorParser.ports(config.getClusterOptions().get(ZOOKEEPER_PORT))[0]);
+        String[] zooKeeperServer = ConnectorParser.hosts(config.getClusterOptions().get(ZOOKEEPER_SERVER));
+        String[] zooKeeperPort = ConnectorParser.ports(config.getClusterOptions().get(ZOOKEEPER_PORT));
 
-        stratioStreamingAPI = StratioStreamingAPIFactory.create().withServerConfig(kafkaServer, kafkaPort,
-                        zooKeeperServer, zooKeeperPort);
+        if (kafkaServer.length != kafkaPort.length || zooKeeperServer.length != zooKeeperPort.length) {
+            final String msg = "The number of hosts and ports must be equal";
+            logger.error(msg);
+            throw new ConnectionException(msg);
+        }
+        String kafkaQuorum = StreamUtil.getStreamingAddressFormat(kafkaServer, kafkaPort);
+        String zookeeperQuorum = StreamUtil.getStreamingAddressFormat(zooKeeperServer, zooKeeperPort);
+
+        stratioStreamingAPI = StratioStreamingAPIFactory.create().withServerConfig(kafkaQuorum, zookeeperQuorum);
 
         try {
             stratioStreamingAPI.init();
