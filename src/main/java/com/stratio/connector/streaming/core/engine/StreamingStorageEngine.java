@@ -73,13 +73,11 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
      *            the row.
      * @throws ExecutionException
      *             in case of failure during the execution.
-     * @throws UnsupportedException
-     *             it the operation is not supported.
      */
 
     @Override
     protected void insert(TableMetadata targetStream, Row row, Connection<IStratioStreamingAPI> connection)
-                    throws UnsupportedException, ExecutionException {
+                    throws ExecutionException {
         String streamName = StreamUtil.createStreamName(targetStream.getName());
         try {
             List<ColumnNameValue> streamData = new ArrayList<ColumnNameValue>();
@@ -103,12 +101,10 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
      *            the set of rows.
      * @throws ExecutionException
      *             in case of failure during the execution.
-     * @throws UnsupportedException
-     *             if the operation is not supported.
      */
     @Override
     protected void insert(TableMetadata targetStream, Collection<Row> rows, Connection<IStratioStreamingAPI> connection)
-                    throws UnsupportedException, ExecutionException {
+                    throws ExecutionException {
         String streamName = targetStream.getName().getName();
         try {
             for (Row row : rows) {

@@ -43,6 +43,7 @@ import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.data.ColumnName;
 import com.stratio.crossdata.common.data.IndexName;
 import com.stratio.crossdata.common.data.TableName;
+import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.metadata.ColumnMetadata;
 import com.stratio.crossdata.common.metadata.ColumnType;
@@ -126,7 +127,7 @@ public class StreamingMetadataEngineTest {
     /**
      * Method: alterTableNotSupportedTest(TableMetadata streamMetadata, Connection<IStratioStreamingAPI> connection)
      */
-    @Test(expected = UnsupportedException.class)
+    @Test(expected = ExecutionException.class)
     public void alterTableNotSupportedTest() throws Exception {
         TableName tableName = new TableName(CATALOG, TABLE);
         AlterOptions alterOptions = new AlterOptions(AlterOperation.DROP_COLUMN, null, null);

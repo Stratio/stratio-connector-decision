@@ -23,12 +23,11 @@ import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.connection.ConnectionHandler;
-import com.stratio.connector.commons.connection.exceptions.CreateNativeConnectionException;
 import com.stratio.crossdata.common.connector.ConnectorClusterConfig;
 import com.stratio.crossdata.common.connector.IConfiguration;
+import com.stratio.crossdata.common.exceptions.ConnectionException;
 import com.stratio.crossdata.common.security.ICredentials;
 import com.stratio.streaming.api.IStratioStreamingAPI;
-import com.stratio.streaming.commons.exceptions.StratioEngineConnectionException;
 
 /**
  * This class manages the logic connections.
@@ -58,20 +57,14 @@ public class StreamingConnectionHandler extends ConnectionHandler {
      * @param connectorClusterConfig
      *            the configuration.
      * @return a logic connection with a native connection inside.
-     * @throws CreateNativeConnectionException
-     *             if a error happens.
+     * @throws ConnectionException
+     *             if an error happens establishing the connection.
      */
     @Override
     protected Connection<IStratioStreamingAPI> createNativeConnection(ICredentials iCredentials,
-                    ConnectorClusterConfig connectorClusterConfig) throws CreateNativeConnectionException {
-        Connection<IStratioStreamingAPI> con = null;
-        try {
-            con = new StreamingConnection(iCredentials, connectorClusterConfig);
-        } catch (StratioEngineConnectionException e) {
-            String msg = "Fail creating Streaming connection. " + e.getMessage();
-            logger.error(msg);
-            throw new CreateNativeConnectionException(msg, e);
-        }
+                    ConnectorClusterConfig connectorClusterConfig) throws ConnectionException {
+        Connection<IStratioStreamingAPI> con = new StreamingConnection(iCredentials, connectorClusterConfig);
+
         return con;
     }
 

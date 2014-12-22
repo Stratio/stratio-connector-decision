@@ -29,7 +29,6 @@ import com.stratio.connector.streaming.core.engine.query.queryexecutor.Connector
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.crossdata.common.connector.IResultHandler;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
-import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 
@@ -108,7 +107,7 @@ public class QueryProcess implements ConnectorProcess {
             queryExecutor = new ConnectorQueryExecutor(queryData, resultHandler);
             queryExecutor.executeQuery(query, connection);
 
-        } catch (UnsupportedException | ExecutionException e) {
+        } catch (ExecutionException e) {
             String msg = "Streaming query execution fail." + e.getMessage();
             logger.error(msg);
             resultHandler.processException(queryId, new ExecutionException(msg, e));

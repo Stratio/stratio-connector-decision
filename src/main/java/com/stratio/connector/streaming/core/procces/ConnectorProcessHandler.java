@@ -24,7 +24,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.stratio.connector.streaming.core.procces.exception.ConnectionProcessException;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
 
 /**
@@ -49,14 +48,14 @@ public class ConnectorProcessHandler {
      *            the query id.
      * @param connectorProcess
      *            a connector procces.
-     * @throws ConnectionProcessException
+     * @throws ExecutionException
      *             if the connection fail.
      */
-    public void startProcess(String queryId, ConnectorProcess connectorProcess) throws ConnectionProcessException {
+    public void startProcess(String queryId, ConnectorProcess connectorProcess) throws ExecutionException {
         if (processMap.containsKey(queryId)) {
             String msg = "The processMap with id " + queryId + " already exists ";
             logger.error(msg);
-            throw new ConnectionProcessException(msg);
+            throw new ExecutionException(msg);
         }
         Thread thread = new Thread(connectorProcess, "[StreamingQuery-" + queryId + "]");
         processMap.put(queryId, new ThreadProcess(thread, connectorProcess));
@@ -72,11 +71,11 @@ public class ConnectorProcessHandler {
      * @throws ConnectionProcessException
      *             if a error happens.
      */
-    public ConnectorProcess getProcess(String queryId) throws ConnectionProcessException {
+    public ConnectorProcess getProcess(String queryId) throws ExecutionException {
         if (!processMap.containsKey(queryId)) {
             String msg = "The processMap with id " + queryId + " not exists ";
             logger.error(msg);
-            throw new ConnectionProcessException(msg);
+            throw new ExecutionException(msg);
         }
         return processMap.get(queryId).getProcess();
     }
@@ -91,7 +90,7 @@ public class ConnectorProcessHandler {
      * @throws ExecutionException
      *             if a execurion error happens.
      */
-    public void stopProcess(String queryId) throws ConnectionProcessException, ExecutionException {
+    public void stopProcess(String queryId) throws ExecutionException {
         ThreadProcess threadProcess = processMap.get(queryId);
 
         threadProcess.getProcess().endQuery();

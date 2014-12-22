@@ -23,9 +23,9 @@ import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageprocess.ProcessMessage;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageprocess.ProcessMessageFactory;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
+import com.stratio.connector.streaming.core.exception.ExecutionValidationException;
 import com.stratio.crossdata.common.connector.IResultHandler;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
-import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.messages.StratioStreamingMessage;
 
@@ -57,11 +57,8 @@ public class ConnectorQueryExecutor {
      *            the query data.
      * @param resultHandler
      *            the result handler.
-     * @throws UnsupportedException
-     *             if an operation is not supported.
      */
-    public ConnectorQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler)
-                    throws UnsupportedException {
+    public ConnectorQueryExecutor(ConnectorQueryData queryData, IResultHandler resultHandler) {
         this.queryData = queryData;
         this.resultHandler = resultHandler;
 
@@ -78,11 +75,11 @@ public class ConnectorQueryExecutor {
      *             if fail the execution.
      * @throws InterruptedException
      *             when the asynchronous query stop.
-     * @throws UnsupportedException
+     * @throws ExecutionValidationException
      *             if a operation is not supported.
      */
     public void executeQuery(String query, Connection<IStratioStreamingAPI> connection) throws InterruptedException,
-                    UnsupportedException, ExecutionException {
+                    ExecutionException {
 
         IStratioStreamingAPI stratioStreamingAPI = connection.getNativeConnection();
         ResultsetCreator resultSetCreator = new ResultsetCreator(queryData);

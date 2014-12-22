@@ -20,7 +20,7 @@ package com.stratio.connector.streaming.core.engine.query.queryexecutor.messagep
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
-import com.stratio.crossdata.common.exceptions.UnsupportedException;
+import com.stratio.connector.streaming.core.exception.ExecutionValidationException;
 
 /**
  * A process manager factory.
@@ -38,11 +38,11 @@ public final class ProcessMessageFactory {
      * @param resultSetCreator
      *            the result creator.
      * @return the correct configure processMessage.
-     * @throws UnsupportedException
+     * @throws ExecutionValidationException
      *             if an error happens.
      */
     public static ProcessMessage getProccesMessage(ConnectorQueryData queryData, ResultsetCreator resultSetCreator)
-                    throws UnsupportedException {
+                    throws ExecutionValidationException {
         ProcessMessage connectorQueryExecutor = null;
 
         switch (queryData.getWindow().getType()) {
@@ -53,7 +53,7 @@ public final class ProcessMessageFactory {
             connectorQueryExecutor = new ElementNumberProcessMessage(queryData, resultSetCreator);
             break;
         default:
-            throw new UnsupportedException("Window " + queryData.getWindow().getType() + "is not supported");
+            throw new ExecutionValidationException("Window " + queryData.getWindow().getType() + "is not supported");
 
         }
         return connectorQueryExecutor;

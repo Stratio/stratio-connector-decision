@@ -28,10 +28,10 @@ import com.stratio.connector.commons.util.ColumnTypeHelper;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.messageprocess.ProcessMessage;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
+import com.stratio.connector.streaming.core.exception.ExecutionValidationException;
 import com.stratio.crossdata.common.data.Cell;
 import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
-import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
 import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
@@ -88,11 +88,11 @@ public class StreamingQueryCreator {
      * @return the query id.
      * @throws ExecutionException
      *             if the execution fail.
-     * @throws UnsupportedException
+     * @throws ExecutionValidationException
      *             if a operation is not supported.
      */
-    public String createQuery(String query, IStratioStreamingAPI stratioStreamingAPI) throws UnsupportedException,
-                    ExecutionException {
+    public String createQuery(String query, IStratioStreamingAPI stratioStreamingAPI)
+                    throws ExecutionValidationException, ExecutionException {
         String streamOutgoingName = "";
         try {
             String streamName = StreamUtil.createStreamName(queryData.getProjection());
@@ -117,13 +117,13 @@ public class StreamingQueryCreator {
      * @param streamOutgoingName
      *            the query name.
      * @return the query result.
-     * @throws UnsupportedException
+     * @throws ExecutionValidationException
      *             if an operation is not supported.
      * @throws ExecutionException
      *             if a error happen.
      */
     public KafkaStream<String, StratioStreamingMessage> listenQuery(IStratioStreamingAPI stratioStreamingAPI,
-                    String streamOutgoingName) throws UnsupportedException, ExecutionException {
+                    String streamOutgoingName) throws ExecutionValidationException, ExecutionException {
         KafkaStream<String, StratioStreamingMessage> messageAndMetadatas = null;
         try {
             logger.info("Listening stream..." + streamOutgoingName);
@@ -144,10 +144,10 @@ public class StreamingQueryCreator {
      * This method read a message.
      *
      * @param streams
-     * @throws UnsupportedException
+     * @throws ExecutionValidationException
      * @throws ExecutionException
      */
-    public void readMessages(KafkaStream<String, StratioStreamingMessage> streams) throws UnsupportedException,
+    public void readMessages(KafkaStream<String, StratioStreamingMessage> streams) throws ExecutionValidationException,
                     ExecutionException {
         logger.info("Waiting a message...");
         for (MessageAndMetadata stream : streams) {

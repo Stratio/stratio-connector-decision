@@ -21,11 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.commons.connection.ConnectionHandler;
-import com.stratio.connector.commons.connection.exceptions.HandlerConnectionException;
+import com.stratio.connector.streaming.core.exception.ConnectionProcessException;
 import com.stratio.connector.streaming.core.procces.ConnectorProcess;
 import com.stratio.connector.streaming.core.procces.ConnectorProcessHandler;
 import com.stratio.connector.streaming.core.procces.QueryProcess;
-import com.stratio.connector.streaming.core.procces.exception.ConnectionProcessException;
 import com.stratio.crossdata.common.connector.IQueryEngine;
 import com.stratio.crossdata.common.connector.IResultHandler;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
@@ -72,8 +71,6 @@ public class StreamingQueryEngine implements IQueryEngine {
      * @param workflow
      *            the work flow witch represents the query.
      * @return the query result.
-     * @throws UnsupportedException
-     *             if aany operation is not supported.
      * @throws ExecutionException
      *             if any error happens.
      */
@@ -92,19 +89,17 @@ public class StreamingQueryEngine implements IQueryEngine {
      * @param resultHandler
      *            the result handler.
      * @return the query result.
-     * @throws UnsupportedException
-     *             if aany operation is not supported.
      * @throws ExecutionException
      *             if any error happens.
      */
     @Override
     public void asyncExecute(String queryId, LogicalWorkflow workflow, IResultHandler resultHandler)
-                    throws UnsupportedException, ExecutionException {
+                    throws ExecutionException {
         validateLogicalWorkflow(queryId, workflow, resultHandler);
         try {
             connectorProcessHandler.startProcess(queryId, initProcess(queryId, workflow, resultHandler));
 
-        } catch (ConnectionProcessException | HandlerConnectionException e) {
+        } catch (ConnectionProcessException e) {
             logger.error("Error while executing the query: " + e.getMessage());
             resultHandler.processException(queryId, new ExecutionException("Failure during the process creation", e));
         } finally {
@@ -118,13 +113,11 @@ public class StreamingQueryEngine implements IQueryEngine {
      *
      * @param queryId
      *            the queryId.
-     * @throws UnsupportedException
-     *             if any operation is not supported.
      * @throws ExecutionException
      *             if any error happens.
      */
     @Override
-    public synchronized void stop(String queryId) throws UnsupportedException, ExecutionException {
+    public synchronized void stop(String queryId) throws ExecutionException {
         try {
             ConnectorProcess process = connectorProcessHandler.getProcess(queryId);
             connectionHandler.endWork(process.getProject().getClusterName().getName());
@@ -145,13 +138,11 @@ public class StreamingQueryEngine implements IQueryEngine {
      * @param resultHandler
      *            the result handler.
      * @return a query process.
-     * @throws ConnectionProcessException
-     *             if the connection fails.
-     * @throws HandlerConnectionException
-     *             if handling the connection fails.
+     * @throws ExecutionException
+     *             if the execution fails.
      */
     private QueryProcess initProcess(String queryId, LogicalWorkflow workflow, IResultHandler resultHandler)
-                    throws ConnectionProcessException, HandlerConnectionException {
+                    throws ExecutionException {
 
         Project project = (Project) workflow.getInitialSteps().get(0);
         String clusterName = project.getClusterName().getName();

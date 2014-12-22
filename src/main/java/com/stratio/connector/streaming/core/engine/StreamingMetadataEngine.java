@@ -28,6 +28,7 @@ import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.connection.ConnectionHandler;
 import com.stratio.connector.commons.engine.CommonsMetadataEngine;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
+import com.stratio.connector.streaming.core.exception.ExecutionValidationException;
 import com.stratio.crossdata.common.data.AlterOperation;
 import com.stratio.crossdata.common.data.AlterOptions;
 import com.stratio.crossdata.common.data.CatalogName;
@@ -203,11 +204,12 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
      * @param columnType
      *            the crossdata type.
      * @return the streaming type.
-     * @throws UnsupportedException
+     * 
+     * @throws ExecutionException
      *             if columnType is not supported.
      */
     private com.stratio.streaming.commons.constants.ColumnType convertType(ColumnType columnType)
-                    throws UnsupportedException {
+                    throws ExecutionValidationException {
         com.stratio.streaming.commons.constants.ColumnType returnType = null;
         switch (columnType) {
 
@@ -231,7 +233,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
             returnType = com.stratio.streaming.commons.constants.ColumnType.STRING;
             break;
         default:
-            throw new UnsupportedException("Column type " + columnType.name() + " not supported in Streaming");
+            throw new ExecutionValidationException("Column type " + columnType.name() + " not supported in Streaming");
 
         }
         return returnType;
@@ -246,12 +248,12 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
      *            the alter options
      * @param connection
      *            the connection
-     * @throws UnsupportedException
+     * @throws ExecutionValidationException
      *             if the operation is not supported
      */
     @Override
     protected void alterTable(TableName name, AlterOptions alterOptions, Connection<IStratioStreamingAPI> connection)
-                    throws UnsupportedException, ExecutionException {
+                    throws ExecutionValidationException, ExecutionException {
 
         if (alterOptions.getOption() == AlterOperation.ADD_COLUMN) {
 
@@ -270,7 +272,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
             }
 
         } else {
-            throw new UnsupportedException("Alter table is not supported except for add column");
+            throw new ExecutionValidationException("Alter table is not supported except for add column");
         }
 
     }

@@ -16,12 +16,14 @@
  * under the License.
  */
 
-package com.stratio.connector.streaming.core.procces.exception;
+package com.stratio.connector.streaming.core.exception;
+
+import com.stratio.crossdata.common.exceptions.ExecutionException;
 
 /**
- * A connection process exception.
+ * The exception is thrown if a supported operation cannot be executed because of the validation.
  */
-public class ConnectionProcessException extends Exception {
+public class ExecutionValidationException extends ExecutionException {
     /**
      * The uid.
      */
@@ -33,7 +35,7 @@ public class ConnectionProcessException extends Exception {
      * @param msg
      *            the message.
      */
-    public ConnectionProcessException(String msg) {
+    public ExecutionValidationException(String msg) {
         super(msg);
     }
 }

@@ -21,7 +21,7 @@ package com.stratio.connector.streaming.core.engine.query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.stratio.crossdata.common.exceptions.UnsupportedException;
+import com.stratio.connector.streaming.core.exception.ExecutionValidationException;
 import com.stratio.crossdata.common.logicalplan.Filter;
 import com.stratio.crossdata.common.logicalplan.Limit;
 import com.stratio.crossdata.common.logicalplan.LogicalStep;
@@ -48,11 +48,11 @@ public class ConnectorQueryParser {
      * @param queryId
      *            the queryID.
      * @return a queryData.
-     * @throws UnsupportedException
+     * @throws ExecutionValidationException
      *             if any operation is not supported.
      */
     public ConnectorQueryData transformLogicalWorkFlow(Project logicalWorkFlow, String queryId)
-                    throws UnsupportedException {
+                    throws ExecutionValidationException {
 
         ConnectorQueryData queryData = new ConnectorQueryData();
         queryData.setQueryId(queryId);
@@ -77,10 +77,11 @@ public class ConnectorQueryParser {
      *            the queryData.
      * @param lStep
      *            the logical Step.
-     * @throws UnsupportedException
+     * @throws ExecutionValidationException
      *             if any logicalStep is not supported.
      */
-    private void extractLogicalStep(ConnectorQueryData queryData, LogicalStep lStep) throws UnsupportedException {
+    private void extractLogicalStep(ConnectorQueryData queryData, LogicalStep lStep)
+                    throws ExecutionValidationException {
         if (lStep instanceof Project) {
             processProject(queryData, (Project) lStep);
         } else if (lStep instanceof Filter) {
@@ -91,11 +92,12 @@ public class ConnectorQueryParser {
         } else if (lStep instanceof Window) {
             queryData.setWindow((Window) lStep);
         } else if (lStep instanceof Limit) {
-            throw new UnsupportedException("LogicalStep [" + lStep.getClass().getCanonicalName() + " not yet supported");
+            throw new ExecutionValidationException("LogicalStep [" + lStep.getClass().getCanonicalName()
+                            + " not yet supported");
         } else {
             String message = "LogicalStep [" + lStep.getClass().getCanonicalName() + " not supported";
             logger.error(message);
-            throw new UnsupportedException(message);
+            throw new ExecutionValidationException(message);
         }
     }
 
@@ -106,15 +108,15 @@ public class ConnectorQueryParser {
      *            the queryData.
      * @param filter
      *            the Filter
-     * @throws UnsupportedException
+     * @throws ExecutionValidationException
      *             if the filter type is not supported.
      */
-    private void processFilter(ConnectorQueryData queryData, Filter filter) throws UnsupportedException {
+    private void processFilter(ConnectorQueryData queryData, Filter filter) throws ExecutionValidationException {
 
         if (Operator.MATCH == filter.getRelation().getOperator()) {
             String message = "LogicalStep [" + filter.getClass().getCanonicalName() + " not supported";
             logger.error(message);
-            throw new UnsupportedException(message);
+            throw new ExecutionValidationException(message);
         } else {
             queryData.addFilter(filter);
         }
@@ -127,16 +129,16 @@ public class ConnectorQueryParser {
      *            the queryData.
      * @param project
      *            the project
-     * @throws UnsupportedException
+     * @throws ExecutionValidationException
      *             if other project exists.
      */
-    private void processProject(ConnectorQueryData queryData, Project project) throws UnsupportedException {
+    private void processProject(ConnectorQueryData queryData, Project project) throws ExecutionValidationException {
         if (!queryData.hasProjection()) {
             queryData.setProjection(project);
         } else {
             String message = "It has been found more than one project";
             logger.error(message);
-            throw new UnsupportedException(message);
+            throw new ExecutionValidationException(message);
         }
     }
 
@@ -145,18 +147,18 @@ public class ConnectorQueryParser {
      *
      * @param queryData
      *            the queryData representatio for the query.
-     * @throws UnsupportedException
+     * @throws ExecutionValidationException
      *             if the query is not supported.
      */
-    private void checkSupportedQuery(ConnectorQueryData queryData) throws UnsupportedException {
+    private void checkSupportedQuery(ConnectorQueryData queryData) throws ExecutionValidationException {
         if (queryData.getSelect() == null) {
             final String msg = "no select found";
             logger.error(msg);
-            throw new UnsupportedException(msg);
+            throw new ExecutionValidationException(msg);
         } else if (queryData.getWindow() == null) {
             final String msg = "no window found";
             logger.error(msg);
-            throw new UnsupportedException(msg);
+            throw new ExecutionValidationException(msg);
         }
     }
 }

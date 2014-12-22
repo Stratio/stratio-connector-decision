@@ -26,9 +26,10 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.stratio.connector.streaming.core.exception.ExecutionValidationException;
 import com.stratio.crossdata.common.data.ColumnName;
 import com.stratio.crossdata.common.data.TableName;
-import com.stratio.crossdata.common.exceptions.UnsupportedException;
+import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.metadata.ColumnType;
@@ -121,11 +122,11 @@ public final class StreamUtil {
      *            the stream name.
      * @param select
      *            the select.
-     * @throws UnsupportedException
+     * @throws ExecutionException
      *             if any option is no supported.
      */
     public static void insertRandomData(IStratioStreamingAPI stratioStreamingAPI, String streamName, Select select)
-                    throws UnsupportedException {
+                    throws ExecutionException {
         try {
 
             List<ColumnNameValue> streamData = new LinkedList<>();
@@ -142,15 +143,16 @@ public final class StreamUtil {
     }
 
     /**
-     * Recovered a rondom type for a columntype.
+     * Recovered a random type for a columntype.
      *
      * @param type
      *            the column type.
      * @return the random value.
-     * @throws UnsupportedException
+     * @throws ExecutionException
      *             if any error happens.
+     * 
      */
-    private static Object getRandomValue(ColumnType type) throws UnsupportedException {
+    private static Object getRandomValue(ColumnType type) throws ExecutionException {
         Object randomObject;
 
         switch (type) {
@@ -169,13 +171,12 @@ public final class StreamUtil {
         case FLOAT:
             randomObject = RANDOM.nextFloat();
             break;
-
         case TEXT:
         case VARCHAR:
             randomObject = getRandonText();
             break;
         default:
-            throw new UnsupportedException("Type " + type + " is not supported in streaming");
+            throw new ExecutionValidationException("Type " + type + " is not supported in streaming");
 
         }
         return randomObject;

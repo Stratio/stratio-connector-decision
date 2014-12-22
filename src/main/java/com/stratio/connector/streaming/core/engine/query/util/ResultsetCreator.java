@@ -22,11 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
+import com.stratio.connector.streaming.core.exception.ExecutionValidationException;
 import com.stratio.crossdata.common.connector.IResultHandler;
 import com.stratio.crossdata.common.data.ColumnName;
 import com.stratio.crossdata.common.data.ResultSet;
 import com.stratio.crossdata.common.data.Row;
-import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.metadata.ColumnMetadata;
 import com.stratio.crossdata.common.metadata.ColumnType;
@@ -59,10 +59,10 @@ public class ResultsetCreator {
      *
      * @param queryData
      *            the query data.
-     * @throws UnsupportedException
-     *             if a operation is not supperted.
+     * @throws ExecutionValidationException
+     *             if a operation is not supported.
      */
-    public ResultsetCreator(ConnectorQueryData queryData) throws UnsupportedException {
+    public ResultsetCreator(ConnectorQueryData queryData) throws ExecutionValidationException {
         this.queryData = queryData;
         createColumnMetadata();
     }
@@ -104,10 +104,10 @@ public class ResultsetCreator {
     /**
      * Create the column metadata.
      *
-     * @throws UnsupportedException
+     * @throws ExecutionValidationException
      *             if a type is not supported.
      */
-    private void createColumnMetadata() throws UnsupportedException {
+    private void createColumnMetadata() {
         columnsMetadata = new ArrayList<>();
         Select select = queryData.getSelect();
 

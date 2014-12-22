@@ -27,8 +27,8 @@ import java.util.TimerTask;
 import com.stratio.connector.streaming.core.engine.query.ConnectorQueryData;
 import com.stratio.connector.streaming.core.engine.query.queryexecutor.timer.SendResultTimer;
 import com.stratio.connector.streaming.core.engine.query.util.ResultsetCreator;
+import com.stratio.connector.streaming.core.exception.ExecutionValidationException;
 import com.stratio.crossdata.common.data.Row;
-import com.stratio.crossdata.common.exceptions.UnsupportedException;
 
 /**
  * This class represent a message processor by element time.
@@ -60,11 +60,11 @@ public class TimeWindowProcessMessage implements ProcessMessage {
      *            the querydata.
      * @param resultsetCreator
      *            the resultSet creator.
-     * @throws UnsupportedException
+     * @throws ExecutionValidationException
      *             if an error happens.
      */
     public TimeWindowProcessMessage(ConnectorQueryData queryData, ResultsetCreator resultsetCreator)
-                    throws UnsupportedException {
+                    throws ExecutionValidationException {
 
         TimerTask timerTask = new SendResultTimer(this);
 

@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import com.stratio.connector.commons.connection.Connection;
 import com.stratio.connector.commons.util.ConnectorParser;
 import com.stratio.crossdata.common.connector.ConnectorClusterConfig;
+import com.stratio.crossdata.common.exceptions.ConnectionException;
 import com.stratio.crossdata.common.security.ICredentials;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.api.StratioStreamingAPIFactory;
@@ -51,7 +52,7 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
     /**
      * The connection is connected.
      */
-    private boolean isConnect = false;
+    private boolean isConnected = false;
 
     private String connectionName;
 
@@ -62,14 +63,14 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
      *            the credentials.
      * @param config
      *            The cluster configuration.
+     * @throws ConnectionException
      * @throws StratioEngineConnectionException
      *             if an connections error happens.
      */
-    public StreamingConnection(ICredentials credentials, ConnectorClusterConfig config)
-                    throws StratioEngineConnectionException {
+    public StreamingConnection(ICredentials credentials, ConnectorClusterConfig config) throws ConnectionException {
 
         if (credentials != null) {
-            throw new StratioEngineConnectionException("Credentials are not supported");
+            throw new ConnectionException("Credentials are not supported");
         }
 
         String kafkaServer = ConnectorParser.hosts(config.getClusterOptions().get(KAFKA_SERVER))[0];
@@ -78,13 +79,22 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
         String zooKeeperServer = ConnectorParser.hosts(config.getClusterOptions().get(ZOOKEEPER_SERVER))[0];
         int zooKeeperPort = Integer.parseInt(ConnectorParser.ports(config.getClusterOptions().get(ZOOKEEPER_PORT))[0]);
 
-        stratioStreamingAPI = StratioStreamingAPIFactory.create().initializeWithServerConfig(kafkaServer, kafkaPort,
+        stratioStreamingAPI = StratioStreamingAPIFactory.create().withServerConfig(kafkaServer, kafkaPort,
                         zooKeeperServer, zooKeeperPort);
 
-        connectionName = config.getName().getName();
-        logger.info("Streaming  connection [" + connectionName + "] established ");
+        try {
+            stratioStreamingAPI.init();
+            // TODO is it async??
+            logger.info("Streaming  connection [" + config.getName().getName() + "] established ");
+            isConnected = true;
 
-        isConnect = true;
+        } catch (StratioEngineConnectionException e) {
+            String msg = "Failure creating Streaming connection. " + e.getMessage();
+            logger.error(msg);
+            throw new ConnectionException(msg, e);
+
+        }
+
     }
 
     /**
@@ -93,7 +103,7 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
     public void close() {
         if (stratioStreamingAPI != null) {
             stratioStreamingAPI.close();
-            isConnect = false;
+            isConnected = false;
             stratioStreamingAPI = null;
             logger.info("Streaming  connection [" + connectionName + "] close");
         }
@@ -106,8 +116,8 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
      * @return true if the connection is open. False in other case.
      */
     @Override
-    public boolean isConnect() {
-        return isConnect;
+    public boolean isConnected() {
+        return isConnected;
     }
 
     /**

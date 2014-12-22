@@ -88,7 +88,7 @@ public class ThreadConnectionFT {
     public void apiStreamingTest() throws ConnectorException, StratioEngineConnectionException {
 
         StratioStreamingAPI stratioStreamingAPI = (StratioStreamingAPI) StratioStreamingAPIFactory.create()
-                        .initializeWithServerConfig("127.0.0.1", 9092, "127.0.0.1", 2181);
+                        .withServerConfig("127.0.0.1", 9092, "127.0.0.1", 2182).init();
 
         waitSeconds(5);
 
@@ -97,7 +97,7 @@ public class ThreadConnectionFT {
         waitSeconds(5);
 
         StratioStreamingAPI stratioStreamingAPI2 = (StratioStreamingAPI) StratioStreamingAPIFactory.create()
-                        .initializeWithServerConfig("127.0.0.1", 9092, "127.0.0.1", 2181);
+                        .withServerConfig("127.0.0.1", 9092, "127.0.0.1", 2181).init();
 
         waitSeconds(5);
 
