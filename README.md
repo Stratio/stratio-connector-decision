@@ -64,7 +64,7 @@ A complete tutorial is available [here](_doc/FirstSteps.md). The basic commands 
     Attach cluster on that datastore. The datastore name must be the same as the defined in the Datastore manifest.
     
       ```
-         xdsh:user>  ATTACH CLUSTER <cluster_name> ON DATASTORE <datastore_name> WITH OPTIONS {'KafkaServer': '[<kafkaServer>]', 'KafkaPort': '[<kafkaPort>]', 'zooKeeperServer':'[<zooKeeperServer>]','zooKeeperPort':'[<zooKeeperPort>]'};
+         xdsh:user>  ATTACH CLUSTER <cluster_name> ON DATASTORE <datastore_name> WITH OPTIONS {'KafkaServer': '[<kafkaHost_1,kafkaHost_2...kafkaHost_n>]', 'KafkaPort': '[<kafkaPort_1, kafkaPort_2...kafkaPort_n>]', 'zooKeeperServer':'[<zooKeeperHost_1,zooKeeperHost_2...zooKeeperHost_n>]','zooKeeperPort':'[<zooKeeperPort_1,zooKeeperPort_2...zooKeeperPort_n>]'};
       ```
 
     Add the connector manifest. The XML with the manifest can be found in the path of the Streaming Connector in target/connector-streaming-core-0.2.0/conf/StreamingConnector.xml
