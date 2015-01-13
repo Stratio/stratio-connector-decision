@@ -29,6 +29,7 @@ import com.stratio.connector.streaming.core.engine.query.queryexecutor.Connector
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.crossdata.common.connector.IResultHandler;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 
@@ -114,6 +115,10 @@ public class QueryProcess implements ConnectorProcess {
 
         } catch (InterruptedException e) {
             logger.info("The query is stopped");
+
+        } catch (UnsupportedException e) {
+            logger.error(e.getMessage());
+            resultHandler.processException(queryId, new ExecutionException(e));
 
         }
     }
