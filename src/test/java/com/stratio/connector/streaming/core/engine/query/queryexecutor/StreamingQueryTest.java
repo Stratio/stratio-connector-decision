@@ -48,6 +48,8 @@ import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.metadata.Operations;
+import com.stratio.crossdata.common.statements.structures.ColumnSelector;
+import com.stratio.crossdata.common.statements.structures.Selector;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.messages.ColumnNameTypeValue;
 import com.stratio.streaming.commons.messages.StratioStreamingMessage;
@@ -162,19 +164,9 @@ public class StreamingQueryTest {
 
         streamingQuery.readMessages(streams);
 
-        // Row row = new Row();
-        // Map<String, Cell> cells = new LinkedHashMap<>();
-        // cells.put(COLUMN_1,new Cell(VALUE_1_1));
-        // cells.put(COLUMN_2,new Cell(VALUE_2_1));
-        // row.setCells(cells);
         verify(processMessage, times(2)).processMessage(any(Row.class));
 
-        // Row row2 = new Row();
-        // Map<String, Cell> cells2 = new LinkedHashMap<>();
-        // cells2.put(COLUMN_1,new Cell(VALUE_1_2));
-        // cells2.put(COLUMN_2,new Cell(VALUE_2_2));
-        // row2.setCells(cells);
-        // verify(processMessage, times(1)).processMessage(eq(row2));
+
     }
 
     private List<ColumnNameTypeValue> createColumns(Object value1, Object value2) {
@@ -188,14 +180,14 @@ public class StreamingQueryTest {
         ConnectorQueryData queryData = new ConnectorQueryData();
         queryData.setProjection(new Project(Operations.PROJECT, new TableName(CATALOG, TABLE), CLUSTER_NAME));
         queryData.setQueryId(QUERY_ID);
-        Map<ColumnName, String> columnMap = new LinkedHashMap<>();
-        columnMap.put(new ColumnName(CATALOG, TABLE, COLUMN1), ALIAS1);
+        Map<Selector, String> columnMap = new LinkedHashMap<>();
+        columnMap.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, COLUMN1)), ALIAS1);
         Map<String, ColumnType> typemap = new LinkedHashMap<>();
         typemap.put(COLUMN1, ColumnType.TEXT);
         typemap.put(COLUMN2, ColumnType.TEXT);
-        Map<ColumnName, ColumnType> typemapColumnName = new LinkedHashMap<>();
-        typemapColumnName.put(new ColumnName(CATALOG, TABLE, COLUMN1), ColumnType.TEXT);
-        typemapColumnName.put(new ColumnName(CATALOG, TABLE, COLUMN2), ColumnType.TEXT);
+        Map<Selector, ColumnType> typemapColumnName = new LinkedHashMap<>();
+        typemapColumnName.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, COLUMN1)), ColumnType.TEXT);
+        typemapColumnName.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, COLUMN2)), ColumnType.TEXT);
         Select select = new Select(Operations.SELECT_OPERATOR, columnMap, typemap, typemapColumnName);
         queryData.setSelect(select);
         return queryData;

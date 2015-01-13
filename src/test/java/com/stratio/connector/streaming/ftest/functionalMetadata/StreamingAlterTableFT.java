@@ -33,8 +33,8 @@ import org.junit.Test;
 
 import com.stratio.connector.commons.ftest.functionalMetadata.GenericMetadataAlterTableFT;
 import com.stratio.connector.commons.ftest.helper.IConnectorHelper;
+import com.stratio.connector.commons.metadata.TableMetadataBuilder;
 import com.stratio.connector.commons.test.util.LogicalWorkFlowCreator;
-import com.stratio.connector.commons.test.util.TableMetadataBuilder;
 import com.stratio.connector.streaming.core.StreamingConnector;
 import com.stratio.connector.streaming.ftest.helper.StreamingConnectorHelper;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
@@ -94,7 +94,7 @@ public class StreamingAlterTableFT extends GenericMetadataAlterTableFT {
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
         tableMetadataBuilder.addColumn(COLUMN_1, ColumnType.VARCHAR);
 
-        connector.getMetadataEngine().createTable(clusterName, tableMetadataBuilder.build(getConnectorHelper()));
+        connector.getMetadataEngine().createTable(clusterName, tableMetadataBuilder.build(false));
         sleep(5000);
 
         // ADD the column: COLUMN_2 with alterTable
@@ -130,7 +130,7 @@ public class StreamingAlterTableFT extends GenericMetadataAlterTableFT {
         row.setCells(cells);
 
         tableMetadataBuilder.addColumn(COLUMN_2, ColumnType.INT);
-        connector.getStorageEngine().insert(clusterName, tableMetadataBuilder.build(getConnectorHelper()), row);
+        connector.getStorageEngine().insert(clusterName, tableMetadataBuilder.build(false), row,false);
 
         sleep(12000);
 

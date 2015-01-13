@@ -20,6 +20,7 @@ package com.stratio.connector.streaming.core.engine;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,19 +33,19 @@ import com.stratio.connector.streaming.core.exception.ExecutionValidationExcepti
 import com.stratio.crossdata.common.data.AlterOperation;
 import com.stratio.crossdata.common.data.AlterOptions;
 import com.stratio.crossdata.common.data.CatalogName;
+import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.data.ColumnName;
 import com.stratio.crossdata.common.data.TableName;
+import com.stratio.crossdata.common.exceptions.ConnectorException;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.metadata.CatalogMetadata;
 import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.metadata.IndexMetadata;
 import com.stratio.crossdata.common.metadata.TableMetadata;
+import com.stratio.crossdata.common.statements.structures.Selector;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.api.messaging.ColumnNameType;
-import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
-import com.stratio.streaming.commons.exceptions.StratioEngineOperationException;
-import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
 import com.stratio.streaming.commons.exceptions.StratioStreamingException;
 
 /**
@@ -69,7 +70,75 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
     }
 
     /**
-     * This method create a index in ES.
+     * This method create a Catalog in Streaming.
+     *
+     * @param clusterName the cluster name.
+     * @param connection the connection.
+     * @throws UnsupportedException
+     *             if any operation is not supported.
+     * @throws ExecutionException
+     *             if an error occur.
+     */
+    @Override protected List<CatalogMetadata> provideMetadata(ClusterName clusterName,
+            Connection<IStratioStreamingAPI> connection) throws ConnectorException {
+        throw new UnsupportedException("provide metadata is not supporting in Streaming connector");
+    }
+
+    /**
+     * This method create a Catalog in Streaming.
+     *
+     * @param catalogName
+     *            the catalog name.
+     * @param clusterName the cluster name.
+     * @param connection the connection.
+     * @throws UnsupportedException
+     *             if any operation is not supported.
+     * @throws ExecutionException
+     *             if an error occur.
+     */
+    @Override protected CatalogMetadata provideCatalogMetadata(CatalogName catalogName, ClusterName clusterName,
+            Connection<IStratioStreamingAPI> connection) throws ConnectorException {
+        throw new UnsupportedException("provide table catalog is not supporting in Streaming connector");
+    }
+
+
+    /**
+     * This method create a Catalog in Streaming.
+     *
+     * @param tableName
+     *            the table name.
+     * @param clusterName the cluster name.
+     * @param connection the connection.
+     * @throws UnsupportedException
+     *             if any operation is not supported.
+     * @throws ExecutionException
+     *             if an error occur.
+     */
+    @Override protected TableMetadata provideTableMetadata(TableName tableName, ClusterName clusterName,
+            Connection<IStratioStreamingAPI> connection) throws ConnectorException {
+        throw new UnsupportedException("provide table metadata is not supporting in Streaming connector");
+    }
+
+    /**
+     * This method create a Catalog in Streaming.
+     *
+     * @param catalogName
+     *            the catalogname.
+     * @param map the map.
+     * @param connection the connection.
+     * @throws UnsupportedException
+     *             if any operation is not supported.
+     * @throws ExecutionException
+     *             if an error occur.
+     */
+    @Override protected void alterCatalog(CatalogName catalogName, Map<Selector, Selector> map,
+            Connection<IStratioStreamingAPI> connection) throws UnsupportedException, ExecutionException {
+
+        throw new UnsupportedException("Alter catalog not supported in Streaming connector");
+    }
+
+    /**
+     * This method create a Catalog in Streaming.
      *
      * @param indexMetaData
      *            the index configuration.
@@ -111,7 +180,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
                 columnList.add(new ColumnNameType(columnName, columnType));
             }
             connection.getNativeConnection().createStream(streamName, columnList);
-        } catch (StratioEngineOperationException | StratioEngineStatusException | StratioAPISecurityException e) {
+        } catch ( StratioStreamingException   e) {
             String msg = "Fail creating the Stream [" + streamName + "]. " + e.getMessage();
             logger.error(msg);
             throw new ExecutionException(msg, e);
@@ -265,7 +334,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
 
             try {
                 connection.getNativeConnection().alterStream(streamName, Arrays.asList(column));
-            } catch (StratioEngineOperationException | StratioEngineStatusException | StratioAPISecurityException e) {
+            } catch ( StratioStreamingException   e) {
                 String msg = "Fail altering the Stream [" + streamName + "]. " + e.getMessage();
                 logger.error(msg);
                 throw new ExecutionException(msg, e);

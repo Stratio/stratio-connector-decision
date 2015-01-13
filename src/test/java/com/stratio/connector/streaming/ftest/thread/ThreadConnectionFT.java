@@ -49,9 +49,9 @@ public class ThreadConnectionFT {
      */
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     public String CATALOG = "catalog_functional_test";
-    protected String SERVER_KAFKA = "127.0.0.1";// "10.200.0.58";// "192.168.0.2";
+    protected String SERVER_KAFKA = "10.200.0.58"; //"127.0.0.1";// "10.200.0.58";// "192.168.0.2";
     protected String PORT_KAFKA = "9092";
-    protected String SERVER_ZOOKEEPER = "127.0.0.1"; // "192.168.0.2";
+    protected String SERVER_ZOOKEEPER = "10.200.0.58"; //"127.0.0.1"; // "192.168.0.2";
     protected String PORT_ZOOKEEPER = "2181";
     protected Random random;
     protected StreamingConnector sConnector;
@@ -88,7 +88,7 @@ public class ThreadConnectionFT {
     public void apiStreamingTest() throws ConnectorException, StratioEngineConnectionException {
 
         StratioStreamingAPI stratioStreamingAPI = (StratioStreamingAPI) StratioStreamingAPIFactory.create()
-                        .withServerConfig("127.0.0.1", 9092, "127.0.0.1", 2181).init();
+                        .withServerConfig(SERVER_KAFKA, 9092, SERVER_ZOOKEEPER, 2181).init();
 
         waitSeconds(5);
 
@@ -97,7 +97,7 @@ public class ThreadConnectionFT {
         waitSeconds(5);
 
         StratioStreamingAPI stratioStreamingAPI2 = (StratioStreamingAPI) StratioStreamingAPIFactory.create()
-                        .withServerConfig("127.0.0.1", 9092, "127.0.0.1", 2181).init();
+                        .withServerConfig(SERVER_KAFKA, 9092, SERVER_ZOOKEEPER, 2181).init();
 
         waitSeconds(5);
 

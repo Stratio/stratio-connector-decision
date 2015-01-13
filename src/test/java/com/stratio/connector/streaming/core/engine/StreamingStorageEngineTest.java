@@ -27,7 +27,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
@@ -89,7 +88,7 @@ public class StreamingStorageEngineTest {
 
         Row row = createRow(VALUE1);
 
-        streamingStorageEngine.insert(createTableMetadata(), row, connection);
+        streamingStorageEngine.insert(createTableMetadata(), row, false,connection);
 
         verify(streamingApi, times(1)).insertData(eq(CATALOG + "_" + TABLE), anyList());
 
@@ -105,7 +104,7 @@ public class StreamingStorageEngineTest {
         rows.add(createRow(VALUE1));
         rows.add(createRow(VALUE2));
 
-        streamingStorageEngine.insert(createTableMetadata(), rows, connection);
+        streamingStorageEngine.insert(createTableMetadata(), rows, false,connection);
 
         verify(streamingApi, times(2)).insertData(eq(CATALOG + "_" + TABLE), anyList());
 
@@ -147,16 +146,18 @@ public class StreamingStorageEngineTest {
 
     private TableMetadata createTableMetadata() {
         Map<Selector, Selector> options = Collections.EMPTY_MAP;
-        Map<IndexName, IndexMetadata> index = Collections.EMPTY_MAP;
-        Map<ColumnName, ColumnMetadata> columns = new LinkedHashMap<>();
+        LinkedHashMap<IndexName, IndexMetadata> index = new LinkedHashMap();
+        LinkedHashMap<ColumnName, ColumnMetadata> columns = new LinkedHashMap<>();
         ColumnMetadata columnMetadata = new ColumnMetadata(new ColumnName(CATALOG, TABLE, COLUM), new Object[0],
                         ColumnType.INT);
         columns.put(new ColumnName(CATALOG, TABLE, COLUM), columnMetadata);
 
-        List<ColumnName> partitionKey = Collections.EMPTY_LIST;
-        List<ColumnName> clusterKey = Collections.EMPTY_LIST;
+        LinkedList<ColumnName> partitionKey = new LinkedList<>();
+        LinkedList<ColumnName> clusterKey = new LinkedList<>();
         return new TableMetadata(new TableName(CATALOG, TABLE), options, columns, index, new ClusterName(CLUSTER_NAME),
                         partitionKey, clusterKey);
+
+
     }
 
 }

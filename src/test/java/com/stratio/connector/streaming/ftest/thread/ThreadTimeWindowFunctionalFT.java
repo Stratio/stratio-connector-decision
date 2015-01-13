@@ -32,15 +32,14 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.stratio.connector.commons.metadata.TableMetadataBuilder;
 import com.stratio.connector.commons.test.util.LogicalWorkFlowCreator;
-import com.stratio.connector.commons.test.util.TableMetadataBuilder;
 import com.stratio.connector.streaming.ftest.GenericStreamingTest;
-import com.stratio.connector.streaming.ftest.helper.StreamingConnectorHelper;
+import com.stratio.connector.streaming.ftest.thread.actions.RowToInsertDefault;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
 import com.stratio.crossdata.common.connector.IResultHandler;
 import com.stratio.crossdata.common.data.Cell;
-import com.stratio.crossdata.common.data.ColumnName;
 import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.data.TableName;
 import com.stratio.crossdata.common.exceptions.ConnectorException;
@@ -52,6 +51,7 @@ import com.stratio.crossdata.common.metadata.ColumnMetadata;
 import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.metadata.TableMetadata;
 import com.stratio.crossdata.common.result.QueryResult;
+import com.stratio.crossdata.common.statements.structures.ColumnSelector;
 import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
 public class ThreadTimeWindowFunctionalFT extends GenericStreamingTest {
@@ -86,7 +86,7 @@ public class ThreadTimeWindowFunctionalFT extends GenericStreamingTest {
         tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, ColumnType.VARCHAR)
                         .addColumn(INTEGER_COLUMN, ColumnType.INT).addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
                         .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT)
-                        .build(new StreamingConnectorHelper(getClusterName()));
+                        .build(false);
         try {
             sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -106,7 +106,8 @@ public class ThreadTimeWindowFunctionalFT extends GenericStreamingTest {
     public void stopReadBeforeStopWriteTest() throws InterruptedException, UnsupportedException {
 
         logger.debug("********************** Inserting ......");
-        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
+        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata, new
+                RowToInsertDefault());
         stramingInserter.setAddIntegerChangeable(true);
         stramingInserter.start();
 
@@ -140,7 +141,8 @@ public class ThreadTimeWindowFunctionalFT extends GenericStreamingTest {
     @Test
     public void stopWriteBeforeStopReadTest() throws InterruptedException, UnsupportedException {
 
-        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
+        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata, new
+                RowToInsertDefault());
         stramingInserter.setAddIntegerChangeable(true);
         stramingInserter.start();
 
@@ -182,7 +184,8 @@ public class ThreadTimeWindowFunctionalFT extends GenericStreamingTest {
         logger.debug("********************** Querying......");
         waitSeconds(WAIT_TIME);
 
-        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
+        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata, new
+                RowToInsertDefault());
         stramingInserter.numOfElement(ELEMENTS_WRITE).elementPerSecond(ELEMENTS_WRITE);
         stramingInserter.setAddIntegerChangeable(true);
         stramingInserter.start();
@@ -249,11 +252,11 @@ public class ThreadTimeWindowFunctionalFT extends GenericStreamingTest {
 
         boolean mustRead = true;
 
-        private ColumnName[] orderendColumnaName;
+        private ColumnSelector[] orderendColumnaName;
 
         public ResultHandler(Select select) {
             mustRead = true;
-            orderendColumnaName = select.getColumnMap().keySet().toArray(new ColumnName[0]);
+            orderendColumnaName = select.getColumnMap().keySet().toArray(new ColumnSelector[0]);
 
         }
 

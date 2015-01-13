@@ -25,10 +25,10 @@ import java.util.LinkedList;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.stratio.connector.commons.metadata.TableMetadataBuilder;
 import com.stratio.connector.commons.test.util.LogicalWorkFlowCreator;
-import com.stratio.connector.commons.test.util.TableMetadataBuilder;
 import com.stratio.connector.streaming.ftest.GenericStreamingTest;
-import com.stratio.connector.streaming.ftest.helper.StreamingConnectorHelper;
+import com.stratio.connector.streaming.ftest.thread.actions.RowToInsertDefault;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
 import com.stratio.crossdata.common.connector.IResultHandler;
@@ -71,7 +71,7 @@ public class ThreadFilterStringFunctionalFT extends GenericStreamingTest {
         tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, ColumnType.VARCHAR)
                         .addColumn(INTEGER_COLUMN, ColumnType.INT).addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
                         .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT)
-                        .build(new StreamingConnectorHelper(getClusterName()));
+                        .build(false);
         try {
             sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -92,14 +92,14 @@ public class ThreadFilterStringFunctionalFT extends GenericStreamingTest {
         waitSeconds(WAIT_TIME);
 
         System.out.println("TEST ********************** Inserting ......");
-        StreamingInserter streamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
+        StreamingInserter streamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata, new RowToInsertDefault());
         streamingInserter.setAddIntegerChangeable(true);
         streamingInserter.numOfElement(CORRECT_ELMENT_TO_FIND);
         streamingInserter.start();
 
-        StreamingInserter oherStreamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
-        oherStreamingInserter.changeStingColumn(OTHER_TEXT);
-        oherStreamingInserter.start();
+        StreamingInserter otherStreamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata, new RowToInsertDefault());
+        otherStreamingInserter.changeStingColumn(OTHER_TEXT);
+        otherStreamingInserter.start();
 
         waitSeconds(WAIT_TIME);
 
@@ -111,10 +111,10 @@ public class ThreadFilterStringFunctionalFT extends GenericStreamingTest {
         waitSeconds(WAIT_TIME);
 
         System.out.println("TEST ********************** END Insert......");
-        oherStreamingInserter.end();
+        otherStreamingInserter.end();
         streamingInserter.end();
 
-        assertEquals("Dont exist incorrect elements", 0, numberAlternativeText);
+        assertEquals("Do not exist incorrect elements", 0, numberAlternativeText);
         assertEquals("All correct elements have been found", CORRECT_ELMENT_TO_FIND, numberDefaultText);
 
     }
@@ -130,11 +130,11 @@ public class ThreadFilterStringFunctionalFT extends GenericStreamingTest {
         waitSeconds(WAIT_TIME);
 
         System.out.println("TEST ********************** Inserting ......");
-        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
+        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata, new RowToInsertDefault());
         stramingInserter.setAddIntegerChangeable(true);
         stramingInserter.start();
 
-        StreamingInserter oherStreamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
+        StreamingInserter oherStreamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata, new RowToInsertDefault());
         oherStreamingInserter.changeStingColumn(OTHER_TEXT);
         oherStreamingInserter.numOfElement(CORRECT_ELMENT_TO_FIND);
         oherStreamingInserter.start();
@@ -193,7 +193,6 @@ public class ThreadFilterStringFunctionalFT extends GenericStreamingTest {
 
         @Override
         public void processException(String queryId, ExecutionException exception) {
-            System.out.println(queryId + " " + exception.getMessage());
             exception.printStackTrace();
         }
 

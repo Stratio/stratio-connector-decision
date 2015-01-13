@@ -55,7 +55,7 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
      */
     private boolean isConnected = false;
 
-    private String connectionName;
+
 
     /**
      * Constructor.
@@ -115,7 +115,7 @@ public class StreamingConnection extends Connection<IStratioStreamingAPI> {
             stratioStreamingAPI.close();
             isConnected = false;
             stratioStreamingAPI = null;
-            logger.info("Streaming  connection [" + connectionName + "] close");
+            logger.info("Streaming  connection close");
         }
 
     }

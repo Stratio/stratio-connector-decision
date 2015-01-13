@@ -151,6 +151,8 @@ public class StreamingConnector extends CommonsConnector {
         return new StreamingMetadataEngine(connectionHandler);
     }
 
+
+
     /**
      * Attach shut down hook.
      */

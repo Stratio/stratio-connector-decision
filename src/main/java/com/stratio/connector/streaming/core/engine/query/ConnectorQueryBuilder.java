@@ -28,12 +28,12 @@ import org.slf4j.LoggerFactory;
 import com.stratio.connector.commons.util.SelectorHelper;
 import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.connector.streaming.core.exception.ExecutionValidationException;
-import com.stratio.crossdata.common.data.ColumnName;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.logicalplan.Filter;
 import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.statements.structures.Operator;
 import com.stratio.crossdata.common.statements.structures.Relation;
+import com.stratio.crossdata.common.statements.structures.Selector;
 import com.stratio.crossdata.common.statements.structures.StringSelector;
 
 /**
@@ -95,8 +95,8 @@ public class ConnectorQueryBuilder {
     private void createProjection(ConnectorQueryData queryData) throws ExecutionValidationException {
 
         Select selectionClause = queryData.getSelect();
-        Map<ColumnName, String> aliasMapping = selectionClause.getColumnMap();
-        Set<ColumnName> columnMetadataList = aliasMapping.keySet();
+        Map<Selector, String> aliasMapping = selectionClause.getColumnMap();
+        Set<Selector> columnMetadataList = aliasMapping.keySet();
 
         // Retrieving the fields
         if (columnMetadataList == null || columnMetadataList.isEmpty()) {
@@ -110,10 +110,10 @@ public class ConnectorQueryBuilder {
         // Retrieving the alias
         int numFields = columnMetadataList.size();
         int i = 0;
-        for (ColumnName colName : columnMetadataList) {
+        for (Selector colName : columnMetadataList) {
 
             querySb.append(StreamUtil.createStreamName(queryData.getProjection())).append(".")
-                            .append(colName.getName()).append(" as ").append(aliasMapping.get(colName));
+                            .append(colName.getColumnName().getName()).append(" as ").append(aliasMapping.get(colName));
             if (++i < numFields) {
                 querySb.append(",");
             }

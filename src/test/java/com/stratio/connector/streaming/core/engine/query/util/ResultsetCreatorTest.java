@@ -45,6 +45,8 @@ import com.stratio.crossdata.common.metadata.ColumnMetadata;
 import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.metadata.Operations;
 import com.stratio.crossdata.common.result.QueryResult;
+import com.stratio.crossdata.common.statements.structures.ColumnSelector;
+import com.stratio.crossdata.common.statements.structures.Selector;
 
 /**
  * ResultsetCreator Tester.
@@ -83,9 +85,11 @@ public class ResultsetCreatorTest {
     private void valiateMetadata(List<ColumnMetadata> columnMetadata) {
         int i = 0;
         for (ColumnMetadata metadata : columnMetadata) {
-            assertEquals("the alias is correct", ALIAS[i], metadata.getName().getAlias());
-            assertEquals("the name is correct", CATALOG + "." + TABLE + "." + NAME[i], metadata.getName()
-                            .getQualifiedName());
+            assertEquals("the alias fot field " + metadata.getName().getName() + " is the expected", ALIAS[i], metadata
+                    .getName().getAlias());
+            assertEquals("the name  fot field "+metadata.getName().getName() + " is correct", CATALOG + "." + TABLE +
+                    "." + NAME[i], metadata.getName()
+                    .getQualifiedName());
             assertEquals("the type is correct", TYPE[i], metadata.getColumnType());
             i++;
         }
@@ -128,15 +132,15 @@ public class ResultsetCreatorTest {
         ConnectorQueryData queryData = new ConnectorQueryData();
         queryData.setProjection(new Project(Operations.PROJECT, new TableName(CATALOG, TABLE), CLUSTER_NAME));
         queryData.setQueryId(QUERY_ID);
-        Map<ColumnName, String> columnMap = new LinkedHashMap<>();
-        columnMap.put(new ColumnName(CATALOG, TABLE, NAME[0]), ALIAS[0]);
-        columnMap.put(new ColumnName(CATALOG, TABLE, NAME[1]), ALIAS[1]);
+        Map<Selector, String> columnMap = new LinkedHashMap<>();
+        columnMap.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, NAME[0])), ALIAS[0]);
+        columnMap.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, NAME[1])), ALIAS[1]);
         Map<String, ColumnType> typemap = new LinkedHashMap();
         typemap.put(CATALOG + "." + TABLE + "." + NAME[0], TYPE[0]);
         typemap.put(CATALOG + "." + TABLE + "." + NAME[1], TYPE[1]);
-        Map<ColumnName, ColumnType> typemapColumnName = new LinkedHashMap<>();
-        typemapColumnName.put(new ColumnName(CATALOG, TABLE, NAME[0]), TYPE[0]);
-        typemapColumnName.put(new ColumnName(CATALOG, TABLE, NAME[1]), TYPE[1]);
+        Map<Selector, ColumnType> typemapColumnName = new LinkedHashMap<>();
+        typemapColumnName.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, NAME[0])), TYPE[0]);
+        typemapColumnName.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, NAME[1])), TYPE[1]);
 
         Select select = new Select(Operations.SELECT_OPERATOR, columnMap, typemap, typemapColumnName);
         queryData.setSelect(select);

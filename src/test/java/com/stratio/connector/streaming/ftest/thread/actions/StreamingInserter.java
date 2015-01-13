@@ -22,9 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.stratio.connector.streaming.core.StreamingConnector;
-import com.stratio.connector.streaming.ftest.GenericStreamingTest;
 import com.stratio.crossdata.common.connector.IStorageEngine;
-import com.stratio.crossdata.common.data.Cell;
 import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.exceptions.ConnectorException;
@@ -33,6 +31,7 @@ import com.stratio.crossdata.common.metadata.TableMetadata;
 
 public class StreamingInserter extends Thread {
 
+    private final RowToInsert rowToInsert;
     StreamingConnector streamingConnector;
 
     private ClusterName clusterName;
@@ -45,12 +44,14 @@ public class StreamingInserter extends Thread {
     private int integerChangeable = 10;
     private boolean addIntegerChangeable;
 
-    public StreamingInserter(StreamingConnector sC, ClusterName clusterName, TableMetadata stream) {
+    public StreamingInserter(StreamingConnector sC, ClusterName clusterName, TableMetadata stream, RowToInsert
+     rowToInsert       ) {
         super("[StreamingInserter]");
         this.streamingConnector = sC;
         this.clusterName = clusterName;
         this.stream = stream;
         this.addIntegerChangeable = false;
+        this.rowToInsert = rowToInsert;
     }
 
     public StreamingInserter elementPerSecond(long elements) {
@@ -84,17 +85,18 @@ public class StreamingInserter extends Thread {
         }
 
         try {
-            System.out.println("****************************** STARTING StreamingInserter **********************");
+
             IStorageEngine storageEngine = streamingConnector.getStorageEngine();
             for (int i = 0; !finishThread; i++) {
                 if (numOfElement != 0 && numOfElement - 1 == i) {
                     finishThread = true;
                 }
 
-                Row row = getRowToInsert(i);
+                Row row = rowToInsert.getRowToInsert(i, text,typesToInsert,addIntegerChangeable,integerChangeable);
 
                 try {
-                    storageEngine.insert(clusterName, stream, row);
+
+                    storageEngine.insert(clusterName, stream, row, false);
                 } catch (ConnectorException e) {
                     e.printStackTrace();
                 }
@@ -107,44 +109,9 @@ public class StreamingInserter extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("****************************** ENDING StreamingInserter **********************");
+
     }
 
-    /**
-     * @param i
-     * @return
-     */
-    private Row getRowToInsert(int i) {
-        Row row = new Row();
-        for (ColumnType colType : typesToInsert) {
-            switch (colType) {
-            case BOOLEAN:
-                row.addCell(GenericStreamingTest.BOOLEAN_COLUMN, new Cell(true));
-                break;
-            case DOUBLE:
-                row.addCell(GenericStreamingTest.DOUBLE_COLUMN, new Cell(new Double(i + 0.5)));
-                break;
-            case FLOAT:
-                row.addCell(GenericStreamingTest.FLOAT_COLUMN, new Cell(new Float(i + 0.5)));
-                break;
-            case INT:
-                row.addCell(GenericStreamingTest.INTEGER_COLUMN, new Cell(i));
-                break;
-            case BIGINT:
-                row.addCell(GenericStreamingTest.LONG_COLUMN, new Cell(new Long(i + new Long(Long.MAX_VALUE / 2))));
-                break;
-            case VARCHAR:
-            case TEXT:
-                row.addCell(GenericStreamingTest.STRING_COLUMN, new Cell(text));
-                break;
-
-            }
-            if (addIntegerChangeable) {
-                row.addCell(GenericStreamingTest.INTEGER_CHANGEABLE_COLUMN, new Cell(integerChangeable));
-            }
-        }
-        return row;
-    }
 
     public void changeStingColumn(String stringOutput) {
         this.text = stringOutput;

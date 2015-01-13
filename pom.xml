@@ -25,8 +25,8 @@
 	<name>Streaming Connector</name>
 
 	<properties>
-		<crossdata.version>0.1.1</crossdata.version>
-		<commons.connector.version>0.3.0-SNAPSHOT</commons.connector.version>
+		<crossdata.version>0.2.0-SNAPSHOT</crossdata.version>
+		<commons.connector.version>0.4.0-SNAPSHOT</commons.connector.version>
 		<streaming.api.version>0.6.1</streaming.api.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -103,10 +103,6 @@
 					<artifactId>mongo-java-driver</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>org.mockito</groupId>
-					<artifactId>mockito-all</artifactId>
-				</exclusion>
-				<exclusion>
 					<groupId>org.scalamock</groupId>
 					<artifactId>scalamock-scalatest-support_2.10</artifactId>
 				</exclusion>
@@ -123,6 +119,14 @@
 			<version>${commons.connector.version}</version>
 		</dependency>
 
+
+		<dependency>
+			<groupId>com.stratio.connector</groupId>
+			<artifactId>stratio-connector-commons</artifactId>
+			<version>0.4.0-SNAPSHOT</version>
+			<classifier>tests</classifier>
+		</dependency>
+
 		<dependency>
 			<groupId>com.stratio.crossdata</groupId>
 			<artifactId>crossdata-connector</artifactId>
@@ -137,22 +141,12 @@
 
 
 		<dependency>
-			<groupId>com.stratio.connector</groupId>
-			<artifactId>stratio-connector-commons</artifactId>
-			<version>${commons.connector.version}</version>
-			<classifier>tests</classifier>
-			<scope>test</scope>
-		</dependency>
-
-
-
-
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
+
 
 		<dependency>
 			<groupId>org.powermock</groupId>

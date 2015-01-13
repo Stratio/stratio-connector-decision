@@ -26,10 +26,10 @@ import java.util.LinkedList;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.stratio.connector.commons.metadata.TableMetadataBuilder;
 import com.stratio.connector.commons.test.util.LogicalWorkFlowCreator;
-import com.stratio.connector.commons.test.util.TableMetadataBuilder;
 import com.stratio.connector.streaming.ftest.GenericStreamingTest;
-import com.stratio.connector.streaming.ftest.helper.StreamingConnectorHelper;
+import com.stratio.connector.streaming.ftest.thread.actions.RowToInsertDefault;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
 import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
 import com.stratio.crossdata.common.connector.IResultHandler;
@@ -69,7 +69,7 @@ public class ThreadTwoFilterFunctionalFT extends GenericStreamingTest {
         tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, ColumnType.VARCHAR)
                         .addColumn(INTEGER_COLUMN, ColumnType.INT).addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
                         .addColumn(INTEGER_CHANGEABLE_COLUMN, ColumnType.INT)
-                        .build(new StreamingConnectorHelper(getClusterName()));
+                        .build(false);
         try {
             sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -89,18 +89,19 @@ public class ThreadTwoFilterFunctionalFT extends GenericStreamingTest {
         waitSeconds(WAIT_TIME);
 
         System.out.println("TEST ********************** Inserting ......");
-        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
+        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata, new RowToInsertDefault());
         stramingInserter.setAddIntegerChangeable(true);
         stramingInserter.changeIntegerChangeableColumn(OTHER_INT_VALUE);
         stramingInserter.start();
 
-        StreamingInserter otherStreamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
+        StreamingInserter otherStreamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata, new RowToInsertDefault());
         otherStreamingInserter.changeStingColumn(TEXT_FIND);
 
         otherStreamingInserter.start();
 
         // This is the correct inserter.
-        StreamingInserter correctStreamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata);
+        StreamingInserter correctStreamingInserter = new StreamingInserter(sConnector, getClusterName(),
+                tableMetadata, new RowToInsertDefault());
         correctStreamingInserter.setAddIntegerChangeable(true);
         correctStreamingInserter.changeStingColumn(TEXT_FIND);
         correctStreamingInserter.changeIntegerChangeableColumn(OTHER_INT_VALUE - 1);

@@ -31,6 +31,7 @@ import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.metadata.ColumnMetadata;
 import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.result.QueryResult;
+import com.stratio.crossdata.common.statements.structures.Selector;
 
 /**
  * This class creates the resultset.
@@ -52,7 +53,8 @@ public class ResultsetCreator {
     /**
      * The query result.
      */
-    private QueryResult queryResult;
+
+     private QueryResult queryResult;
 
     /**
      * Constructor.
@@ -111,11 +113,13 @@ public class ResultsetCreator {
         columnsMetadata = new ArrayList<>();
         Select select = queryData.getSelect();
 
-        for (ColumnName colName : select.getColumnMap().keySet()) {
+        for (Selector colName : select.getColumnMap().keySet()) {
+
 
             ColumnType colType = select.getTypeMapFromColumnName().get(colName);
-            colName.setAlias(select.getColumnMap().get(colName));
-            ColumnMetadata columnMetadata = new ColumnMetadata(colName, null, colType);
+            ColumnName columnName = colName.getColumnName();
+            columnName.setAlias(select.getColumnMap().get(colName));
+            ColumnMetadata columnMetadata = new ColumnMetadata(columnName, null, colType);
             columnsMetadata.add(columnMetadata);
         }
 

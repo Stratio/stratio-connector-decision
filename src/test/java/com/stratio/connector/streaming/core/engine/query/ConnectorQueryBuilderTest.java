@@ -86,16 +86,18 @@ public class ConnectorQueryBuilderTest {
     }
 
     private Select createSelect() {
-        Map<ColumnName, String> columMap = createColumnMap();
+        Map<Selector, String> columMap = createColumnMap();
         Map<String, ColumnType> typeMap = createTypeMap();
-        Map<ColumnName, ColumnType> typeMapColumnName = createTypeMapColumnName();
+        Map<Selector, ColumnType> typeMapColumnName = createTypeMapColumnName();
         return new Select(Operations.SELECT_OPERATOR, columMap, typeMap, typeMapColumnName);
+
+
     }
 
-    private Map<ColumnName, ColumnType> createTypeMapColumnName() {
-        Map<ColumnName, ColumnType> typeMap = new LinkedHashMap<>();
-        typeMap.put(new ColumnName(CATALOG, TABLE, COLUMN_1), ColumnType.DOUBLE);
-        typeMap.put(new ColumnName(CATALOG, TABLE, COLUMN_2), ColumnType.INT);
+    private Map<Selector, ColumnType> createTypeMapColumnName() {
+        Map<Selector, ColumnType> typeMap = new LinkedHashMap<>();
+        typeMap.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, COLUMN_1)), ColumnType.DOUBLE);
+        typeMap.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, COLUMN_2)), ColumnType.INT);
         return typeMap;
     }
 
@@ -106,10 +108,10 @@ public class ConnectorQueryBuilderTest {
         return typeMap;
     }
 
-    private Map<ColumnName, String> createColumnMap() {
-        Map<ColumnName, String> columMap = new LinkedHashMap();
-        columMap.put(new ColumnName(CATALOG, TABLE, COLUMN_1), ALIAS_COLUMN_1);
-        columMap.put(new ColumnName(CATALOG, TABLE, COLUMN_2), ALIAS_COLUMN_2);
+    private Map<Selector, String> createColumnMap() {
+        Map<Selector, String> columMap = new LinkedHashMap();
+        columMap.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, COLUMN_1)), ALIAS_COLUMN_1);
+        columMap.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, COLUMN_2)), ALIAS_COLUMN_2);
         return columMap;
     }
 

@@ -120,7 +120,7 @@ public class StreamingQueryEngine implements IQueryEngine {
     public synchronized void stop(String queryId) throws ExecutionException {
         try {
             ConnectorProcess process = connectorProcessHandler.getProcess(queryId);
-            connectionHandler.endWork(process.getProject().getClusterName().getName());
+            connectionHandler.endJob(process.getProject().getClusterName().getName());
             connectorProcessHandler.stopProcess(queryId);
         } catch (ConnectionProcessException e) {
             logger.error("Error while stopping the query: " + e.getMessage());
@@ -146,7 +146,7 @@ public class StreamingQueryEngine implements IQueryEngine {
 
         Project project = (Project) workflow.getInitialSteps().get(0);
         String clusterName = project.getClusterName().getName();
-        connectionHandler.startWork(clusterName);
+        connectionHandler.startJob(clusterName);
 
         return new QueryProcess(queryId, project, resultHandler, connectionHandler.getConnection(clusterName));
     }

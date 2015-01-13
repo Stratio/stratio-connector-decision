@@ -27,16 +27,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.streaming.core.exception.ExecutionValidationException;
-import com.stratio.crossdata.common.data.ColumnName;
 import com.stratio.crossdata.common.data.TableName;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.metadata.ColumnType;
+import com.stratio.crossdata.common.statements.structures.Selector;
 import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.api.messaging.ColumnNameValue;
-import com.stratio.streaming.commons.exceptions.StratioAPISecurityException;
-import com.stratio.streaming.commons.exceptions.StratioEngineStatusException;
+import com.stratio.streaming.commons.exceptions.StratioStreamingException;
 
 /**
  * Streaming connector utilities.
@@ -130,14 +129,14 @@ public final class StreamUtil {
         try {
 
             List<ColumnNameValue> streamData = new LinkedList<>();
-            for (ColumnName columnName : select.getColumnMap().keySet()) {
-                String field = columnName.getName();
+            for (Selector columnName : select.getColumnMap().keySet()) {
+                String field = columnName.getColumnName().getName();
                 ColumnType type = select.getTypeMapFromColumnName().get(columnName);
                 streamData.add(new ColumnNameValue(field, getRandomValue(type)));
             }
 
             stratioStreamingAPI.insertData(streamName, streamData);
-        } catch (StratioEngineStatusException | StratioAPISecurityException e) {
+        } catch (StratioStreamingException e) {
             LOGGER.error("Error inserting data in stream", e);
         }
     }

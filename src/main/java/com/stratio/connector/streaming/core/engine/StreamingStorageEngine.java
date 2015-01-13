@@ -73,11 +73,17 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
      *            the row.
      * @throws ExecutionException
      *             in case of failure during the execution.
+     *
+     *  @throws UnsupportedException if the operation is not supported.
      */
 
     @Override
-    protected void insert(TableMetadata targetStream, Row row, Connection<IStratioStreamingAPI> connection)
-                    throws ExecutionException {
+    protected void insert(TableMetadata targetStream, Row row, boolean isNotExists, Connection<IStratioStreamingAPI>
+            connection)
+            throws ExecutionException, UnsupportedException {
+        if (isNotExists){
+            throw new UnsupportedException("if not exist is not supporting in Streaming connector");
+        }
         String streamName = StreamUtil.createStreamName(targetStream.getName());
         try {
             List<ColumnNameValue> streamData = new ArrayList<ColumnNameValue>();
@@ -101,14 +107,20 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
      *            the set of rows.
      * @throws ExecutionException
      *             in case of failure during the execution.
+     *  @throws UnsupportedException if the operation is not supported.
      */
     @Override
-    protected void insert(TableMetadata targetStream, Collection<Row> rows, Connection<IStratioStreamingAPI> connection)
-                    throws ExecutionException {
+    protected void insert(TableMetadata targetStream, Collection<Row> rows, boolean isNotExists,
+            Connection<IStratioStreamingAPI> connection)
+            throws ExecutionException, UnsupportedException {
+        if (isNotExists){
+            throw new UnsupportedException("if not exist is not supporting in Streaming connector");
+        }
         String streamName = targetStream.getName().getName();
+
         try {
             for (Row row : rows) {
-                insert(targetStream, row, connection);
+                insert(targetStream, row, isNotExists,connection);
             }
         } catch (ExecutionException e) {
             String msg = "Inserting bulk data error in Streaming. [" + streamName + "]. " + e.getMessage();
@@ -137,5 +149,6 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
         throw new UnsupportedException("Update is not supported");
 
     }
+
 
 }

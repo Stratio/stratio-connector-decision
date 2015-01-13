@@ -23,10 +23,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.LinkedList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -93,15 +91,15 @@ public class StreamingMetadataEngineTest {
     @Test
     public void createTableTest() throws Exception {
 
-        Map<Selector, Selector> options = Collections.EMPTY_MAP;
-        Map<IndexName, IndexMetadata> index = Collections.EMPTY_MAP;
-        Map<ColumnName, ColumnMetadata> columns = new LinkedHashMap<>();
+        LinkedHashMap<Selector, Selector> options = new LinkedHashMap();
+        LinkedHashMap<IndexName, IndexMetadata> index = new LinkedHashMap();
+        LinkedHashMap<ColumnName, ColumnMetadata> columns = new LinkedHashMap<>();
         ColumnMetadata columnMetadata = new ColumnMetadata(new ColumnName(CATALOG, TABLE, COLUM), new Object[0],
                         ColumnType.INT);
         columns.put(new ColumnName(CATALOG, TABLE, COLUM), columnMetadata);
 
-        List<ColumnName> partitionKey = Collections.EMPTY_LIST;
-        List<ColumnName> clusterKey = Collections.EMPTY_LIST;
+        LinkedList<ColumnName> partitionKey = new LinkedList();
+        LinkedList<ColumnName> clusterKey = new  LinkedList();
         TableMetadata tableMetadata = new TableMetadata(new TableName(CATALOG, TABLE), options, columns, index,
                         new ClusterName(CLUSTER_NAME), partitionKey, clusterKey);
         streamingMetadataEngine.createTable(tableMetadata, connection);

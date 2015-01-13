@@ -27,19 +27,18 @@ import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.result.QueryResult;
 
-public class ResultSetTest implements IResultHandler {
+public class ResultHandlerTest implements IResultHandler {
 
-    List<QueryResult> resultSetList = new ArrayList<QueryResult>();
+    private List<QueryResult> resultSetList = new ArrayList<QueryResult>();
 
     @Override
     public void processException(String queryId, ExecutionException exception) {
-        System.out.println(queryId + " " + exception.getMessage());
         exception.printStackTrace();
     }
 
     @Override
     public void processResult(QueryResult result) {
-        System.out.println("************Processing results" + result.getResultSet().getRows().get(0).getCellList());
+
         resultSetList.add(result);
     }
 
