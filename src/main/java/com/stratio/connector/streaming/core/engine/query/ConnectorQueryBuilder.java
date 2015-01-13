@@ -30,6 +30,7 @@ import com.stratio.connector.streaming.core.engine.query.util.StreamUtil;
 import com.stratio.connector.streaming.core.exception.ExecutionValidationException;
 import com.stratio.crossdata.common.data.ColumnName;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
+import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.logicalplan.Filter;
 import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.statements.structures.Operator;
@@ -59,10 +60,10 @@ public class ConnectorQueryBuilder {
      * @return the string query representation.
      * @throws ExecutionException
      *             in any error happens.
-     * @throws ExecutionValidationException
+     * @throws UnsupportedException
      *             if any operation is not supported.
      */
-    public String createQuery(ConnectorQueryData queryData) throws ExecutionException, ExecutionValidationException {
+    public String createQuery(ConnectorQueryData queryData) throws ExecutionException, UnsupportedException {
 
         createInputQuery(queryData);
         createProjection(queryData);
@@ -126,12 +127,12 @@ public class ConnectorQueryBuilder {
      *
      * @param queryData
      *            the query data.
-     * @throws ExecutionValidationException
+     * @throws UnsupportedException
      *             if any operation is not supported.
      * @throws ExecutionException
      *             in any error happens.
      */
-    private void createInputQuery(ConnectorQueryData queryData) throws ExecutionValidationException, ExecutionException {
+    private void createInputQuery(ConnectorQueryData queryData) throws ExecutionException, UnsupportedException {
         querySb.append("from ");
 
         String streamName = StreamUtil.createStreamName(queryData.getProjection());
@@ -148,13 +149,12 @@ public class ConnectorQueryBuilder {
      *
      * @param queryData
      *            the query data.
-     * @throws ExecutionValidationException
+     * @throws UnsupportedException
      *             if any operation is not supported.
      * @throws ExecutionException
      *             in any error happens.
      */
-    private void createConditionList(ConnectorQueryData queryData) throws ExecutionValidationException,
-                    ExecutionException {
+    private void createConditionList(ConnectorQueryData queryData) throws UnsupportedException, ExecutionException {
 
         querySb.append("[");
         Iterator<Filter> filterIter = queryData.getFilter().iterator();
@@ -186,10 +186,10 @@ public class ConnectorQueryBuilder {
      * @param operator
      *            the crossdata operator.
      * @return a the siddhi operator.
-     * @throws ExecutionValidationException
+     * @throws UnsupportedException
      *             if any operation is not supported.
      */
-    private String getSiddhiOperator(Operator operator) throws ExecutionValidationException {
+    private String getSiddhiOperator(Operator operator) throws UnsupportedException {
 
         String siddhiOperator;
         switch (operator) {
@@ -213,7 +213,7 @@ public class ConnectorQueryBuilder {
             siddhiOperator = "<";
             break;
         default:
-            throw new ExecutionValidationException("Operator " + operator.toString() + "is not supported");
+            throw new UnsupportedException("Operator " + operator.toString() + "is not supported");
 
         }
 
