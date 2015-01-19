@@ -31,6 +31,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import kafka.consumer.ConsumerIterator;
+import kafka.consumer.KafkaStream;
+import kafka.message.MessageAndMetadata;
+import kafka.serializer.Decoder;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,11 +59,6 @@ import com.stratio.streaming.api.IStratioStreamingAPI;
 import com.stratio.streaming.commons.messages.ColumnNameTypeValue;
 import com.stratio.streaming.commons.messages.StratioStreamingMessage;
 import com.stratio.streaming.commons.messages.StreamQuery;
-
-import kafka.consumer.ConsumerIterator;
-import kafka.consumer.KafkaStream;
-import kafka.message.MessageAndMetadata;
-import kafka.serializer.Decoder;
 
 /**
  * StreamingQuery Tester.
