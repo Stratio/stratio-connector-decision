@@ -46,6 +46,7 @@ import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.metadata.TableMetadata;
 import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
+
 public class SimpleInsertFT extends GenericStreamingTest {
 
     @Test
@@ -170,6 +171,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
 
         RowToInsertBigLong rowToInsert = new
                 RowToInsertBigLong();
+        
         insertValuesToStream(tableMetadata, rowToInsert);
         endReader(reader);
 
@@ -192,7 +194,8 @@ public class SimpleInsertFT extends GenericStreamingTest {
         assertEquals(10, numsRecovered.size());
 
         for (int i = 0; i < 10; i++) {
-            assertTrue("The value  recovered is correct "+rowToInsert.getBigLong(i), numsRecovered.contains
+  
+            assertTrue("The value is not the expected one "+rowToInsert.getBigLong(i), numsRecovered.contains
                     (rowToInsert.getBigLong(i)));
 
         }
@@ -216,8 +219,9 @@ public class SimpleInsertFT extends GenericStreamingTest {
         StreamingInserter streamingInserter = new StreamingInserter(sConnector,  getClusterName(), tableMetadata,
                 rowToInsert);
         streamingInserter.numOfElement(10).elementPerSecond(5);
-        streamingInserter.start();
         streamingInserter.addTypeToInsert(ColumnType.BIGINT).addTypeToInsert(ColumnType.VARCHAR);
+        streamingInserter.start();
+        
 
         waitSeconds(10);
 

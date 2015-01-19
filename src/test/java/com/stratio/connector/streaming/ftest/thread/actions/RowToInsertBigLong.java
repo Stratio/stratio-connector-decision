@@ -18,18 +18,60 @@
 
 package com.stratio.connector.streaming.ftest.thread.actions;
 
+import java.util.List;
+
+import com.stratio.connector.streaming.ftest.GenericStreamingTest;
 import com.stratio.crossdata.common.data.Cell;
+import com.stratio.crossdata.common.data.Row;
+import com.stratio.crossdata.common.metadata.ColumnType;
 
 /**
  * Created by jmgomez on 13/01/15.
  */
 public class RowToInsertBigLong extends RowToInsertDefault {
 
+	
+	 @Override public Row getRowToInsert(Integer value, String text, List<ColumnType> typesToInsert, boolean
+	            addIntegerChangeable, int integerChangeable) {
+	        Row row = new Row();
+	        for (ColumnType colType : typesToInsert) {
+
+	            switch (colType) {
+	            case BOOLEAN:
+	                row.addCell(GenericStreamingTest.BOOLEAN_COLUMN, new Cell(true));
+	                break;
+	            case DOUBLE:
+	                row.addCell(GenericStreamingTest.DOUBLE_COLUMN, new Cell(new Double(value + 0.5)));
+	                break;
+	            case FLOAT:
+	                row.addCell(GenericStreamingTest.FLOAT_COLUMN, new Cell(new Float(value + 0.5)));
+	                break;
+	            case INT:
+	                row.addCell(GenericStreamingTest.INTEGER_COLUMN, new Cell(value));
+	                break;
+	            case BIGINT:
+	                row.addCell(GenericStreamingTest.LONG_COLUMN, new Cell(new Long(value + new Long(Long.MAX_VALUE / 2))));
+
+
+	                break;
+	            case VARCHAR:
+	            case TEXT:
+	                row.addCell(GenericStreamingTest.STRING_COLUMN, new Cell(text));
+	                break;
+
+	            }
+	            if (addIntegerChangeable) {
+	                row.addCell(GenericStreamingTest.INTEGER_CHANGEABLE_COLUMN, new Cell(integerChangeable));
+	            }
+	        }
+	        return row;
+	    }
+	 
     protected Cell getLongCell(Integer value) {
         return new Cell(getBigLong(value));
     }
 
     public Long getBigLong(Integer value){
-        return  new Long(value + + new Long(Long.MAX_VALUE / 2));
+        return  new Long(value + new Long(Long.MAX_VALUE / 2));
     }
 }
