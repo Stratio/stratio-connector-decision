@@ -301,7 +301,7 @@ public class ThreadTimeWindowFunctionalFT extends GenericStreamingTest {
         private void testOrder(Row row) {
             String[] recoveredColumn = row.getCells().keySet().toArray(new String[0]);
             for (int i = 0; i < recoveredColumn.length; i++) {
-                if (!orderendColumnaName[i].getName().equals(recoveredColumn[i])) {
+                if (!orderendColumnaName[i].getName().getName().equals(recoveredColumn[i])) {
                     correctOrder = false;
                 }
             }
