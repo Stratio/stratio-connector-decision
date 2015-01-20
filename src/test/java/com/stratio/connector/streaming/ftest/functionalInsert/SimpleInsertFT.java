@@ -46,19 +46,15 @@ import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.metadata.TableMetadata;
 import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
-
 public class SimpleInsertFT extends GenericStreamingTest {
 
     @Test
     public void insertIntTest() throws ConnectorException {
         ClusterName clusterName = getClusterName();
 
-
-
-        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
+        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE, clusterName.getName());
         TableMetadata tableMetadata = tableMetadataBuilder.addColumn(INTEGER_COLUMN, ColumnType.INT)
-                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR)
-                        .build(false);
+                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(false);
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -79,8 +75,8 @@ public class SimpleInsertFT extends GenericStreamingTest {
         reader.start();
         waitSeconds(20);
 
-        StreamingInserter streamingInserter = new StreamingInserter(sConnector, clusterName, tableMetadata, new
-                RowToInsertDefault());
+        StreamingInserter streamingInserter = new StreamingInserter(sConnector, clusterName, tableMetadata,
+                        new RowToInsertDefault());
         streamingInserter.numOfElement(10).elementPerSecond(5);
         streamingInserter.addTypeToInsert(ColumnType.INT).addTypeToInsert(ColumnType.VARCHAR);
         streamingInserter.start();
@@ -125,8 +121,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
 
         StreamingRead reader = startReader(resultSet, queryId);
 
-        insertValuesToStream(tableMetadata, new
-                RowToInsertDefault());
+        insertValuesToStream(tableMetadata, new RowToInsertDefault());
         endReader(reader);
 
         ResultSet resultQueryIdSet = resultSet.getResultSet(queryId);
@@ -139,26 +134,21 @@ public class SimpleInsertFT extends GenericStreamingTest {
         for (Row recoveredRow : resultQueryIdSet.getRows()) {
             if (recoveredRow.getCell(STRING_COLUMN).getValue().equals("Text")) {
                 Object longValue = recoveredRow.getCell(LONG_COLUMN).getValue();
-                assertTrue("The type must be Long",longValue instanceof Long);
+                assertTrue("The type must be Long", longValue instanceof Long);
                 numsRecovered.add((Long) longValue);
-
             }
         }
 
         assertEquals(10, numsRecovered.size());
 
         for (int i = 0; i < 10; i++) {
-            assertTrue("The value  recovered is correct "+i, numsRecovered.contains(new Long(i)));
-
+            assertTrue("The value  recovered is correct " + i, numsRecovered.contains(new Long(i)));
         }
 
         assertTrue(columnMetadata.size() == 2);
         assertEquals(ColumnType.BIGINT, columnMetadata.get(0).getColumnType());
         assertTrue(resultQueryIdSet.getRows().get(0).getCell(LONG_COLUMN).getValue() instanceof Long);
-
     }
-
-
 
     @Test
     public void insertBigLongTest() throws ConnectorException {
@@ -169,9 +159,8 @@ public class SimpleInsertFT extends GenericStreamingTest {
 
         StreamingRead reader = startReader(resultSet, queryId);
 
-        RowToInsertBigLong rowToInsert = new
-                RowToInsertBigLong();
-        
+        RowToInsertBigLong rowToInsert = new RowToInsertBigLong();
+
         insertValuesToStream(tableMetadata, rowToInsert);
         endReader(reader);
 
@@ -185,43 +174,37 @@ public class SimpleInsertFT extends GenericStreamingTest {
         for (Row recoveredRow : resultQueryIdSet.getRows()) {
             if (recoveredRow.getCell(STRING_COLUMN).getValue().equals("Text")) {
                 Object longValue = recoveredRow.getCell(LONG_COLUMN).getValue();
-                assertTrue("The type must be Long",longValue instanceof Long);
+                assertTrue("The type must be Long", longValue instanceof Long);
                 numsRecovered.add((Long) longValue);
-
             }
         }
 
         assertEquals(10, numsRecovered.size());
 
         for (int i = 0; i < 10; i++) {
-  
-            assertTrue("The value is not the expected one "+rowToInsert.getBigLong(i), numsRecovered.contains
-                    (rowToInsert.getBigLong(i)));
 
+            assertTrue("The value is not the expected one " + rowToInsert.getBigLong(i),
+                            numsRecovered.contains(rowToInsert.getBigLong(i)));
         }
 
         assertTrue(columnMetadata.size() == 2);
         assertEquals(ColumnType.BIGINT, columnMetadata.get(0).getColumnType());
         assertTrue(resultQueryIdSet.getRows().get(0).getCell(LONG_COLUMN).getValue() instanceof Long);
-
     }
-
-
-
 
     private void endReader(StreamingRead reader) {
         waitSeconds(15);
         reader.end();
     }
 
-    private void insertValuesToStream(TableMetadata tableMetadata, RowToInsertDefault rowToInsert) throws ConnectorException {
+    private void insertValuesToStream(TableMetadata tableMetadata, RowToInsertDefault rowToInsert)
+                    throws ConnectorException {
 
-        StreamingInserter streamingInserter = new StreamingInserter(sConnector,  getClusterName(), tableMetadata,
-                rowToInsert);
+        StreamingInserter streamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata,
+                        rowToInsert);
         streamingInserter.numOfElement(10).elementPerSecond(5);
         streamingInserter.addTypeToInsert(ColumnType.BIGINT).addTypeToInsert(ColumnType.VARCHAR);
         streamingInserter.start();
-        
 
         waitSeconds(10);
 
@@ -235,11 +218,10 @@ public class SimpleInsertFT extends GenericStreamingTest {
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(LONG_COLUMN, LONG_COLUMN, ColumnType.BIGINT));
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
         LogicalWorkflow logicalWorkFlow = logicalWorkFlowCreator.addColumnName(LONG_COLUMN)
-                .addColumnName(STRING_COLUMN).addWindow(WindowType.NUM_ROWS, 1).addSelect(selectColumns)
-                .getLogicalWorkflow();
+                        .addColumnName(STRING_COLUMN).addWindow(WindowType.NUM_ROWS, 1).addSelect(selectColumns)
+                        .getLogicalWorkflow();
 
         StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultHandlerTest);
-
 
         reader.setQueryId(queryId);
         reader.start();
@@ -248,12 +230,12 @@ public class SimpleInsertFT extends GenericStreamingTest {
     }
 
     private TableMetadata createTable() throws ConnectorException {
-        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
+        ClusterName clusterName = getClusterName();
+        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE, clusterName.getName());
         TableMetadata tableMetadata = tableMetadataBuilder.addColumn(LONG_COLUMN, ColumnType.BIGINT)
-                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR)
-                        .build(false);
+                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(false);
 
-        sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
+        sConnector.getMetadataEngine().createTable(clusterName, tableMetadata);
         return tableMetadata;
     }
 
@@ -261,11 +243,9 @@ public class SimpleInsertFT extends GenericStreamingTest {
     public void insertBooleanTest() throws ConnectorException {
         ClusterName clusterName = getClusterName();
 
-
-        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
+        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE, clusterName.getName());
         TableMetadata tableMetadata = tableMetadataBuilder.addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
-                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR)
-                        .build(false);
+                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(false);
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -286,8 +266,8 @@ public class SimpleInsertFT extends GenericStreamingTest {
         reader.start();
         waitSeconds(15);
 
-        StreamingInserter streamingInserter = new StreamingInserter(sConnector, clusterName, tableMetadata, new
-                RowToInsertDefault());
+        StreamingInserter streamingInserter = new StreamingInserter(sConnector, clusterName, tableMetadata,
+                        new RowToInsertDefault());
         streamingInserter.numOfElement(10).elementPerSecond(5);
         streamingInserter.start();
         streamingInserter.addTypeToInsert(ColumnType.BOOLEAN).addTypeToInsert(ColumnType.VARCHAR);
@@ -321,11 +301,9 @@ public class SimpleInsertFT extends GenericStreamingTest {
     public void insertFloatTest() throws ConnectorException {
         ClusterName clusterName = getClusterName();
 
-
-        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
+        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE, clusterName.getName());
         TableMetadata tableMetadata = tableMetadataBuilder.addColumn(FLOAT_COLUMN, ColumnType.FLOAT)
-                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR)
-                        .build(false);
+                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(false);
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -345,8 +323,8 @@ public class SimpleInsertFT extends GenericStreamingTest {
         reader.start();
         waitSeconds(15);
 
-        StreamingInserter streamingInserter = new StreamingInserter(sConnector, clusterName, tableMetadata, new
-                RowToInsertDefault());
+        StreamingInserter streamingInserter = new StreamingInserter(sConnector, clusterName, tableMetadata,
+                        new RowToInsertDefault());
         streamingInserter.numOfElement(10).elementPerSecond(5);
         streamingInserter.start();
         streamingInserter.addTypeToInsert(ColumnType.FLOAT).addTypeToInsert(ColumnType.VARCHAR);
@@ -384,11 +362,9 @@ public class SimpleInsertFT extends GenericStreamingTest {
     public void insertDoubleTest() throws ConnectorException {
         ClusterName clusterName = getClusterName();
 
-
-        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
+        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE, clusterName.getName());
         TableMetadata tableMetadata = tableMetadataBuilder.addColumn(DOUBLE_COLUMN, ColumnType.DOUBLE)
-                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR)
-                        .build(false);
+                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(false);
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -408,8 +384,8 @@ public class SimpleInsertFT extends GenericStreamingTest {
         reader.start();
         waitSeconds(15);
 
-        StreamingInserter streamingInserter = new StreamingInserter(sConnector, clusterName, tableMetadata, new
-                RowToInsertDefault());
+        StreamingInserter streamingInserter = new StreamingInserter(sConnector, clusterName, tableMetadata,
+                        new RowToInsertDefault());
         streamingInserter.numOfElement(10).elementPerSecond(5);
         streamingInserter.start();
         streamingInserter.addTypeToInsert(ColumnType.DOUBLE).addTypeToInsert(ColumnType.VARCHAR);
@@ -447,8 +423,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
     public void insertStringTest() throws ConnectorException {
         ClusterName clusterName = getClusterName();
 
-
-        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
+        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE, clusterName.getName());
         TableMetadata tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(false);
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
@@ -468,8 +443,8 @@ public class SimpleInsertFT extends GenericStreamingTest {
         reader.start();
         waitSeconds(15);
 
-        StreamingInserter streamingInserter = new StreamingInserter(sConnector, clusterName, tableMetadata, new
-                RowToInsertDefault());
+        StreamingInserter streamingInserter = new StreamingInserter(sConnector, clusterName, tableMetadata,
+                        new RowToInsertDefault());
         streamingInserter.numOfElement(10).elementPerSecond(5);
         streamingInserter.start();
         streamingInserter.addTypeToInsert(ColumnType.VARCHAR);

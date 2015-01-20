@@ -19,7 +19,6 @@
 package com.stratio.connector.streaming.core.engine.query.queryexecutor;
 
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -151,6 +150,7 @@ public class StreamingQueryCreator {
     public void readMessages(KafkaStream<String, StratioStreamingMessage> streams) throws ExecutionValidationException,
                     ExecutionException {
         logger.info("Waiting a message...");
+
         for (MessageAndMetadata stream : streams) {
             StratioStreamingMessage theMessage = (StratioStreamingMessage) stream.message();
 
@@ -202,11 +202,10 @@ public class StreamingQueryCreator {
 
         Row row = new Row();
         for (ColumnNameTypeValue column : columns) {
-        	
 
-    			logger.warn("native: "+column.getColumn() +" type--> " +column.getType() +" value -> "+column.getValue());
+            logger.warn("native: " + column.getColumn() + " type--> " + column.getType() + " value -> "
+                            + column.getValue());
 
-        	
             Object value = ColumnTypeHelper.getCastingValue(queryData.getSelect().getTypeMap().get(column.getColumn()),
                             column.getValue());
             row.addCell(column.getColumn(), new Cell(value));
