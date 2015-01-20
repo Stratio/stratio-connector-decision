@@ -25,10 +25,10 @@ To generate the executable execute the following command:
    > mvn crossdata-connector:install
 ```
 
-The user and the group of the service are setted up to root by default. It could be changed in the following file:
+The user and the group of the service are set up to root by default. It could be changed in the following file:
 
 ```
-   > target/connector-streaming-core-0.2.0/bin/connector-streaming-core-0.2.0
+   > target/connector-streaming-core-0.3.0/bin/connector-streaming-core-0.3.0
 ```
 
 ## Running the Stratio Connector Streaming ##
@@ -36,13 +36,13 @@ The user and the group of the service are setted up to root by default. It could
 To run Connector Streaming execute:
 
 ```
-   > target/connector-streaming-core-0.2.0/bin/connector-streaming-core-0.2.0 start
+   > target/connector-streaming-core-0.3.0/bin/connector-streaming-core-0.3.0 start
 ```
 
 To stop the connector execute:
 
 ```
-   > target/connector-streaming-core-0.2.0/bin/connector-streaming-core-0.2.0 stop
+   > target/connector-streaming-core-0.3.0/bin/connector-streaming-core-0.3.0 stop
 ```
 
 ## How to use Connector Streaming ##
@@ -55,7 +55,7 @@ A complete tutorial is available [here](_doc/FirstSteps.md). The basic commands 
     
     Add a datastore with this command:
 
-    Add a data store. We need to specified the XML manifest that defines the data store. The XML manifest can be found in the path of the Streaming Connector in target/stratio-connector-streaming-0.2.0/conf/StreamingDataStore.xml
+    Add a data store. We need to specified the XML manifest that defines the data store. The XML manifest can be found in the path of the Streaming Connector in target/stratio-connector-streaming-0.3.0/conf/StreamingDataStore.xml
       
       ```
          xdsh:user>  ADD DATASTORE <Absolute path to Streaming Datastore manifest>;
@@ -67,7 +67,7 @@ A complete tutorial is available [here](_doc/FirstSteps.md). The basic commands 
          xdsh:user>  ATTACH CLUSTER <cluster_name> ON DATASTORE <datastore_name> WITH OPTIONS {'KafkaServer': '[<kafkaHost_1,kafkaHost_2...kafkaHost_n>]', 'KafkaPort': '[<kafkaPort_1, kafkaPort_2...kafkaPort_n>]', 'zooKeeperServer':'[<zooKeeperHost_1,zooKeeperHost_2...zooKeeperHost_n>]','zooKeeperPort':'[<zooKeeperPort_1,zooKeeperPort_2...zooKeeperPort_n>]'};
       ```
 
-    Add the connector manifest. The XML with the manifest can be found in the path of the Streaming Connector in target/connector-streaming-core-0.2.0/conf/StreamingConnector.xml
+    Add the connector manifest. The XML with the manifest can be found in the path of the Streaming Connector in target/connector-streaming-core-0.3.0/conf/StreamingConnector.xml
 
        ```
          xdsh:user>  ADD CONNECTOR <Path to Streaming Connector Manifest>
