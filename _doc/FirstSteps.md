@@ -1,6 +1,6 @@
 # First Steps #
 
-Streaming Crossdata connector allows the integration between Crossdata and Stratio Streaming. Crossdata provides a easy and common language as well as the integration with several other databases. More information about Crossdata can be found at [Crossdata](https://github.com/Stratio/crossdata)
+Streaming Crossdata connector allows the integration between Crossdata and Stratio Streaming. Crossdata provides an easy and common language as well as the integration with several other databases. More information about Crossdata can be found at [Crossdata](https://github.com/Stratio/crossdata)
 
 Table of Contents
 =================
@@ -34,9 +34,9 @@ Prerequisites
 -------------
 
 -   Basic knowledge of SQL like language.
--   First of all [Stratio Crossdata 0.1.1](https://github.com/Stratio/crossdata) is needed and must be installed. The 
+-   First of all [Stratio Crossdata 0.2.0](https://github.com/Stratio/crossdata) is needed and must be installed. The 
 server and the shell must be running.
--   An installation of [Stratio Streaming 0.5.0](http://docs.openstratio.org/getting-started.html#stratio-streaming). 
+-   An installation of [Stratio Streaming 0.6.2](http://docs.openstratio.org/getting-started.html#stratio-streaming). 
 -   Build an StreamingConnector executable and run it following this [guide](https://github.com/Stratio/stratio-connector-streaming#build-an-executable-connector-streaming). 
 
 Configuration
@@ -278,5 +278,5 @@ Step 7: Drop catalog
 Where to go from here
 =====================
 
-To learn more about Stratio Crossdata, we recommend to visit the [Crossdata Reference](https://github.com/Stratio/crossdata/blob/0.1.1/_doc/meta-reference.md "Meta Reference").
+To learn more about Stratio Crossdata, we recommend to visit the [Crossdata Reference](https://github.com/Stratio/crossdata/blob/master/_doc/meta-reference.md "Meta Reference").
 
