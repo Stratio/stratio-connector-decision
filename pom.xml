@@ -19,14 +19,14 @@
 
 	<groupId>com.stratio.connector</groupId>
 	<artifactId>stratio-connector-streaming</artifactId>
-	<version>0.3.0-RC1</version>
+	<version>0.3.0-RC2</version>
 	<description>Connector for Stratio Streaming</description>
 	<url>http://www.stratio.com</url>
 	<name>Streaming Connector</name>
 
 	<properties>
-		<crossdata.version>0.2.0-RC1</crossdata.version>
-		<commons.connector.version>0.4.0-RC2</commons.connector.version>
+		<crossdata.version>0.2.0-RC2</crossdata.version>
+		<commons.connector.version>0.4.0-RC3</commons.connector.version>
 		<streaming.api.version>0.6.2</streaming.api.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
