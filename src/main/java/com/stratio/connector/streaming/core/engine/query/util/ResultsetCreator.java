@@ -54,7 +54,7 @@ public class ResultsetCreator {
      * The query result.
      */
 
-     private QueryResult queryResult;
+    private QueryResult queryResult;
 
     /**
      * Constructor.
@@ -98,7 +98,7 @@ public class ResultsetCreator {
         resultSet.setRows(rows);
         queryResult = QueryResult.createQueryResult(resultSet);
         queryResult.setQueryId(queryData.getQueryId());
-
+        queryResult.setLastResultSet(false);
         return this;
 
     }
@@ -114,7 +114,6 @@ public class ResultsetCreator {
         Select select = queryData.getSelect();
 
         for (Selector colName : select.getColumnMap().keySet()) {
-
 
             ColumnType colType = select.getTypeMapFromColumnName().get(colName);
             ColumnName columnName = colName.getColumnName();
