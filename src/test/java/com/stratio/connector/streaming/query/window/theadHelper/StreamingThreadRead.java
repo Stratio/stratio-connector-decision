@@ -16,20 +16,25 @@
  * under the License.
  */
 
-package com.stratio.connector.streaming.ftest.thread.actions;
+package com.stratio.connector.streaming.query.window.theadHelper;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.stratio.connector.streaming.core.StreamingConnector;
 import com.stratio.crossdata.common.connector.IResultHandler;
 import com.stratio.crossdata.common.logicalplan.LogicalWorkflow;
 
-public class StreamingRead extends Thread {
+public class StreamingThreadRead extends Thread {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private StreamingConnector streamingConnector;
     private LogicalWorkflow logicalWorkFlow;
     private IResultHandler resultHandler;
     private String queryId;
 
-    public StreamingRead(StreamingConnector sC, LogicalWorkflow logicalWorkFlow, IResultHandler resultHandler) {
+    public StreamingThreadRead(StreamingConnector sC, LogicalWorkflow logicalWorkFlow, IResultHandler resultHandler) {
         super("[StreamingRead]");
         this.streamingConnector = sC;
         this.logicalWorkFlow = logicalWorkFlow;
@@ -43,11 +48,11 @@ public class StreamingRead extends Thread {
 
     public void run() {
         try {
-            System.out.println("****************************** STARTING StreamingReader **********************");
+            logger.debug("****************************** STARTING StreamingReader **********************");
             streamingConnector.getQueryEngine().asyncExecute(queryId, logicalWorkFlow, resultHandler);
         } catch (com.stratio.crossdata.common.exceptions.ConnectorException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("Error happens in Streaming Query." +e.toString());
+            throw new RuntimeException(e);
         }
     }
 
@@ -55,8 +60,9 @@ public class StreamingRead extends Thread {
         try {
             streamingConnector.getQueryEngine().stop(queryId);
         } catch (com.stratio.crossdata.common.exceptions.ConnectorException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+
+            logger.error("Error happens in Streaming close." +e.toString());
+            throw new RuntimeException(e);
         }
     }
 

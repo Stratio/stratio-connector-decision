@@ -18,7 +18,6 @@
 
 package com.stratio.connector.streaming.ftest.thread;
 
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import java.util.HashMap;
@@ -55,7 +54,7 @@ public class ThreadConnectionFT {
     protected String PORT_ZOOKEEPER = "2181";
     protected Random random;
     protected StreamingConnector sConnector;
-    protected boolean deleteBeteweenTest = true;
+
 
     protected ClusterName getClusterName() {
         return new ClusterName(CATALOG + "_" + TABLE);
@@ -80,7 +79,6 @@ public class ThreadConnectionFT {
 
         sConnector.close(getClusterName());
 
-        assertTrue(true);
 
     }
 
@@ -103,7 +101,7 @@ public class ThreadConnectionFT {
 
         stratioStreamingAPI2.close();
 
-        assertTrue(true);
+
 
     }
 

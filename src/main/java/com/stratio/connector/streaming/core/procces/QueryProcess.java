@@ -109,7 +109,7 @@ public class QueryProcess implements ConnectorProcess {
             queryExecutor.executeQuery(query, connection);
 
         } catch (ExecutionException e) {
-            String msg = "Streaming query execution fail." + e.getMessage();
+            String msg = "Streaming query execution fail. " + e.getMessage();
             logger.error(msg);
             resultHandler.processException(queryId, new ExecutionException(msg, e));
 

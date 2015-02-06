@@ -32,8 +32,8 @@ import com.stratio.connector.streaming.ftest.GenericStreamingTest;
 import com.stratio.connector.streaming.ftest.ResultHandlerTest;
 import com.stratio.connector.streaming.ftest.thread.actions.RowToInsertBigLong;
 import com.stratio.connector.streaming.ftest.thread.actions.RowToInsertDefault;
-import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
-import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
+import com.stratio.connector.streaming.query.window.theadHelper.StreamingThreadInserter;
+import com.stratio.connector.streaming.query.window.theadHelper.StreamingThreadRead;
 import com.stratio.crossdata.common.connector.IResultHandler;
 import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.data.ResultSet;
@@ -68,14 +68,14 @@ public class SimpleInsertFT extends GenericStreamingTest {
                         .getLogicalWorkflow();
 
         ResultHandlerTest resultSet = new ResultHandlerTest();
-        StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultSet);
+        StreamingThreadRead reader = new StreamingThreadRead(sConnector, logicalWorkFlow, resultSet);
 
         String queryId = String.valueOf(Math.abs(random.nextLong()));
         reader.setQueryId(queryId);
         reader.start();
         waitSeconds(20);
 
-        StreamingInserter streamingInserter = new StreamingInserter(sConnector, clusterName, tableMetadata,
+        StreamingThreadInserter streamingInserter = new StreamingThreadInserter(sConnector, clusterName, tableMetadata,
                         new RowToInsertDefault());
         streamingInserter.numOfElement(10).elementPerSecond(5);
         streamingInserter.addTypeToInsert(ColumnType.INT).addTypeToInsert(ColumnType.VARCHAR);
@@ -119,7 +119,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
         ResultHandlerTest resultSet = new ResultHandlerTest();
         String queryId = String.valueOf(Math.abs(random.nextLong()));
 
-        StreamingRead reader = startReader(resultSet, queryId);
+        StreamingThreadRead reader = startReader(resultSet, queryId);
 
         insertValuesToStream(tableMetadata, new RowToInsertDefault());
         endReader(reader);
@@ -157,7 +157,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
         ResultHandlerTest resultSet = new ResultHandlerTest();
         String queryId = String.valueOf(Math.abs(random.nextLong()));
 
-        StreamingRead reader = startReader(resultSet, queryId);
+        StreamingThreadRead reader = startReader(resultSet, queryId);
 
         RowToInsertBigLong rowToInsert = new RowToInsertBigLong();
 
@@ -192,7 +192,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
         assertTrue(resultQueryIdSet.getRows().get(0).getCell(LONG_COLUMN).getValue() instanceof Long);
     }
 
-    private void endReader(StreamingRead reader) {
+    private void endReader(StreamingThreadRead reader) {
         waitSeconds(15);
         reader.end();
     }
@@ -200,7 +200,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
     private void insertValuesToStream(TableMetadata tableMetadata, RowToInsertDefault rowToInsert)
                     throws ConnectorException {
 
-        StreamingInserter streamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata,
+        StreamingThreadInserter streamingInserter = new StreamingThreadInserter(sConnector, getClusterName(), tableMetadata,
                         rowToInsert);
         streamingInserter.numOfElement(10).elementPerSecond(5);
         streamingInserter.addTypeToInsert(ColumnType.BIGINT).addTypeToInsert(ColumnType.VARCHAR);
@@ -211,7 +211,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
         streamingInserter.end();
     }
 
-    private StreamingRead startReader(IResultHandler resultHandlerTest, String queryId) throws UnsupportedException {
+    private StreamingThreadRead startReader(IResultHandler resultHandlerTest, String queryId) throws UnsupportedException {
         // TODO window with 1element
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, getClusterName());
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
@@ -221,7 +221,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
                         .addColumnName(STRING_COLUMN).addWindow(WindowType.NUM_ROWS, 1).addSelect(selectColumns)
                         .getLogicalWorkflow();
 
-        StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultHandlerTest);
+        StreamingThreadRead reader = new StreamingThreadRead(sConnector, logicalWorkFlow, resultHandlerTest);
 
         reader.setQueryId(queryId);
         reader.start();
@@ -259,14 +259,14 @@ public class SimpleInsertFT extends GenericStreamingTest {
                         .addWindow(WindowType.NUM_ROWS, 1).addSelect(selectColumns).getLogicalWorkflow();
 
         ResultHandlerTest resultSet = new ResultHandlerTest();
-        StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultSet);
+        StreamingThreadRead reader = new StreamingThreadRead(sConnector, logicalWorkFlow, resultSet);
 
         String queryId = String.valueOf(Math.abs(random.nextLong()));
         reader.setQueryId(queryId);
         reader.start();
         waitSeconds(15);
 
-        StreamingInserter streamingInserter = new StreamingInserter(sConnector, clusterName, tableMetadata,
+        StreamingThreadInserter streamingInserter = new StreamingThreadInserter(sConnector, clusterName, tableMetadata,
                         new RowToInsertDefault());
         streamingInserter.numOfElement(10).elementPerSecond(5);
         streamingInserter.start();
@@ -316,14 +316,14 @@ public class SimpleInsertFT extends GenericStreamingTest {
                         .addWindow(WindowType.NUM_ROWS, 1).addSelect(selectColumns).getLogicalWorkflow();
 
         ResultHandlerTest resultSet = new ResultHandlerTest();
-        StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultSet);
+        StreamingThreadRead reader = new StreamingThreadRead(sConnector, logicalWorkFlow, resultSet);
 
         String queryId = String.valueOf(Math.abs(random.nextLong()));
         reader.setQueryId(queryId);
         reader.start();
         waitSeconds(15);
 
-        StreamingInserter streamingInserter = new StreamingInserter(sConnector, clusterName, tableMetadata,
+        StreamingThreadInserter streamingInserter = new StreamingThreadInserter(sConnector, clusterName, tableMetadata,
                         new RowToInsertDefault());
         streamingInserter.numOfElement(10).elementPerSecond(5);
         streamingInserter.start();
@@ -377,14 +377,14 @@ public class SimpleInsertFT extends GenericStreamingTest {
                         .addWindow(WindowType.NUM_ROWS, 1).addSelect(selectColumns).getLogicalWorkflow();
 
         ResultHandlerTest resultSet = new ResultHandlerTest();
-        StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultSet);
+        StreamingThreadRead reader = new StreamingThreadRead(sConnector, logicalWorkFlow, resultSet);
 
         String queryId = String.valueOf(Math.abs(random.nextLong()));
         reader.setQueryId(queryId);
         reader.start();
         waitSeconds(15);
 
-        StreamingInserter streamingInserter = new StreamingInserter(sConnector, clusterName, tableMetadata,
+        StreamingThreadInserter streamingInserter = new StreamingThreadInserter(sConnector, clusterName, tableMetadata,
                         new RowToInsertDefault());
         streamingInserter.numOfElement(10).elementPerSecond(5);
         streamingInserter.start();
@@ -436,14 +436,14 @@ public class SimpleInsertFT extends GenericStreamingTest {
                         .addWindow(WindowType.NUM_ROWS, 1).getLogicalWorkflow();
 
         ResultHandlerTest resultSet = new ResultHandlerTest();
-        StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultSet);
+        StreamingThreadRead reader = new StreamingThreadRead(sConnector, logicalWorkFlow, resultSet);
 
         String queryId = String.valueOf(Math.abs(random.nextLong()));
         reader.setQueryId(queryId);
         reader.start();
         waitSeconds(15);
 
-        StreamingInserter streamingInserter = new StreamingInserter(sConnector, clusterName, tableMetadata,
+        StreamingThreadInserter streamingInserter = new StreamingThreadInserter(sConnector, clusterName, tableMetadata,
                         new RowToInsertDefault());
         streamingInserter.numOfElement(10).elementPerSecond(5);
         streamingInserter.start();

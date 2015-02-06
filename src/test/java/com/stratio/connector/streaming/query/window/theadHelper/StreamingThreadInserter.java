@@ -16,12 +16,19 @@
  * under the License.
  */
 
-package com.stratio.connector.streaming.ftest.thread.actions;
+package com.stratio.connector.streaming.query.window.theadHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.stratio.connector.commons.ftest.helper.TextConstant;
+import com.stratio.connector.streaming.bean.StreamingBean;
 import com.stratio.connector.streaming.core.StreamingConnector;
+import com.stratio.connector.streaming.ftest.thread.actions.RowToInsert;
 import com.stratio.crossdata.common.connector.IStorageEngine;
 import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.data.Row;
@@ -29,10 +36,17 @@ import com.stratio.crossdata.common.exceptions.ConnectorException;
 import com.stratio.crossdata.common.metadata.ColumnType;
 import com.stratio.crossdata.common.metadata.TableMetadata;
 
-public class StreamingInserter extends Thread {
+public class StreamingThreadInserter extends Thread {
+
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    public Random random = new Random(System.currentTimeMillis());
 
     private final RowToInsert rowToInsert;
     StreamingConnector streamingConnector;
+
+    private Integer ageValue;
 
     private ClusterName clusterName;
     private TableMetadata stream;
@@ -42,37 +56,49 @@ public class StreamingInserter extends Thread {
     private long numOfElement = 0;
     private String text = "Text";
     private int integerChangeable = 10;
-    private boolean addIntegerChangeable;
 
-    public StreamingInserter(StreamingConnector sC, ClusterName clusterName, TableMetadata stream, RowToInsert
-     rowToInsert       ) {
+
+    public StreamingThreadInserter(StreamingConnector sC, ClusterName clusterName, TableMetadata stream, RowToInsert
+            rowToInsert) {
         super("[StreamingInserter]");
         this.streamingConnector = sC;
         this.clusterName = clusterName;
         this.stream = stream;
-        this.addIntegerChangeable = false;
+
         this.rowToInsert = rowToInsert;
+
     }
 
-    public StreamingInserter elementPerSecond(long elements) {
+    public StreamingThreadInserter(StreamingConnector sC, ClusterName clusterName,  RowToInsert
+            rowToInsert, Integer ageValue, String catalog) {
+        super("[StreamingInserter]");
+        this.streamingConnector = sC;
+        this.clusterName = clusterName;
+
+        this.stream = StreamingBean.getTableMetadata(catalog,clusterName);
+
+        this.rowToInsert = rowToInsert;
+        this.ageValue =ageValue;
+
+    }
+
+    public StreamingThreadInserter elementPerSecond(long elements) {
         this.elementPerSecond = elements;
         return this;
     }
 
-    public StreamingInserter numOfElement(long elements) {
+    public StreamingThreadInserter numOfElement(long elements) {
         this.numOfElement = elements;
         return this;
     }
 
-    public StreamingInserter addTypeToInsert(ColumnType type) {
+    public StreamingThreadInserter addTypeToInsert(ColumnType type) {
         typesToInsert = (typesToInsert == null) ? new ArrayList<ColumnType>() : typesToInsert;
         typesToInsert.add(type);
         return this;
     }
 
-    public void setAddIntegerChangeable(boolean addIntegerChangeable) {
-        this.addIntegerChangeable = addIntegerChangeable;
-    }
+
 
     @Override
     public void run() {
@@ -91,23 +117,21 @@ public class StreamingInserter extends Thread {
                 if (numOfElement != 0 && numOfElement - 1 == i) {
                     finishThread = true;
                 }
+                Integer age = (ageValue!=null) ?ageValue:random.nextInt();
 
-                Row row = rowToInsert.getRowToInsert(i, text,typesToInsert,addIntegerChangeable,integerChangeable);
+                Row row = new StreamingBean(i,age, TextConstant.getRandomName(),TextConstant
+                        .getRandomDanteLine(),
+                        random.nextLong(),random.nextBoolean(),random.nextFloat(),random.nextDouble()).toRow();
 
-                try {
-
-                    storageEngine.insert(clusterName, stream, row, false);
-                } catch (ConnectorException e) {
-                    e.printStackTrace();
-                }
-
+                storageEngine.insert(clusterName, stream, row, false);
                 if ((i % elementPerSecond) == 0) {
                     Thread.sleep(1000);
                 }
 
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (ConnectorException | InterruptedException e) {
+             logger.error("A exception happens while "+this.getClass().getName()+" was inserting data in Streaming."+e);
+            throw  new RuntimeException(e);
         }
 
     }

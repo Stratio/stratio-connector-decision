@@ -37,7 +37,7 @@ import com.stratio.connector.commons.metadata.TableMetadataBuilder;
 import com.stratio.connector.commons.test.util.LogicalWorkFlowCreator;
 import com.stratio.connector.streaming.core.StreamingConnector;
 import com.stratio.connector.streaming.ftest.helper.StreamingConnectorHelper;
-import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
+import com.stratio.connector.streaming.query.window.theadHelper.StreamingThreadRead;
 import com.stratio.crossdata.common.connector.IResultHandler;
 import com.stratio.crossdata.common.data.AlterOperation;
 import com.stratio.crossdata.common.data.AlterOptions;
@@ -116,7 +116,7 @@ public class StreamingAlterTableFT extends GenericMetadataAlterTableFT {
                         .addSelect(selectColumns).addWindow(WindowType.NUM_ROWS, 1).getLogicalWorkflow();
 
         StreamingResultHandler strResultHandler = new StreamingResultHandler();
-        StreamingRead streamingReader = new StreamingRead((StreamingConnector) connector, lw, strResultHandler);
+        StreamingThreadRead streamingReader = new StreamingThreadRead((StreamingConnector) connector, lw, strResultHandler);
         streamingReader.setQueryId(UUID.randomUUID().toString());
         streamingReader.start();
 

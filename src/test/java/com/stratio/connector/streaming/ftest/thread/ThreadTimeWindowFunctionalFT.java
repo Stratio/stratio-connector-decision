@@ -36,8 +36,8 @@ import com.stratio.connector.commons.metadata.TableMetadataBuilder;
 import com.stratio.connector.commons.test.util.LogicalWorkFlowCreator;
 import com.stratio.connector.streaming.ftest.GenericStreamingTest;
 import com.stratio.connector.streaming.ftest.thread.actions.RowToInsertDefault;
-import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
-import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
+import com.stratio.connector.streaming.query.window.theadHelper.StreamingThreadInserter;
+import com.stratio.connector.streaming.query.window.theadHelper.StreamingThreadRead;
 import com.stratio.crossdata.common.connector.IResultHandler;
 import com.stratio.crossdata.common.data.Cell;
 import com.stratio.crossdata.common.data.Row;
@@ -106,14 +106,14 @@ public class ThreadTimeWindowFunctionalFT extends GenericStreamingTest {
     public void stopReadBeforeStopWriteTest() throws InterruptedException, UnsupportedException {
 
         logger.debug("********************** Inserting ......");
-        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata, new
+        StreamingThreadInserter stramingInserter = new StreamingThreadInserter(sConnector, getClusterName(), tableMetadata, new
                 RowToInsertDefault());
-        stramingInserter.setAddIntegerChangeable(true);
+
         stramingInserter.start();
 
         LogicalWorkflow logicalWokflow = createLogicalWorkFlow();
 
-        StreamingRead stremingRead = new StreamingRead(sConnector, logicalWokflow, new ResultHandler(
+        StreamingThreadRead stremingRead = new StreamingThreadRead(sConnector, logicalWokflow, new ResultHandler(
                         (Select) logicalWokflow.getLastStep()));
 
         stremingRead.start();
@@ -141,15 +141,15 @@ public class ThreadTimeWindowFunctionalFT extends GenericStreamingTest {
     @Test
     public void stopWriteBeforeStopReadTest() throws InterruptedException, UnsupportedException {
 
-        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata, new
+        StreamingThreadInserter stramingInserter = new StreamingThreadInserter(sConnector, getClusterName(), tableMetadata, new
                 RowToInsertDefault());
-        stramingInserter.setAddIntegerChangeable(true);
+
         stramingInserter.start();
 
         LogicalWorkflow logicalWokflow = createLogicalWorkFlow();
 
         ResultHandler resultHandler = new ResultHandler((Select) logicalWokflow.getLastStep());
-        StreamingRead stremingRead = new StreamingRead(sConnector, logicalWokflow, resultHandler);
+        StreamingThreadRead stremingRead = new StreamingThreadRead(sConnector, logicalWokflow, resultHandler);
 
         stremingRead.start();
         logger.debug("********************** Querying......");
@@ -177,17 +177,17 @@ public class ThreadTimeWindowFunctionalFT extends GenericStreamingTest {
 
         LogicalWorkflow logicalWokflow = createLogicalWorkFlow();
 
-        StreamingRead stremingRead = new StreamingRead(sConnector, logicalWokflow, new ResultHandler(
+        StreamingThreadRead stremingRead = new StreamingThreadRead(sConnector, logicalWokflow, new ResultHandler(
                         (Select) logicalWokflow.getLastStep()));
 
         stremingRead.start();
         logger.debug("********************** Querying......");
         waitSeconds(WAIT_TIME);
 
-        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata, new
+        StreamingThreadInserter stramingInserter = new StreamingThreadInserter(sConnector, getClusterName(), tableMetadata, new
                 RowToInsertDefault());
         stramingInserter.numOfElement(ELEMENTS_WRITE).elementPerSecond(ELEMENTS_WRITE);
-        stramingInserter.setAddIntegerChangeable(true);
+
         stramingInserter.start();
         waitSeconds(WAIT_TIME);
         stremingRead.end();

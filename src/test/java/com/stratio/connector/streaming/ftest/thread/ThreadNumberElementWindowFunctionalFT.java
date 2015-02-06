@@ -35,8 +35,8 @@ import com.stratio.connector.commons.metadata.TableMetadataBuilder;
 import com.stratio.connector.commons.test.util.LogicalWorkFlowCreator;
 import com.stratio.connector.streaming.ftest.GenericStreamingTest;
 import com.stratio.connector.streaming.ftest.thread.actions.RowToInsertDefault;
-import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
-import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
+import com.stratio.connector.streaming.query.window.theadHelper.StreamingThreadInserter;
+import com.stratio.connector.streaming.query.window.theadHelper.StreamingThreadRead;
 import com.stratio.crossdata.common.connector.IResultHandler;
 import com.stratio.crossdata.common.data.TableName;
 import com.stratio.crossdata.common.exceptions.ConnectorException;
@@ -106,16 +106,16 @@ public class ThreadNumberElementWindowFunctionalFT extends GenericStreamingTest 
                         .addColumnName(INTEGER_COLUMN).addColumnName(BOOLEAN_COLUMN).addSelect(selectColumns)
                         .addWindow(WindowType.NUM_ROWS, WINDOW_ELEMENTS).getLogicalWorkflow();
 
-        StreamingRead stremingRead = new StreamingRead(sConnector, logicalWokflow, new ResultHandler());
+        StreamingThreadRead stremingRead = new StreamingThreadRead(sConnector, logicalWokflow, new ResultHandler());
 
         stremingRead.start();
         logger.debug(" ********************** Quering......");
         Thread.sleep(20000);
 
-        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata, new
+        StreamingThreadInserter stramingInserter = new StreamingThreadInserter(sConnector, getClusterName(), tableMetadata, new
                 RowToInsertDefault());
         stramingInserter.numOfElement(ELEMENTS_WRITE + 8).elementPerSecond(500);
-        stramingInserter.setAddIntegerChangeable(true);
+
         stramingInserter.start();
         Thread.sleep(30000);
         stremingRead.end();

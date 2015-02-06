@@ -29,8 +29,8 @@ import com.stratio.connector.commons.metadata.TableMetadataBuilder;
 import com.stratio.connector.commons.test.util.LogicalWorkFlowCreator;
 import com.stratio.connector.streaming.ftest.GenericStreamingTest;
 import com.stratio.connector.streaming.ftest.thread.actions.RowToInsertDefault;
-import com.stratio.connector.streaming.ftest.thread.actions.StreamingInserter;
-import com.stratio.connector.streaming.ftest.thread.actions.StreamingRead;
+import com.stratio.connector.streaming.query.window.theadHelper.StreamingThreadInserter;
+import com.stratio.connector.streaming.query.window.theadHelper.StreamingThreadRead;
 import com.stratio.crossdata.common.connector.IResultHandler;
 import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.exceptions.ConnectorException;
@@ -84,7 +84,7 @@ public class ThreadFilterStringFunctionalFT extends GenericStreamingTest {
     @Test
     public void testEqualFilter() throws InterruptedException, UnsupportedException {
 
-        StreamingRead stremingRead = new StreamingRead(sConnector, createEqualLogicalWorkFlow(),
+        StreamingThreadRead stremingRead = new StreamingThreadRead(sConnector, createEqualLogicalWorkFlow(),
                         new ResultTextHandler());
 
         stremingRead.start();
@@ -92,12 +92,12 @@ public class ThreadFilterStringFunctionalFT extends GenericStreamingTest {
         waitSeconds(WAIT_TIME);
 
         System.out.println("TEST ********************** Inserting ......");
-        StreamingInserter streamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata, new RowToInsertDefault());
-        streamingInserter.setAddIntegerChangeable(true);
+        StreamingThreadInserter streamingInserter = new StreamingThreadInserter(sConnector, getClusterName(), tableMetadata, new RowToInsertDefault());
+
         streamingInserter.numOfElement(CORRECT_ELMENT_TO_FIND);
         streamingInserter.start();
 
-        StreamingInserter otherStreamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata, new RowToInsertDefault());
+        StreamingThreadInserter otherStreamingInserter = new StreamingThreadInserter(sConnector, getClusterName(), tableMetadata, new RowToInsertDefault());
         otherStreamingInserter.changeStingColumn(OTHER_TEXT);
         otherStreamingInserter.start();
 
@@ -122,7 +122,7 @@ public class ThreadFilterStringFunctionalFT extends GenericStreamingTest {
     @Test
     public void distinctFilterTest() throws InterruptedException, UnsupportedException {
 
-        StreamingRead stremingRead = new StreamingRead(sConnector, createDistinctLogicalWorkFlow(),
+        StreamingThreadRead stremingRead = new StreamingThreadRead(sConnector, createDistinctLogicalWorkFlow(),
                         new ResultTextHandler());
 
         stremingRead.start();
@@ -130,11 +130,11 @@ public class ThreadFilterStringFunctionalFT extends GenericStreamingTest {
         waitSeconds(WAIT_TIME);
 
         System.out.println("TEST ********************** Inserting ......");
-        StreamingInserter stramingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata, new RowToInsertDefault());
-        stramingInserter.setAddIntegerChangeable(true);
+        StreamingThreadInserter stramingInserter = new StreamingThreadInserter(sConnector, getClusterName(), tableMetadata, new RowToInsertDefault());
+
         stramingInserter.start();
 
-        StreamingInserter oherStreamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata, new RowToInsertDefault());
+        StreamingThreadInserter oherStreamingInserter = new StreamingThreadInserter(sConnector, getClusterName(), tableMetadata, new RowToInsertDefault());
         oherStreamingInserter.changeStingColumn(OTHER_TEXT);
         oherStreamingInserter.numOfElement(CORRECT_ELMENT_TO_FIND);
         oherStreamingInserter.start();
