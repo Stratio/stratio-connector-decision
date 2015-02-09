@@ -17,6 +17,8 @@ Compiling Stratio Connector Streaming
 
 To automatically build execute the following command:
 
+::
+
        > mvn clean compile install
 
 Build an executable Connector Streaming
@@ -24,11 +26,15 @@ Build an executable Connector Streaming
 
 To generate the executable execute the following command:
 
+::
+
        > cd connector-streaming-core
        > mvn crossdata-connector:install
 
 The user and the group of the service are set up to root by default. It
 could be changed in the following file:
+
+::
 
        > target/connector-streaming-core-0.3.0/bin/connector-streaming-core-0.3.0
 
@@ -37,63 +43,71 @@ Running the Stratio Connector Streaming
 
 To run Connector Streaming execute:
 
+::
+
        > target/connector-streaming-core-0.3.0/bin/connector-streaming-core-0.3.0 start
 
 To stop the connector execute:
+
+::
 
        > target/connector-streaming-core-0.3.0/bin/connector-streaming-core-0.3.0 stop
 
 How to use Connector Streaming
 ------------------------------
 
-A complete tutorial is available here. The basic commands are described
-below.
+A complete tutorial is available `here <_doc/FirstSteps.md>`__. The
+basic commands are described below.
 
-1.  Start crossdata-server and then crossdata-shell.  
-2.  Start Streaming Connector as it is explained before
-3.  In crossdata-shell:
+1. Start `crossdata-server and then
+   crossdata-shell <https://github.com/Stratio/crossdata>`__.
+2. Start Streaming Connector as it is explained before
+3. In crossdata-shell:
 
-    Add a datastore with this command:
+   Add a datastore with this command:
 
-    Add a data store. We need to specified the XML manifest that defines
-    the data store. The XML manifest can be found in the path of the
-    Streaming Connector in
-    target/stratio-connector-streaming-0.3.0/conf/StreamingDataStore.xml
+   Add a data store. We need to specified the XML manifest that defines
+   the data store. The XML manifest can be found in the path of the
+   Streaming Connector in
+   target/stratio-connector-streaming-0.3.0/conf/StreamingDataStore.xml
 
-    xdsh:user>  ADD DATASTORE <Absolute path to Streaming Datastore manifest>;
+::   
 
-    Attach cluster on that datastore. The datastore name must be the
-    same as the defined in the Datastore manifest.
+       xdsh:user>  ADD DATASTORE <Absolute path to Streaming Datastore manifest>;
 
-    xdsh:user>  ATTACH CLUSTER <cluster_name> ON DATASTORE <datastore_name> WITH OPTIONS {'KafkaServer': '[<kafkaHost_1,kafkaHost_2...kafkaHost_n>]', 'KafkaPort': '[<kafkaPort_1, kafkaPort_2...kafkaPort_n>]', 'zooKeeperServer':'[<zooKeeperHost_1,zooKeeperHost_2...zooKeeperHost_n>]','zooKeeperPort':'[<zooKeeperPort_1,zooKeeperPort_2...zooKeeperPort_n>]'};
+Attach cluster on that datastore. The datastore name must be the same as the defined in the Datastore manifest.
+::
 
-    Add the connector manifest. The XML with the manifest can be found
-    in the path of the Streaming Connector in
-    target/connector-streaming-core-0.3.0/conf/StreamingConnector.xml
+       xdsh:user>  ATTACH CLUSTER <cluster_name> ON DATASTORE <datastore_name> WITH OPTIONS {'KafkaServer': '[<kafkaHost_1,kafkaHost_2...kafkaHost_n>]', 'KafkaPort': '[<kafkaPort_1, kafkaPort_2...kafkaPort_n>]', 'zooKeeperServer':'[<zooKeeperHost_1,zooKeeperHost_2...zooKeeperHost_n>]','zooKeeperPort':'[<zooKeeperPort_1,zooKeeperPort_2...zooKeeperPort_n>]'};
 
-    xdsh:user>  ADD CONNECTOR <Path to Streaming Connector Manifest>
 
-    Attach the connector to the previously defined cluster. The
-    connector name must match the one defined in the Connector Manifest,
-    and the cluster name must match with the previously defined in the
-    ATTACH CLUSTER command.  
+Add the connector manifest. The XML with the manifest can be found in the path of the Streaming Connector in target/connector-streaming-core-0.3.0/conf/StreamingConnector.xml
 
-    xdsh:user>  ATTACH CONNECTOR <connector name> TO <cluster name> WITH OPTIONS {};
+::
 
-    At this point, we can start to send queries, that Crossdata execute
-    with the connector specified..
+       xdsh:user>  ADD CONNECTOR <Path to Streaming Connector Manifest>
 
-        ...
-            xdsh:user> CREATE CATALOG catalogTest;
+Attach the connector to the previously defined cluster. The connector name must match the one defined in the Connector Manifest, and the cluster name must match with the previously defined in the ATTACH CLUSTER command.
+   |
+:: 
 
-            xdsh:user> USE catalogTest;
+       xdsh:user>  ATTACH CONNECTOR <connector name> TO <cluster name> WITH OPTIONS {};
 
-            xdsh:user> CREATE TABLE tableTest ON CLUSTER <cluster_name> (id int PRIMARY KEY, name text);
+At this point, we can start to send queries, that Crossdata execute with the connector specified..
 
-            xdsh:user> SELECT * FROM tableTest WITH WINDOW 2 sec;
+   ::
 
-            xdsh:user> INSERT INTO tableTest(id, name) VALUES (1, 'stratio');
-        ...
+       ...
+           xdsh:user> CREATE CATALOG catalogTest;
+
+           xdsh:user> USE catalogTest;
+
+           xdsh:user> CREATE TABLE tableTest ON CLUSTER <cluster_name> (id int PRIMARY KEY, name text);
+
+           xdsh:user> SELECT * FROM tableTest WITH WINDOW 2 sec;
+
+           xdsh:user> INSERT INTO tableTest(id, name) VALUES (1, 'stratio');
+       ...
 
 Behaviours
 ----------
@@ -118,5 +132,4 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
 
