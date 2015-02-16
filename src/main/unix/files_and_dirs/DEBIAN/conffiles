@@ -1,0 +1,4 @@
+/etc/default/stratio-connector-streaming
+/etc/sds/stratio-connector-streaming/connector-application.conf
+/etc/sds/stratio-connector-streaming/log.properties
+/etc/sds/stratio-connector-streaming/connector-reference.conf

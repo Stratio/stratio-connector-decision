@@ -19,13 +19,13 @@
 
 	<groupId>com.stratio.connector</groupId>
 	<artifactId>stratio-connector-streaming</artifactId>
-	<version>0.3.0</version>
+	<version>0.4.0-SNAPSHOT</version>
 	<description>Connector for Stratio Streaming</description>
 	<url>http://www.stratio.com</url>
 	<name>Streaming Connector</name>
 
 	<properties>
-		<crossdata.version>0.2.0-001</crossdata.version>
+		<crossdata.version>0.3.0-SNAPSHOT</crossdata.version>
 		<commons.connector.version>0.4.0-001</commons.connector.version>
 		<streaming.api.version>0.6.2</streaming.api.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -356,6 +356,69 @@
              </reportPlugins>
          </configuration>
      </plugin>
+
+ <plugin>
+                <groupId>com.stratio.mojo.unix</groupId>
+                <artifactId>unix-maven-plugin</artifactId>
+                <version>1.0-alpha-9</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <contact><![CDATA[Stratio <jmgomez@stratio.com>]]></contact>
+                    <contactEmail>jmgomez@stratio.com</contactEmail>
+                    <size>2048</size>
+                    <deb>
+                        <section>devel</section>
+                    </deb>
+                    <rpm>
+                        <group>stratio</group>
+                    </rpm>
+                    <assembly>
+                        <mkdirs>
+                            <paths>
+                                <path>etc/sds/stratio-connector-streaming</path>
+                                <path>etc/default</path>
+                            </paths>
+                            <attributes>
+                                <user>stratio</user>
+                                <group>stratio</group>
+                                <mode>644</mode>
+                            </attributes>
+                        </mkdirs>
+                        <copyDirectory>
+                            <from>target/stratio-connector-streaming-${project.version}/bin</from>
+                            <to>opt/sds/stratio-connector-streaming/bin</to>
+                        </copyDirectory>
+                        <copyDirectory>
+                            <from>target/stratio-connector-streaming-${project.version}/lib</from>
+                            <to>opt/sds/stratio-connector-streaming/lib</to>
+                        </copyDirectory>
+                        <copyDirectory>
+                            <from>target/stratio-connector-streaming-${project.version}/conf</from>
+                            <to>opt/sds/stratio-connector-streaming/conf</to>
+                        </copyDirectory>
+                        <copyDirectory>
+                            <from>src/main/template</from>
+                            <to>opt/sds/stratio-connector-streaming/template</to>
+                        </copyDirectory>
+                        <copyDirectory>
+                            <from>src/main/config</from>
+                            <to>etc/sds/stratio-connector-streaming</to>
+                        </copyDirectory>
+                        <copyDirectory>
+                            <from>src/main/unix/files_and_dirs/etc/default</from>
+                            <to>etc/default</to>
+                        </copyDirectory>
+                        <copyFile>
+                            <path>src/main/include/LICENSE</path>
+                            <toFile>opt/sds/stratio-connector-streaming/LICENSE</toFile>
+                        </copyFile>
+                        <copyFile>
+                            <path>src/main/include/NOTICE</path>
+                            <toFile>opt/sds/stratio-connector-streaming/NOTICE</toFile>
+                        </copyFile>
+                    </assembly>
+                </configuration>
+            </plugin>
 
 		</plugins>
 	</build>

@@ -1,0 +1,3 @@
+export STREAMING_CONNECTOR_CONF="/etc/sds/stratio-connector-streaming"
+export STREAMING_CONNECTOR_HOME="/opt/sds/stratio-connector-streaming"
+export STREAMING_CONNECTOR_LOGS="/var/logs/sds/stratio-connector-streaming"

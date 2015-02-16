@@ -36,7 +36,7 @@ could be changed in the following file:
 
 ::
 
-       > target/connector-streaming-core-0.3.0/bin/connector-streaming-core-0.3.0
+       > target/connector-streaming-core-0.4.0-SNAPSHOT/bin/connector-streaming-core-0.4.0-SNAPSHOT
 
 Running the Stratio Connector Streaming
 ---------------------------------------
@@ -45,13 +45,51 @@ To run Connector Streaming execute:
 
 ::
 
-       > target/connector-streaming-core-0.3.0/bin/connector-streaming-core-0.3.0 start
+       > target/connector-streaming-core-0.4.0-SNAPSHOT/bin/connector-streaming-core-0.4.0-SNAPSHOT start
 
 To stop the connector execute:
 
 ::
 
-       > target/connector-streaming-core-0.3.0/bin/connector-streaming-core-0.3.0 stop
+       > target/connector-streaming-core-0.4.0-SNAPSHOT/bin/connector-streaming-core-0.4.0-SNAPSHOT stop
+
+Build a redistributable package
+-------------------------------
+It is possible too, to create a RPM or DEB redistributable package.
+
+RPM Package:
+
+::
+
+       > mvn unix:package-rpm -N
+
+DEB Package:
+
+::
+   
+       > mvn unix:package-deb -N
+
+Once the package it's created, execute this commands to install:
+
+RPM Package:
+
+::   
+    
+       > rpm -i target/stratio-connector-streaming-0.4.0-SNAPSHOT.rpm
+
+DEB Package:
+
+::   
+    
+       > dpkg -i target/stratio-connector-streaming-0.4.0-SNAPSHOT.deb
+
+Now to start/stop the connector:
+
+::   
+    
+       > service stratio-connector-streaming start
+       > service stratio-connector-streaming stop
+
 
 How to use Connector Streaming
 ------------------------------
@@ -69,7 +107,7 @@ basic commands are described below.
    Add a data store. We need to specified the XML manifest that defines
    the data store. The XML manifest can be found in the path of the
    Streaming Connector in
-   target/stratio-connector-streaming-0.3.0/conf/StreamingDataStore.xml
+   target/stratio-connector-streaming-0.4.0-SNAPSHOT/conf/StreamingDataStore.xml
 
 ::   
 
@@ -81,7 +119,7 @@ Attach cluster on that datastore. The datastore name must be the same as the def
        xdsh:user>  ATTACH CLUSTER <cluster_name> ON DATASTORE <datastore_name> WITH OPTIONS {'KafkaServer': '[<kafkaHost_1,kafkaHost_2...kafkaHost_n>]', 'KafkaPort': '[<kafkaPort_1, kafkaPort_2...kafkaPort_n>]', 'zooKeeperServer':'[<zooKeeperHost_1,zooKeeperHost_2...zooKeeperHost_n>]','zooKeeperPort':'[<zooKeeperPort_1,zooKeeperPort_2...zooKeeperPort_n>]'};
 
 
-Add the connector manifest. The XML with the manifest can be found in the path of the Streaming Connector in target/connector-streaming-core-0.3.0/conf/StreamingConnector.xml
+Add the connector manifest. The XML with the manifest can be found in the path of the Streaming Connector in target/connector-streaming-core-0.4.0-SNAPSHOT/conf/StreamingConnector.xml
 
 ::
 
