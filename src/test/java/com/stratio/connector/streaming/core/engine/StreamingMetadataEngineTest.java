@@ -45,6 +45,7 @@ import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.metadata.ColumnMetadata;
 import com.stratio.crossdata.common.metadata.ColumnType;
+import com.stratio.crossdata.common.metadata.DataType;
 import com.stratio.crossdata.common.metadata.IndexMetadata;
 import com.stratio.crossdata.common.metadata.TableMetadata;
 import com.stratio.crossdata.common.statements.structures.Selector;
@@ -95,7 +96,7 @@ public class StreamingMetadataEngineTest {
         LinkedHashMap<IndexName, IndexMetadata> index = new LinkedHashMap();
         LinkedHashMap<ColumnName, ColumnMetadata> columns = new LinkedHashMap<>();
         ColumnMetadata columnMetadata = new ColumnMetadata(new ColumnName(CATALOG, TABLE, COLUM), new Object[0],
-                        ColumnType.INT);
+        		new ColumnType(DataType.INT));
         columns.put(new ColumnName(CATALOG, TABLE, COLUM), columnMetadata);
 
         LinkedList<ColumnName> partitionKey = new LinkedList();
@@ -114,7 +115,7 @@ public class StreamingMetadataEngineTest {
     public void alterTableAddColumnTest() throws Exception {
 
         ColumnMetadata columnMetadata = new ColumnMetadata(new ColumnName(CATALOG, TABLE, COLUM), new Object[0],
-                        ColumnType.INT);
+        		new ColumnType(DataType.INT));
         TableName tableName = new TableName(CATALOG, TABLE);
         AlterOptions alterOptions = new AlterOptions(AlterOperation.ADD_COLUMN, null, columnMetadata);
         streamingMetadataEngine.alterTable(tableName, alterOptions, connection);

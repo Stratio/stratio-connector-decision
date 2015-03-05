@@ -38,6 +38,7 @@ import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.exceptions.ConnectionException;
 import com.stratio.crossdata.common.exceptions.InitializationException;
 import com.stratio.crossdata.common.metadata.ColumnType;
+import com.stratio.crossdata.common.metadata.DataType;
 import com.stratio.crossdata.common.security.ICredentials;
 
 public class StreamingConnectorHelper implements IConnectorHelper {
@@ -101,13 +102,13 @@ public class StreamingConnectorHelper implements IConnectorHelper {
     public Collection<ColumnType> getAllSupportedColumnType() {
         Set<ColumnType> allColumntTypes = new HashSet<>();
 
-        allColumntTypes.add(ColumnType.BIGINT);
-        allColumntTypes.add(ColumnType.BOOLEAN);
-        allColumntTypes.add(ColumnType.DOUBLE);
-        allColumntTypes.add(ColumnType.FLOAT);
-        allColumntTypes.add(ColumnType.INT);
-        allColumntTypes.add(ColumnType.TEXT);
-        allColumntTypes.add(ColumnType.VARCHAR);
+        allColumntTypes.add(new ColumnType(DataType.BIGINT));
+        allColumntTypes.add(new ColumnType(DataType.BOOLEAN));
+        allColumntTypes.add(new ColumnType(DataType.DOUBLE));
+        allColumntTypes.add(new ColumnType(DataType.FLOAT));
+        allColumntTypes.add(new ColumnType(DataType.INT));
+        allColumntTypes.add(new ColumnType(DataType.TEXT));
+        allColumntTypes.add(new ColumnType(DataType.VARCHAR));
         return allColumntTypes;
     }
 

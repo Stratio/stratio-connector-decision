@@ -280,7 +280,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
     private com.stratio.streaming.commons.constants.ColumnType convertType(ColumnType columnType)
                     throws ExecutionValidationException {
         com.stratio.streaming.commons.constants.ColumnType returnType = null;
-        switch (columnType) {
+        switch (columnType.getDataType()) {
 
         case BIGINT:
             returnType = com.stratio.streaming.commons.constants.ColumnType.LONG;
@@ -302,7 +302,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
             returnType = com.stratio.streaming.commons.constants.ColumnType.STRING;
             break;
         default:
-            throw new ExecutionValidationException("Column type " + columnType.name() + " not supported in Streaming");
+            throw new ExecutionValidationException("Column type " + columnType.getDataType().name() + " not supported in Streaming");
 
         }
         return returnType;

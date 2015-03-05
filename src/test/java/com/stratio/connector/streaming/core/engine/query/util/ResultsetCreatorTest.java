@@ -43,6 +43,7 @@ import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.metadata.ColumnMetadata;
 import com.stratio.crossdata.common.metadata.ColumnType;
+import com.stratio.crossdata.common.metadata.DataType;
 import com.stratio.crossdata.common.metadata.Operations;
 import com.stratio.crossdata.common.result.QueryResult;
 import com.stratio.crossdata.common.statements.structures.ColumnSelector;
@@ -70,7 +71,7 @@ public class ResultsetCreatorTest {
     private ResultsetCreator resultsetCreator;
     private String[] ALIAS = { "alias_1", "alias_2" };
     private String[] NAME = { "name_1", "name_2" };
-    private ColumnType[] TYPE = { ColumnType.BOOLEAN, ColumnType.DOUBLE };
+    private ColumnType[] TYPE = { new ColumnType(DataType.BOOLEAN), new ColumnType(DataType.DOUBLE) };
 
     @Before
     public void before() throws Exception {

@@ -27,6 +27,7 @@ import com.stratio.connector.streaming.core.procces.ConnectorProcessHandler;
 import com.stratio.connector.streaming.core.procces.QueryProcess;
 import com.stratio.crossdata.common.connector.IQueryEngine;
 import com.stratio.crossdata.common.connector.IResultHandler;
+import com.stratio.crossdata.common.exceptions.ConnectorException;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.logicalplan.LogicalWorkflow;
@@ -167,5 +168,14 @@ public class StreamingQueryEngine implements IQueryEngine {
                             + "Streaming"));
         }
     }
+
+	@Override
+	public void pagedExecute(String queryId, LogicalWorkflow workflow,
+			IResultHandler resultHandler, int pageSize)
+			throws ConnectorException {
+        throw new UnsupportedException("Page Execute not supported in Streaming connector");
+
+		
+	}
 
 }

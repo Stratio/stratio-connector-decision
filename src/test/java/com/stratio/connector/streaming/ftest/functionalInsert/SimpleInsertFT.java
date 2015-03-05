@@ -43,6 +43,7 @@ import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.common.logicalplan.LogicalWorkflow;
 import com.stratio.crossdata.common.metadata.ColumnMetadata;
 import com.stratio.crossdata.common.metadata.ColumnType;
+import com.stratio.crossdata.common.metadata.DataType;
 import com.stratio.crossdata.common.metadata.TableMetadata;
 import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
@@ -53,19 +54,19 @@ public class SimpleInsertFT extends GenericStreamingTest {
         ClusterName clusterName = getClusterName();
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE, clusterName.getName());
-        TableMetadata tableMetadata = tableMetadataBuilder.addColumn(INTEGER_COLUMN, ColumnType.INT)
-                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(false);
+        TableMetadata tableMetadata = tableMetadataBuilder.addColumn(INTEGER_COLUMN, new ColumnType(DataType.INT))
+                        .addColumn(STRING_COLUMN, new ColumnType(DataType.VARCHAR)).build(false);
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
         // TODO window with 1element
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, clusterName);
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, ColumnType.INT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(INTEGER_COLUMN, INTEGER_COLUMN, new ColumnType(DataType.INT)));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, new ColumnType(DataType.VARCHAR)));
         LogicalWorkflow logicalWorkFlow = logicalWorkFlowCreator.addColumnName(INTEGER_COLUMN)
                         .addColumnName(STRING_COLUMN).addWindow(WindowType.NUM_ROWS, 1).addSelect(selectColumns)
-                        .getLogicalWorkflow();
+                        .build();
 
         ResultHandlerTest resultSet = new ResultHandlerTest();
         StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultSet);
@@ -78,7 +79,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
         StreamingInserter streamingInserter = new StreamingInserter(sConnector, clusterName, tableMetadata,
                         new RowToInsertDefault());
         streamingInserter.numOfElement(10).elementPerSecond(5);
-        streamingInserter.addTypeToInsert(ColumnType.INT).addTypeToInsert(ColumnType.VARCHAR);
+        streamingInserter.addTypeToInsert(new ColumnType(DataType.INT)).addTypeToInsert(new ColumnType(DataType.VARCHAR));
         streamingInserter.start();
 
         waitSeconds(15);
@@ -107,7 +108,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
         }
 
         assertTrue(columnMetadata.size() == 2);
-        assertEquals(ColumnType.INT, columnMetadata.get(0).getColumnType());
+        assertEquals(new ColumnType(DataType.INT), columnMetadata.get(0).getColumnType());
         assertTrue(resSet.getRows().get(0).getCell(INTEGER_COLUMN).getValue() instanceof Integer);
 
     }
@@ -146,7 +147,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
         }
 
         assertTrue(columnMetadata.size() == 2);
-        assertEquals(ColumnType.BIGINT, columnMetadata.get(0).getColumnType());
+        assertEquals(new ColumnType(DataType.BIGINT), columnMetadata.get(0).getColumnType());
         assertTrue(resultQueryIdSet.getRows().get(0).getCell(LONG_COLUMN).getValue() instanceof Long);
     }
 
@@ -188,7 +189,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
         }
 
         assertTrue(columnMetadata.size() == 2);
-        assertEquals(ColumnType.BIGINT, columnMetadata.get(0).getColumnType());
+        assertEquals(new ColumnType(DataType.BIGINT), columnMetadata.get(0).getColumnType());
         assertTrue(resultQueryIdSet.getRows().get(0).getCell(LONG_COLUMN).getValue() instanceof Long);
     }
 
@@ -203,7 +204,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
         StreamingInserter streamingInserter = new StreamingInserter(sConnector, getClusterName(), tableMetadata,
                         rowToInsert);
         streamingInserter.numOfElement(10).elementPerSecond(5);
-        streamingInserter.addTypeToInsert(ColumnType.BIGINT).addTypeToInsert(ColumnType.VARCHAR);
+        streamingInserter.addTypeToInsert(new ColumnType(DataType.BIGINT)).addTypeToInsert(new ColumnType(DataType.VARCHAR));
         streamingInserter.start();
 
         waitSeconds(10);
@@ -215,11 +216,11 @@ public class SimpleInsertFT extends GenericStreamingTest {
         // TODO window with 1element
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, getClusterName());
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(LONG_COLUMN, LONG_COLUMN, ColumnType.BIGINT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(LONG_COLUMN, LONG_COLUMN, new ColumnType(DataType.BIGINT)));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, new ColumnType(DataType.VARCHAR)));
         LogicalWorkflow logicalWorkFlow = logicalWorkFlowCreator.addColumnName(LONG_COLUMN)
                         .addColumnName(STRING_COLUMN).addWindow(WindowType.NUM_ROWS, 1).addSelect(selectColumns)
-                        .getLogicalWorkflow();
+                        .build();
 
         StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultHandlerTest);
 
@@ -232,8 +233,8 @@ public class SimpleInsertFT extends GenericStreamingTest {
     private TableMetadata createTable() throws ConnectorException {
         ClusterName clusterName = getClusterName();
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE, clusterName.getName());
-        TableMetadata tableMetadata = tableMetadataBuilder.addColumn(LONG_COLUMN, ColumnType.BIGINT)
-                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(false);
+        TableMetadata tableMetadata = tableMetadataBuilder.addColumn(LONG_COLUMN, new ColumnType(DataType.BIGINT))
+                        .addColumn(STRING_COLUMN, new ColumnType(DataType.VARCHAR)).build(false);
 
         sConnector.getMetadataEngine().createTable(clusterName, tableMetadata);
         return tableMetadata;
@@ -244,8 +245,8 @@ public class SimpleInsertFT extends GenericStreamingTest {
         ClusterName clusterName = getClusterName();
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE, clusterName.getName());
-        TableMetadata tableMetadata = tableMetadataBuilder.addColumn(BOOLEAN_COLUMN, ColumnType.BOOLEAN)
-                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(false);
+        TableMetadata tableMetadata = tableMetadataBuilder.addColumn(BOOLEAN_COLUMN, new ColumnType(DataType.BOOLEAN))
+                        .addColumn(STRING_COLUMN, new ColumnType(DataType.VARCHAR)).build(false);
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
@@ -253,10 +254,10 @@ public class SimpleInsertFT extends GenericStreamingTest {
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, clusterName);
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
         selectColumns.add(logicalWorkFlowCreator.createConnectorField(BOOLEAN_COLUMN, BOOLEAN_COLUMN,
-                        ColumnType.BOOLEAN));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
+        		new ColumnType(DataType.BOOLEAN)));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, new ColumnType(DataType.VARCHAR)));
         LogicalWorkflow logicalWorkFlow = logicalWorkFlowCreator.addColumnName(BOOLEAN_COLUMN, STRING_COLUMN)
-                        .addWindow(WindowType.NUM_ROWS, 1).addSelect(selectColumns).getLogicalWorkflow();
+                        .addWindow(WindowType.NUM_ROWS, 1).addSelect(selectColumns).build();
 
         ResultHandlerTest resultSet = new ResultHandlerTest();
         StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultSet);
@@ -270,7 +271,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
                         new RowToInsertDefault());
         streamingInserter.numOfElement(10).elementPerSecond(5);
         streamingInserter.start();
-        streamingInserter.addTypeToInsert(ColumnType.BOOLEAN).addTypeToInsert(ColumnType.VARCHAR);
+        streamingInserter.addTypeToInsert(new ColumnType(DataType.BOOLEAN)).addTypeToInsert(new ColumnType(DataType.VARCHAR));
         waitSeconds(10);
 
         streamingInserter.end();
@@ -293,7 +294,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
         assertEquals(10, numsRecovered.size());
 
         assertTrue(columnMetadata.size() == 2);
-        assertEquals(ColumnType.BOOLEAN, columnMetadata.get(0).getColumnType());
+        assertEquals(new ColumnType(DataType.BOOLEAN), columnMetadata.get(0).getColumnType());
         assertTrue(resSet.getRows().get(0).getCell(BOOLEAN_COLUMN).getValue() instanceof Boolean);
     }
 
@@ -302,18 +303,18 @@ public class SimpleInsertFT extends GenericStreamingTest {
         ClusterName clusterName = getClusterName();
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE, clusterName.getName());
-        TableMetadata tableMetadata = tableMetadataBuilder.addColumn(FLOAT_COLUMN, ColumnType.FLOAT)
-                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(false);
+        TableMetadata tableMetadata = tableMetadataBuilder.addColumn(FLOAT_COLUMN, new ColumnType(DataType.FLOAT))
+                        .addColumn(STRING_COLUMN, new ColumnType(DataType.VARCHAR)).build(false);
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
         // TODO window with 1element
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, clusterName);
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(FLOAT_COLUMN, FLOAT_COLUMN, ColumnType.FLOAT));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(FLOAT_COLUMN, FLOAT_COLUMN, new ColumnType(DataType.FLOAT)));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, new ColumnType(DataType.VARCHAR)));
         LogicalWorkflow logicalWorkFlow = logicalWorkFlowCreator.addColumnName(FLOAT_COLUMN, STRING_COLUMN)
-                        .addWindow(WindowType.NUM_ROWS, 1).addSelect(selectColumns).getLogicalWorkflow();
+                        .addWindow(WindowType.NUM_ROWS, 1).addSelect(selectColumns).build();
 
         ResultHandlerTest resultSet = new ResultHandlerTest();
         StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultSet);
@@ -327,7 +328,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
                         new RowToInsertDefault());
         streamingInserter.numOfElement(10).elementPerSecond(5);
         streamingInserter.start();
-        streamingInserter.addTypeToInsert(ColumnType.FLOAT).addTypeToInsert(ColumnType.VARCHAR);
+        streamingInserter.addTypeToInsert(new ColumnType(DataType.FLOAT)).addTypeToInsert(new ColumnType(DataType.VARCHAR));
         waitSeconds(10);
 
         streamingInserter.end();
@@ -353,7 +354,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
         }
 
         assertTrue(columnMetadata.size() == 2);
-        assertEquals(ColumnType.FLOAT, columnMetadata.get(0).getColumnType());
+        assertEquals(new ColumnType(DataType.FLOAT), columnMetadata.get(0).getColumnType());
         assertTrue(resSet.getRows().get(0).getCell(FLOAT_COLUMN).getValue() instanceof Float);
 
     }
@@ -363,18 +364,18 @@ public class SimpleInsertFT extends GenericStreamingTest {
         ClusterName clusterName = getClusterName();
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE, clusterName.getName());
-        TableMetadata tableMetadata = tableMetadataBuilder.addColumn(DOUBLE_COLUMN, ColumnType.DOUBLE)
-                        .addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(false);
+        TableMetadata tableMetadata = tableMetadataBuilder.addColumn(DOUBLE_COLUMN, new ColumnType(DataType.DOUBLE))
+                        .addColumn(STRING_COLUMN, new ColumnType(DataType.VARCHAR)).build(false);
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
         // TODO window with 1element
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, clusterName);
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(DOUBLE_COLUMN, DOUBLE_COLUMN, ColumnType.DOUBLE));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(DOUBLE_COLUMN, DOUBLE_COLUMN, new ColumnType(DataType.DOUBLE)));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, new ColumnType(DataType.VARCHAR)));
         LogicalWorkflow logicalWorkFlow = logicalWorkFlowCreator.addColumnName(DOUBLE_COLUMN, STRING_COLUMN)
-                        .addWindow(WindowType.NUM_ROWS, 1).addSelect(selectColumns).getLogicalWorkflow();
+                        .addWindow(WindowType.NUM_ROWS, 1).addSelect(selectColumns).build();
 
         ResultHandlerTest resultSet = new ResultHandlerTest();
         StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultSet);
@@ -388,7 +389,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
                         new RowToInsertDefault());
         streamingInserter.numOfElement(10).elementPerSecond(5);
         streamingInserter.start();
-        streamingInserter.addTypeToInsert(ColumnType.DOUBLE).addTypeToInsert(ColumnType.VARCHAR);
+        streamingInserter.addTypeToInsert(new ColumnType(DataType.DOUBLE)).addTypeToInsert(new ColumnType(DataType.VARCHAR));
         waitSeconds(10);
 
         streamingInserter.end();
@@ -414,7 +415,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
         }
 
         assertTrue(columnMetadata.size() == 2);
-        assertEquals(ColumnType.DOUBLE, columnMetadata.get(0).getColumnType());
+        assertEquals(new ColumnType(DataType.DOUBLE), columnMetadata.get(0).getColumnType());
         assertTrue(resSet.getRows().get(0).getCell(DOUBLE_COLUMN).getValue() instanceof Double);
 
     }
@@ -424,16 +425,16 @@ public class SimpleInsertFT extends GenericStreamingTest {
         ClusterName clusterName = getClusterName();
 
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE, clusterName.getName());
-        TableMetadata tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, ColumnType.VARCHAR).build(false);
+        TableMetadata tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, new ColumnType(DataType.VARCHAR)).build(false);
 
         sConnector.getMetadataEngine().createTable(getClusterName(), tableMetadata);
 
         // TODO window with 1element
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, clusterName);
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, ColumnType.VARCHAR));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(STRING_COLUMN, STRING_COLUMN, new ColumnType(DataType.VARCHAR)));
         LogicalWorkflow logicalWorkFlow = logicalWorkFlowCreator.addColumnName(STRING_COLUMN).addSelect(selectColumns)
-                        .addWindow(WindowType.NUM_ROWS, 1).getLogicalWorkflow();
+                        .addWindow(WindowType.NUM_ROWS, 1).build();
 
         ResultHandlerTest resultSet = new ResultHandlerTest();
         StreamingRead reader = new StreamingRead(sConnector, logicalWorkFlow, resultSet);
@@ -447,7 +448,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
                         new RowToInsertDefault());
         streamingInserter.numOfElement(10).elementPerSecond(5);
         streamingInserter.start();
-        streamingInserter.addTypeToInsert(ColumnType.VARCHAR);
+        streamingInserter.addTypeToInsert(new ColumnType(DataType.VARCHAR));
         waitSeconds(10);
 
         streamingInserter.end();
@@ -467,7 +468,7 @@ public class SimpleInsertFT extends GenericStreamingTest {
         }
 
         assertTrue(columnMetadata.size() == 1);
-        assertEquals(ColumnType.VARCHAR, columnMetadata.get(0).getColumnType());
+        assertEquals(new ColumnType(DataType.VARCHAR), columnMetadata.get(0).getColumnType());
         assertTrue(resSet.getRows().get(0).getCell(STRING_COLUMN).getValue() instanceof String);
 
     }

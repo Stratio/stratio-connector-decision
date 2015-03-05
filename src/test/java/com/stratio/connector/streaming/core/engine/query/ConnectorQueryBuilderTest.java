@@ -32,6 +32,7 @@ import com.stratio.crossdata.common.logicalplan.Filter;
 import com.stratio.crossdata.common.logicalplan.Project;
 import com.stratio.crossdata.common.logicalplan.Select;
 import com.stratio.crossdata.common.metadata.ColumnType;
+import com.stratio.crossdata.common.metadata.DataType;
 import com.stratio.crossdata.common.metadata.Operations;
 import com.stratio.crossdata.common.statements.structures.ColumnSelector;
 import com.stratio.crossdata.common.statements.structures.Operator;
@@ -96,15 +97,15 @@ public class ConnectorQueryBuilderTest {
 
     private Map<Selector, ColumnType> createTypeMapColumnName() {
         Map<Selector, ColumnType> typeMap = new LinkedHashMap<>();
-        typeMap.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, COLUMN_1)), ColumnType.DOUBLE);
-        typeMap.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, COLUMN_2)), ColumnType.INT);
+        typeMap.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, COLUMN_1)), new ColumnType(DataType.DOUBLE));
+        typeMap.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, COLUMN_2)), new ColumnType(DataType.INT));
         return typeMap;
     }
 
     private Map<String, ColumnType> createTypeMap() {
         Map<String, ColumnType> typeMap = new LinkedHashMap<>();
-        typeMap.put(COLUMN_1, ColumnType.DOUBLE);
-        typeMap.put(COLUMN_2, ColumnType.INT);
+        typeMap.put(COLUMN_1, new ColumnType(DataType.DOUBLE));
+        typeMap.put(COLUMN_2, new ColumnType(DataType.INT));
         return typeMap;
     }
 

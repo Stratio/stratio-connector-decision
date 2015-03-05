@@ -53,6 +53,7 @@ import com.stratio.crossdata.common.exceptions.InitializationException;
 import com.stratio.crossdata.common.logicalplan.LogicalWorkflow;
 import com.stratio.crossdata.common.metadata.ColumnMetadata;
 import com.stratio.crossdata.common.metadata.ColumnType;
+import com.stratio.crossdata.common.metadata.DataType;
 import com.stratio.crossdata.common.result.QueryResult;
 import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
@@ -92,14 +93,14 @@ public class StreamingAlterTableFT extends GenericMetadataAlterTableFT {
 
         // Create the stream with COLUMN_1
         TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
-        tableMetadataBuilder.addColumn(COLUMN_1, ColumnType.VARCHAR);
+        tableMetadataBuilder.addColumn(COLUMN_1, new ColumnType(DataType.VARCHAR));
 
         connector.getMetadataEngine().createTable(clusterName, tableMetadataBuilder.build(false));
         sleep(5000);
 
         // ADD the column: COLUMN_2 with alterTable
         ColumnMetadata columnMetadata = new ColumnMetadata(new ColumnName(CATALOG, TABLE, COLUMN_2), new Object[0],
-                        ColumnType.INT);
+        		new ColumnType(DataType.INT));
         AlterOptions alterOptions = new AlterOptions(AlterOperation.ADD_COLUMN, null, columnMetadata);
         connector.getMetadataEngine().alterTable(clusterName, new TableName(CATALOG, TABLE), alterOptions);
 
@@ -110,10 +111,10 @@ public class StreamingAlterTableFT extends GenericMetadataAlterTableFT {
         LogicalWorkFlowCreator logicalWorkFlowCreator = new LogicalWorkFlowCreator(CATALOG, TABLE, getClusterName());
 
         LinkedList<LogicalWorkFlowCreator.ConnectorField> selectColumns = new LinkedList<>();
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(COLUMN_1, COLUMN_1, ColumnType.VARCHAR));
-        selectColumns.add(logicalWorkFlowCreator.createConnectorField(COLUMN_2, COLUMN_2, ColumnType.INT));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(COLUMN_1, COLUMN_1, new ColumnType(DataType.VARCHAR)));
+        selectColumns.add(logicalWorkFlowCreator.createConnectorField(COLUMN_2, COLUMN_2, new ColumnType(DataType.INT)));
         LogicalWorkflow lw = logicalWorkFlowCreator.addColumnName(COLUMN_1).addColumnName(COLUMN_2)
-                        .addSelect(selectColumns).addWindow(WindowType.NUM_ROWS, 1).getLogicalWorkflow();
+                        .addSelect(selectColumns).addWindow(WindowType.NUM_ROWS, 1).build();
 
         StreamingResultHandler strResultHandler = new StreamingResultHandler();
         StreamingRead streamingReader = new StreamingRead((StreamingConnector) connector, lw, strResultHandler);
@@ -129,7 +130,7 @@ public class StreamingAlterTableFT extends GenericMetadataAlterTableFT {
         cells.put(COLUMN_2, new Cell(25));
         row.setCells(cells);
 
-        tableMetadataBuilder.addColumn(COLUMN_2, ColumnType.INT);
+        tableMetadataBuilder.addColumn(COLUMN_2, new ColumnType(DataType.INT));
         connector.getStorageEngine().insert(clusterName, tableMetadataBuilder.build(false), row,false);
 
         sleep(12000);

@@ -154,7 +154,7 @@ public final class StreamUtil {
     private static Object getRandomValue(ColumnType type) throws ExecutionException {
         Object randomObject;
 
-        switch (type) {
+        switch (type.getDataType()) {
         case INT:
             randomObject = RANDOM.nextInt();
             break;
