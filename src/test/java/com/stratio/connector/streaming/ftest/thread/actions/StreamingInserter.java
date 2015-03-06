@@ -27,6 +27,7 @@ import com.stratio.crossdata.common.data.ClusterName;
 import com.stratio.crossdata.common.data.Row;
 import com.stratio.crossdata.common.exceptions.ConnectorException;
 import com.stratio.crossdata.common.metadata.ColumnType;
+import com.stratio.crossdata.common.metadata.DataType;
 import com.stratio.crossdata.common.metadata.TableMetadata;
 
 public class StreamingInserter extends Thread {
@@ -79,9 +80,9 @@ public class StreamingInserter extends Thread {
 
         if (typesToInsert == null) {
             typesToInsert = new ArrayList<ColumnType>(3);
-            typesToInsert.add(ColumnType.BOOLEAN);
-            typesToInsert.add(ColumnType.INT);
-            typesToInsert.add(ColumnType.VARCHAR);
+            typesToInsert.add(new ColumnType(DataType.BOOLEAN));
+            typesToInsert.add(new ColumnType(DataType.INT));
+            typesToInsert.add(new ColumnType(DataType.VARCHAR));
         }
 
         try {

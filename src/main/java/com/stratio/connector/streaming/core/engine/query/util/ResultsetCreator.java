@@ -96,9 +96,8 @@ public class ResultsetCreator {
         ResultSet resultSet = new ResultSet();
         resultSet.setColumnMetadata(this.columnsMetadata);
         resultSet.setRows(rows);
-        queryResult = QueryResult.createQueryResult(resultSet);
+        queryResult = QueryResult.createQueryResult(resultSet,0,false);
         queryResult.setQueryId(queryData.getQueryId());
-        queryResult.setLastResultSet(false);
         return this;
 
     }

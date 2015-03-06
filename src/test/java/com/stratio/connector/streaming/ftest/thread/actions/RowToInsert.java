@@ -38,7 +38,7 @@ public abstract class RowToInsert {
         Row row = new Row();
         for (ColumnType colType : typesToInsert) {
 
-            switch (colType) {
+            switch (colType.getDataType()) {
             case BOOLEAN:
                 row.addCell(GenericStreamingTest.BOOLEAN_COLUMN, getBooleanColumnCell());
                 break;
