@@ -24,7 +24,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 
 import org.junit.After;
@@ -65,7 +67,9 @@ public class TimeWindowProcessMessageTest {
     public void before() throws Exception {
 
         ConnectorQueryData queryData = new ConnectorQueryData();
-        Window window = new Window(Operations.SELECT_WINDOW, WindowType.TEMPORAL);
+        Set operations = new HashSet<>();
+        operations.add(Operations.SELECT_WINDOW);
+        Window window = new Window(operations, WindowType.TEMPORAL);
         window.setTimeWindow(NUM_TIME_UNITS, TimeUnit.SECONDS);
         queryData.setWindow(window);
         when(resultSetCreator.create(any(List.class))).thenReturn(resultSetCreator);

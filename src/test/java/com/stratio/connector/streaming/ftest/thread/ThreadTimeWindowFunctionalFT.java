@@ -83,7 +83,7 @@ public class ThreadTimeWindowFunctionalFT extends GenericStreamingTest {
         returnTypes = true;
         correctOrder = true;
 
-        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
+        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE, CLUSTER_NAME);
         tableMetadata = tableMetadataBuilder.addColumn(STRING_COLUMN, new ColumnType(DataType.VARCHAR))
                         .addColumn(INTEGER_COLUMN, new ColumnType(DataType.INT)).addColumn(BOOLEAN_COLUMN, new ColumnType(DataType.BOOLEAN))
                         .addColumn(INTEGER_CHANGEABLE_COLUMN, new ColumnType(DataType.INT))

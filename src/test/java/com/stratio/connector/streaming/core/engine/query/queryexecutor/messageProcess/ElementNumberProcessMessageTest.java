@@ -23,7 +23,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -57,7 +59,9 @@ public class ElementNumberProcessMessageTest {
     public void before() throws Exception {
 
         ConnectorQueryData queryData = new ConnectorQueryData();
-        Window window = new Window(Operations.SELECT_WINDOW, WindowType.NUM_ROWS);
+        Set operations = new HashSet<>();
+        operations.add(Operations.SELECT_WINDOW);
+        Window window = new Window(operations, WindowType.NUM_ROWS);
         window.setNumRows(NUM_ROWS);
         queryData.setWindow(window);
         when(resultSetCreator.create(any(List.class))).thenReturn(resultSetCreator);

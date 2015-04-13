@@ -31,11 +31,9 @@ import com.stratio.connector.streaming.core.procces.ConnectorProcessHandler;
 import com.stratio.crossdata.common.connector.IConfiguration;
 import com.stratio.crossdata.common.connector.IMetadataEngine;
 import com.stratio.crossdata.common.connector.IQueryEngine;
-import com.stratio.crossdata.common.connector.ISqlEngine;
 import com.stratio.crossdata.common.connector.IStorageEngine;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
 import com.stratio.crossdata.common.exceptions.InitializationException;
-import com.stratio.crossdata.common.exceptions.UnsupportedException;
 import com.stratio.crossdata.connectors.ConnectorApp;
 
 /**
@@ -170,11 +168,5 @@ public class StreamingConnector extends CommonsConnector {
             }
         });
     }
-
-	@Override
-	public ISqlEngine getSqlEngine() throws UnsupportedException {
-        throw new UnsupportedException("SQL Engine not supported in Streaming connector");
-
-	}
 
 }

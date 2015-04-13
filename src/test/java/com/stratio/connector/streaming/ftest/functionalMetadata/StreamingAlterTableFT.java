@@ -92,7 +92,7 @@ public class StreamingAlterTableFT extends GenericMetadataAlterTableFT {
         ClusterName clusterName = getClusterName();
 
         // Create the stream with COLUMN_1
-        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE);
+        TableMetadataBuilder tableMetadataBuilder = new TableMetadataBuilder(CATALOG, TABLE, clusterName.toString());
         tableMetadataBuilder.addColumn(COLUMN_1, new ColumnType(DataType.VARCHAR));
 
         connector.getMetadataEngine().createTable(clusterName, tableMetadataBuilder.build(false));

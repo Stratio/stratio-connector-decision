@@ -19,8 +19,10 @@ package com.stratio.connector.streaming.core.engine.query;
 
 import static junit.framework.TestCase.assertEquals;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -90,7 +92,9 @@ public class ConnectorQueryBuilderTest {
         Map<Selector, String> columMap = createColumnMap();
         Map<String, ColumnType> typeMap = createTypeMap();
         Map<Selector, ColumnType> typeMapColumnName = createTypeMapColumnName();
-        return new Select(Operations.SELECT_OPERATOR, columMap, typeMap, typeMapColumnName);
+        Set operations = new HashSet<>();
+        operations.add(Operations.SELECT_WINDOW);
+        return new Select(operations, columMap, typeMap, typeMapColumnName);
 
 
     }
@@ -117,14 +121,18 @@ public class ConnectorQueryBuilderTest {
     }
 
     private Project createProject() {
-        return new Project(Operations.PROJECT, new TableName(CATALOG, TABLE), new ClusterName(CLUSTER_NAME));
+        Set operations = new HashSet<>();
+        operations.add(Operations.PROJECT);
+        return new Project(operations, new TableName(CATALOG, TABLE), new ClusterName(CLUSTER_NAME));
     }
 
     private Filter createFilter(String column, Operator operator, String value) {
         Selector leftSelector = new ColumnSelector(new ColumnName(CATALOG, TABLE, column));
         Selector rightSelector = new StringSelector(value);
         Relation relation = new Relation(leftSelector, operator, rightSelector);
-        return new Filter(Operations.FILTER_FUNCTION_EQ, relation);
+        Set operations = new HashSet<>();
+        operations.add(Operations.FILTER_FUNCTION_EQ);
+        return new Filter(operations, relation);
     }
 
 }

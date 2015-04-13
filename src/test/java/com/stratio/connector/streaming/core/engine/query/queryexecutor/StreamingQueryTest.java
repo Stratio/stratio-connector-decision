@@ -25,11 +25,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
@@ -179,7 +175,9 @@ public class StreamingQueryTest {
 
     private ConnectorQueryData createQueryData() {
         ConnectorQueryData queryData = new ConnectorQueryData();
-        queryData.setProjection(new Project(Operations.PROJECT, new TableName(CATALOG, TABLE), CLUSTER_NAME));
+        Set operations = new HashSet<>();
+        operations.add(Operations.PROJECT);
+        queryData.setProjection(new Project(operations, new TableName(CATALOG, TABLE), CLUSTER_NAME));
         queryData.setQueryId(QUERY_ID);
         Map<Selector, String> columnMap = new LinkedHashMap<>();
         columnMap.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, COLUMN1)), ALIAS1);
@@ -189,7 +187,10 @@ public class StreamingQueryTest {
         Map<Selector, ColumnType> typemapColumnName = new LinkedHashMap<>();
         typemapColumnName.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, COLUMN1)), new ColumnType(DataType.TEXT));
         typemapColumnName.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, COLUMN2)), new ColumnType(DataType.TEXT));
-        Select select = new Select(Operations.SELECT_OPERATOR, columnMap, typemap, typemapColumnName);
+
+        Set operations2 = new HashSet<>();
+        operations2.add(Operations.SELECT_OPERATOR);
+        Select select = new Select(operations2, columnMap, typemap, typemapColumnName);
         queryData.setSelect(select);
         return queryData;
     }

@@ -57,6 +57,8 @@ public abstract class GenericStreamingTest {
      */
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     public String CATALOG = "catalog_functional_test";
+    public String CLUSTER_NAME = "cluster_name";
+
     protected String SERVER_KAFKA = "10.200.0.58"; //"127.0.0.1";// "10.200.0.58";// "192.168.0.2";
     protected String PORT_KAFKA = "9092";
     protected String SERVER_ZOOKEEPER = "10.200.0.58";//"127.0.0.1";// "10.200.0.58"; // "192.168.0.2";
