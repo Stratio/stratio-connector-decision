@@ -36,6 +36,9 @@ import com.stratio.crossdata.common.metadata.Operations;
 import com.stratio.crossdata.common.statements.structures.window.TimeUnit;
 import com.stratio.crossdata.common.statements.structures.window.WindowType;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 /**
  * ProccesMessageFactory Tester.
  *
@@ -58,12 +61,12 @@ public class ProccesMessageFactoryTest {
     public void getProccesMessageTest() throws Exception {
 
         ConnectorQueryData queryDataNum = new ConnectorQueryData();
-        queryDataNum.setWindow(new Window(Operations.SELECT_WINDOW, WindowType.NUM_ROWS));
+        queryDataNum.setWindow(new Window( new HashSet<Operations>(Arrays.asList(Operations.SELECT_WINDOW)), WindowType.NUM_ROWS));
         assertTrue("number row is correct",
                         ProcessMessageFactory.getProccesMessage(queryDataNum, mock(ResultsetCreator.class)) instanceof ElementNumberProcessMessage);
 
         ConnectorQueryData queryDataTemporal = new ConnectorQueryData();
-        Window window = new Window(Operations.SELECT_WINDOW, WindowType.TEMPORAL);
+        Window window = new Window(new HashSet<Operations>(Arrays.asList(Operations.SELECT_WINDOW)), WindowType.TEMPORAL);
         window.setTimeWindow(10, TimeUnit.DAYS);
         queryDataTemporal.setWindow(window);
         assertTrue("number row is correct",

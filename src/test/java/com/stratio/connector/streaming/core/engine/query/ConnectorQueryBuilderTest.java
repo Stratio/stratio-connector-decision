@@ -19,6 +19,8 @@ package com.stratio.connector.streaming.core.engine.query;
 
 import static junit.framework.TestCase.assertEquals;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -90,7 +92,7 @@ public class ConnectorQueryBuilderTest {
         Map<Selector, String> columMap = createColumnMap();
         Map<String, ColumnType> typeMap = createTypeMap();
         Map<Selector, ColumnType> typeMapColumnName = createTypeMapColumnName();
-        return new Select(Operations.SELECT_OPERATOR, columMap, typeMap, typeMapColumnName);
+        return new Select(new HashSet<Operations>(Arrays.asList(Operations.SELECT_OPERATOR)), columMap, typeMap, typeMapColumnName);
 
 
     }
@@ -117,14 +119,14 @@ public class ConnectorQueryBuilderTest {
     }
 
     private Project createProject() {
-        return new Project(Operations.PROJECT, new TableName(CATALOG, TABLE), new ClusterName(CLUSTER_NAME));
+        return new Project(new HashSet<Operations>(Arrays.asList(Operations.PROJECT)), new TableName(CATALOG, TABLE), new ClusterName(CLUSTER_NAME));
     }
 
     private Filter createFilter(String column, Operator operator, String value) {
         Selector leftSelector = new ColumnSelector(new ColumnName(CATALOG, TABLE, column));
         Selector rightSelector = new StringSelector(value);
         Relation relation = new Relation(leftSelector, operator, rightSelector);
-        return new Filter(Operations.FILTER_FUNCTION_EQ, relation);
+        return new Filter(new HashSet<Operations>(Arrays.asList(Operations.FILTER_FUNCTION_EQ)), relation);
     }
 
 }

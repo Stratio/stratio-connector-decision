@@ -19,10 +19,7 @@ package com.stratio.connector.streaming.core.engine.query.util;
 
 import static junit.framework.TestCase.assertEquals;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.junit.After;
 import org.junit.Before;
@@ -131,7 +128,7 @@ public class ResultsetCreatorTest {
 
     private ConnectorQueryData createQueryData() {
         ConnectorQueryData queryData = new ConnectorQueryData();
-        queryData.setProjection(new Project(Operations.PROJECT, new TableName(CATALOG, TABLE), CLUSTER_NAME));
+        queryData.setProjection(new Project(new HashSet<Operations>(Arrays.asList(Operations.PROJECT)), new TableName(CATALOG, TABLE), CLUSTER_NAME));
         queryData.setQueryId(QUERY_ID);
         Map<Selector, String> columnMap = new LinkedHashMap<>();
         columnMap.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, NAME[0])), ALIAS[0]);
@@ -143,7 +140,7 @@ public class ResultsetCreatorTest {
         typemapColumnName.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, NAME[0])), TYPE[0]);
         typemapColumnName.put(new ColumnSelector(new ColumnName(CATALOG, TABLE, NAME[1])), TYPE[1]);
 
-        Select select = new Select(Operations.SELECT_OPERATOR, columnMap, typemap, typemapColumnName);
+        Select select = new Select(new HashSet<Operations>(Arrays.asList(Operations.SELECT_OPERATOR)), columnMap, typemap, typemapColumnName);
         queryData.setSelect(select);
 
         return queryData;
