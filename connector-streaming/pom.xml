@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!-- ~  Copyright (c) 2014, Stratio, All rights reserved. 
+	~ ~ This library is free software; you can redistribute it and/or modify 
+	it under the terms of the ~ GNU Lesser General Public License as published 
+	by the Free Software Foundation; either version ~ 3.0 of the License, or 
+	(at your option) any later version. ~ ~ This library is distributed in the 
+	hope that it will be useful, but WITHOUT ANY WARRANTY; without ~ even the 
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+	See the GNU ~ Lesser General Public License for more details. ~ ~ You should 
+	have received a copy of the GNU Lesser General Public License along with 
+	this library. -->
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xmlns="http://maven.apache.org/POM/4.0.0"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.stratio.connector</groupId>
+	<artifactId>stratio-connector-streaming</artifactId>
+	<version>0.4.0-SNAPSHOT</version>
+	<description>Connector for Stratio Streaming</description>
+	<url>http://www.stratio.com</url>
+	<name>Streaming Connector</name>
+	<parent>
+		<groupId>com.stratio.connector</groupId>
+		<artifactId>stratio-connector-streaming-parent</artifactId>
+		<version>0.4.0-SNAPSHOT</version>
+	</parent>
+	<dependencies>
+		<dependency>
+			<groupId>com.stratio.streaming</groupId>
+			<artifactId>streaming-api</artifactId>
+			<version>${streaming.api.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.datastax.cassandra</groupId>
+					<artifactId>cassandra-driver-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.mongodb</groupId>
+					<artifactId>mongo-java-driver</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.scalamock</groupId>
+					<artifactId>scalamock-scalatest-support_2.10</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.jboss.netty</groupId>
+					<artifactId>netty</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.stratio.connector</groupId>
+			<artifactId>stratio-connector-commons</artifactId>
+			<version>${commons.connector.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.stratio.crossdata</groupId>
+			<artifactId>crossdata-connector</artifactId>
+			<version>${crossdata.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.7</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
+			<version>1.5.5</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>1.5.5</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.stratio.connector</groupId>
+			<artifactId>stratio-connector-commons</artifactId>
+			<classifier>tests</classifier>
+			<version>${commons.connector.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>crossdata-connector-maven-plugin</artifactId>
+				<groupId>com.stratio.crossdata</groupId>
+				<version>${crossdata.version}</version>
+				<configuration>
+					<mainClass>com.stratio.connector.streaming.core.StreamingConnector</mainClass>
+					<jmxPort>7188</jmxPort>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.stratio.mojo.unix</groupId>
+				<artifactId>unix-maven-plugin</artifactId>
+				<version>1.1.2</version>
+				<extensions>true</extensions>
+				<configuration>
+					<contact><![CDATA[Stratio <jmgomez@stratio.com>]]></contact>
+					<contactEmail>jmgomez@stratio.com</contactEmail>
+					<size>1</size>
+					<deb>
+						<section>devel</section>
+					</deb>
+					<rpm>
+						<group>stratio</group>
+					</rpm>
+					<assembly>
+						<mkdirs>
+							<paths>
+								<path>etc/sds/stratio-connector-streaming</path>
+								<path>etc/default</path>
+							</paths>
+							<attributes>
+								<user>stratio</user>
+								<group>stratio</group>
+								<mode>644</mode>
+							</attributes>
+						</mkdirs>
+						<copyDirectory>
+							<from>target/stratio-connector-streaming-${project.version}/bin</from>
+							<to>opt/sds/stratio-connector-streaming/bin</to>
+						</copyDirectory>
+						<copyDirectory>
+							<from>target/stratio-connector-streaming-${project.version}/lib</from>
+							<to>opt/sds/stratio-connector-streaming/lib</to>
+						</copyDirectory>
+						<copyDirectory>
+							<from>target/stratio-connector-streaming-${project.version}/conf</from>
+							<to>opt/sds/stratio-connector-streaming/conf</to>
+						</copyDirectory>
+						<copyDirectory>
+							<from>src/main/template</from>
+							<to>opt/sds/stratio-connector-streaming/template</to>
+						</copyDirectory>
+						<copyDirectory>
+							<from>src/main/config</from>
+							<to>etc/sds/stratio-connector-streaming</to>
+						</copyDirectory>
+						<copyDirectory>
+							<from>src/main/unix/files_and_dirs/etc/default</from>
+							<to>etc/default</to>
+						</copyDirectory>
+						<copyFile>
+							<path>src/main/include/LICENSE</path>
+							<toFile>opt/sds/stratio-connector-streaming/LICENSE</toFile>
+						</copyFile>
+						<copyFile>
+							<path>src/main/include/NOTICE</path>
+							<toFile>opt/sds/stratio-connector-streaming/NOTICE</toFile>
+						</copyFile>
+					</assembly>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
