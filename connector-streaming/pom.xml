@@ -99,20 +99,20 @@
 				<artifactId>crossdata-connector-maven-plugin</artifactId>
 				<groupId>com.stratio.crossdata</groupId>
 				<version>${crossdata.version}</version>
-				<executions>
+		<!--		<executions>
 					<execution>
 						<id>crossdata</id>
 						<goals>
 							<goal>install</goal>
 						</goals>
-						<phase>package</phase>
+						<phase>package</phase> -->
 						<configuration>
 							<mainClass>com.stratio.connector.streaming.core.StreamingConnector</mainClass>
 							<jmxPort>7188</jmxPort>
 						</configuration>
 
-					</execution>
-				</executions>
+	<!--				</execution>
+				</executions> -->
 			</plugin>
 		</plugins>
 	</build>
