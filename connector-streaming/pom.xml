@@ -16,17 +16,16 @@
 		 xmlns="http://maven.apache.org/POM/4.0.0"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>com.stratio.connector</groupId>
 	<artifactId>stratio-connector-streaming</artifactId>
-	<version>0.4.0-SNAPSHOT</version>
+	<version>0.4.0-RC1</version>
 	<description>Connector for Stratio Streaming</description>
 	<url>http://www.stratio.com</url>
 	<name>Streaming Connector</name>
 	<parent>
 		<groupId>com.stratio.connector</groupId>
 		<artifactId>stratio-connector-streaming-parent</artifactId>
-		<version>0.4.0-SNAPSHOT</version>
+		<version>0.4.0-RC1</version>
 	</parent>
 	<dependencies>
 		<dependency>
@@ -99,24 +98,13 @@
 				<artifactId>crossdata-connector-maven-plugin</artifactId>
 				<groupId>com.stratio.crossdata</groupId>
 				<version>${crossdata.version}</version>
-		<!--		<executions>
-					<execution>
-						<id>crossdata</id>
-						<goals>
-							<goal>install</goal>
-						</goals>
-						<phase>package</phase> -->
 						<configuration>
 							<mainClass>com.stratio.connector.streaming.core.StreamingConnector</mainClass>
 							<jmxPort>7188</jmxPort>
 						</configuration>
-
-	<!--				</execution>
-				</executions> -->
 			</plugin>
 		</plugins>
 	</build>
-
 	<profiles>
 	<profile>
 		<id>package</id>
