@@ -45,7 +45,7 @@ To run Connector Streaming execute:
 
 ::
 
-       > target/connector-streaming-core-0.4.0-SNAPSHOT/bin/connector-streaming-core-<version> start
+       > target/connector-streaming-core-<version>/bin/connector-streaming-core-<version> start
 
 To stop the connector execute:
 
@@ -107,7 +107,7 @@ basic commands are described below.
    Add a data store. We need to specified the XML manifest that defines
    the data store. The XML manifest can be found in the path of the
    Streaming Connector in
-   target/stratio-connector-streaming-0.4.0-SNAPSHOT/conf/StreamingDataStore.xml
+   target/stratio-connector-streaming-<version>/conf/StreamingDataStore.xml
 
 ::   
 
