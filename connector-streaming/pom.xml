@@ -54,7 +54,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.stratio.connector</groupId>
-			<artifactId>stratio-connector-commons</artifactId>
+			<artifactId>stratio-connector-commons-core</artifactId>
 			<version>${commons.connector.version}</version>
 		</dependency>
 		<dependency>
@@ -87,7 +87,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.stratio.connector</groupId>
-			<artifactId>stratio-connector-commons</artifactId>
+			<artifactId>stratio-connector-commons-core</artifactId>
 			<classifier>tests</classifier>
 			<version>${commons.connector.version}</version>
 			<scope>test</scope>
