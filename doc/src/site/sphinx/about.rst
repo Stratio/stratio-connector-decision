@@ -36,7 +36,7 @@ could be changed in the following file:
 
 ::
 
-       > target/connector-streaming-core-0.4.0-SNAPSHOT/bin/connector-streaming-core-0.4.0-SNAPSHOT
+       > target/connector-streaming-core-<version>/bin/connector-streaming-core-<version>
 
 Running the Stratio Connector Streaming
 ---------------------------------------
@@ -45,13 +45,13 @@ To run Connector Streaming execute:
 
 ::
 
-       > target/connector-streaming-core-0.4.0-SNAPSHOT/bin/connector-streaming-core-0.4.0-SNAPSHOT start
+       > target/connector-streaming-core-0.4.0-SNAPSHOT/bin/connector-streaming-core-<version> start
 
 To stop the connector execute:
 
 ::
 
-       > target/connector-streaming-core-0.4.0-SNAPSHOT/bin/connector-streaming-core-0.4.0-SNAPSHOT stop
+       > target/connector-streaming-core-<version>/bin/connector-streaming-core-<version> stop
 
 Build a redistributable package
 -------------------------------
@@ -75,13 +75,13 @@ RPM Package:
 
 ::   
     
-       > rpm -i target/stratio-connector-streaming-0.4.0-SNAPSHOT.rpm
+       > rpm -i target/stratio-connector-streaming-<version>.rpm
 
 DEB Package:
 
 ::   
     
-       > dpkg -i target/stratio-connector-streaming-0.4.0-SNAPSHOT.deb
+       > dpkg -i target/stratio-connector-streaming-<version>.deb
 
 Now to start/stop the connector:
 
@@ -119,7 +119,7 @@ Attach cluster on that datastore. The datastore name must be the same as the def
        xdsh:user>  ATTACH CLUSTER <cluster_name> ON DATASTORE <datastore_name> WITH OPTIONS {'KafkaServer': '[<kafkaHost_1,kafkaHost_2...kafkaHost_n>]', 'KafkaPort': '[<kafkaPort_1, kafkaPort_2...kafkaPort_n>]', 'zooKeeperServer':'[<zooKeeperHost_1,zooKeeperHost_2...zooKeeperHost_n>]','zooKeeperPort':'[<zooKeeperPort_1,zooKeeperPort_2...zooKeeperPort_n>]'};
 
 
-Add the connector manifest. The XML with the manifest can be found in the path of the Streaming Connector in target/connector-streaming-core-0.4.0-SNAPSHOT/conf/StreamingConnector.xml
+Add the connector manifest. The XML with the manifest can be found in the path of the Streaming Connector in target/connector-streaming-core-<version>/conf/StreamingConnector.xml
 
 ::
 

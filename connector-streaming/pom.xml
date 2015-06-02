@@ -18,14 +18,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.stratio.connector</groupId>
 	<artifactId>stratio-connector-streaming</artifactId>
-	<version>0.4.0</version>
+	<version>0.4.1</version>
 	<description>Connector for Stratio Streaming</description>
 	<url>http://www.stratio.com</url>
 	<name>Streaming Connector</name>
 	<parent>
 		<groupId>com.stratio.connector</groupId>
 		<artifactId>stratio-connector-streaming-parent</artifactId>
-		<version>0.4.0</version>
+		<version>0.4.1</version>
 	</parent>
 	<dependencies>
 		<dependency>
@@ -53,7 +53,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.stratio.connector</groupId>
-			<artifactId>stratio-connector-commons</artifactId>
+			<artifactId>stratio-connector-commons-core</artifactId>
 			<version>${commons.connector.version}</version>
 		</dependency>
 		<dependency>
@@ -86,7 +86,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.stratio.connector</groupId>
-			<artifactId>stratio-connector-commons</artifactId>
+			<artifactId>stratio-connector-commons-core</artifactId>
 			<classifier>tests</classifier>
 			<version>${commons.connector.version}</version>
 			<scope>test</scope>
