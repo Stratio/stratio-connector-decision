@@ -28,7 +28,7 @@ To generate the executable execute the following command:
 The user and the group of the service are set up to root by default. It could be changed in the following file:
 
 ```
-   > target/connector-streaming-core-0.4.0-SNAPSHOT/bin/connector-streaming-core-0.4.0-SNAPSHOT
+   > target/connector-streaming-core-0.5.0-SNAPSHOT/bin/connector-streaming-core-0.5.0-SNAPSHOT
 ```
 
 ## Running the Stratio Connector Streaming ##
@@ -36,13 +36,13 @@ The user and the group of the service are set up to root by default. It could be
 To run Connector Streaming execute:
 
 ```
-   > target/connector-streaming-core-0.4.0-SNAPSHOT/bin/connector-streaming-core-0.4.0-SNAPSHOT start
+   > target/connector-streaming-core-0.5.0-SNAPSHOT/bin/connector-streaming-core-0.5.0-SNAPSHOT start
 ```
 
 To stop the connector execute:
 
 ```
-   > target/connector-streaming-core-0.4.0-SNAPSHOT/bin/connector-streaming-core-0.4.0-SNAPSHOT stop
+   > target/connector-streaming-core-0.5.0-SNAPSHOT/bin/connector-streaming-core-0.5.0-SNAPSHOT stop
 ```
 
 ## Build a redistributable package ##
@@ -61,11 +61,11 @@ Once the package it's created, execute this commands to install:
 
 RPM Package:
 
-    > rpm -i target/stratio-connector-streaming-0.4.0-SNAPSHOT.rpm
+    > rpm -i target/stratio-connector-streaming-0.5.0-SNAPSHOT.rpm
 
 DEB Package:
 
-    > dpkg -i target/stratio-connector-streaming-0.4.0-SNAPSHOT.deb
+    > dpkg -i target/stratio-connector-streaming-0.5.0-SNAPSHOT.deb
 
 Now to start/stop the connector:
 
@@ -85,7 +85,7 @@ A complete tutorial is available [here](_doc/FirstSteps.md). The basic commands 
     
     Add a datastore with this command:
 
-    Add a data store. We need to specified the XML manifest that defines the data store. The XML manifest can be found in the path of the Streaming Connector in target/stratio-connector-streaming-0.4.0-SNAPSHOT/conf/StreamingDataStore.xml
+    Add a data store. We need to specified the XML manifest that defines the data store. The XML manifest can be found in the path of the Streaming Connector in target/stratio-connector-streaming-0.5.0-SNAPSHOT/conf/StreamingDataStore.xml
       
       ```
          xdsh:user>  ADD DATASTORE <Absolute path to Streaming Datastore manifest>;
@@ -97,7 +97,7 @@ A complete tutorial is available [here](_doc/FirstSteps.md). The basic commands 
          xdsh:user>  ATTACH CLUSTER <cluster_name> ON DATASTORE <datastore_name> WITH OPTIONS {'KafkaServer': '[<kafkaHost_1,kafkaHost_2...kafkaHost_n>]', 'KafkaPort': '[<kafkaPort_1, kafkaPort_2...kafkaPort_n>]', 'zooKeeperServer':'[<zooKeeperHost_1,zooKeeperHost_2...zooKeeperHost_n>]','zooKeeperPort':'[<zooKeeperPort_1,zooKeeperPort_2...zooKeeperPort_n>]'};
       ```
 
-    Add the connector manifest. The XML with the manifest can be found in the path of the Streaming Connector in target/connector-streaming-core-0.4.0-SNAPSHOT/conf/StreamingConnector.xml
+    Add the connector manifest. The XML with the manifest can be found in the path of the Streaming Connector in target/connector-streaming-core-0.5.0-SNAPSHOT/conf/StreamingConnector.xml
 
        ```
          xdsh:user>  ADD CONNECTOR <Path to Streaming Connector Manifest>
