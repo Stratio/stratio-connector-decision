@@ -16,16 +16,15 @@
 		 xmlns="http://maven.apache.org/POM/4.0.0"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>com.stratio.connector</groupId>
-	<artifactId>stratio-connector-streaming</artifactId>
-	<version>0.5.0-SNAPSHOT</version>
-	<description>Connector for Stratio Streaming</description>
+	<artifactId>stratio-connector-streaming-core</artifactId>
+	<description>Stratio Streaming connector core</description>
 	<url>http://www.stratio.com</url>
-	<name>Streaming Connector</name>
+	<name>Stratio Streaming Connector core</name>
+	<packaging>jar</packaging>
 	<parent>
 		<groupId>com.stratio.connector</groupId>
-		<artifactId>stratio-connector-streaming-parent</artifactId>
+		<artifactId>stratio-connector-streaming</artifactId>
 		<version>0.5.0-SNAPSHOT</version>
 	</parent>
 	<dependencies>
@@ -108,7 +107,6 @@
 						<phase>package</phase> -->
 						<configuration>
 							<mainClass>com.stratio.connector.streaming.core.StreamingConnector</mainClass>
-							<jmxPort>7188</jmxPort>
 						</configuration>
 
 	<!--				</execution>
@@ -118,84 +116,178 @@
 	</build>
 
 	<profiles>
-	<profile>
-		<id>package</id>
-		<build>
-			<plugins>
-				<plugin>
-					<groupId>com.stratio.mojo.unix</groupId>
-					<artifactId>unix-maven-plugin</artifactId>
-					<version>1.1.2</version>
-					<extensions>true</extensions>
-					<executions>
-						<execution>
-							<id>deb</id>
-							<phase>package</phase>
-							<goals>
-								<goal>package-deb</goal>
-								<goal>package-rpm</goal>
-							</goals>
-							<configuration>
-								<contact><![CDATA[Stratio <jmgomez@stratio.com>]]></contact>
-								<contactEmail>jmgomez@stratio.com</contactEmail>
-								<size>1</size>
-								<deb>
-									<section>devel</section>
-								</deb>
-								<rpm>
-									<group>stratio</group>
-								</rpm>
-								<assembly>
-									<mkdirs>
-										<paths>
-											<path>etc/sds/stratio-connector-streaming</path>
-											<path>etc/default</path>
-										</paths>
-										<attributes>
-											<user>stratio</user>
-											<group>stratio</group>
-											<mode>644</mode>
-										</attributes>
-									</mkdirs>
-									<copyDirectory>
-										<from>target/stratio-connector-streaming-${project.version}/bin</from>
-										<to>opt/sds/stratio-connector-streaming/bin</to>
-									</copyDirectory>
-									<copyDirectory>
-										<from>target/stratio-connector-streaming-${project.version}/lib</from>
-										<to>opt/sds/stratio-connector-streaming/lib</to>
-									</copyDirectory>
-									<copyDirectory>
-										<from>target/stratio-connector-streaming-${project.version}/conf</from>
-										<to>opt/sds/stratio-connector-streaming/conf</to>
-									</copyDirectory>
-									<copyDirectory>
-										<from>src/main/template</from>
-										<to>opt/sds/stratio-connector-streaming/template</to>
-									</copyDirectory>
-									<copyDirectory>
-										<from>src/main/config</from>
-										<to>etc/sds/stratio-connector-streaming</to>
-									</copyDirectory>
-									<copyDirectory>
-										<from>src/main/unix/files_and_dirs/etc/default</from>
-										<to>etc/default</to>
-									</copyDirectory>
-									<copyFile>
-										<path>src/main/include/LICENSE</path>
-										<toFile>opt/sds/stratio-connector-streaming/LICENSE</toFile>
-									</copyFile>
-									<copyFile>
-										<path>src/main/include/NOTICE</path>
-										<toFile>opt/sds/stratio-connector-streaming/NOTICE</toFile>
-									</copyFile>
-								</assembly>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-		</build>
-	</profile>
+		<profile>
+			<id>package</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>appassembler-maven-plugin</artifactId>
+						<version>1.10</version>
+						<executions>
+							<execution>
+								<id>appassembler</id>
+								<phase>package</phase>
+								<goals>
+									<goal>assemble</goal>
+								</goals>
+								<configuration>
+									<configurationSourceDirectory>src/main/config</configurationSourceDirectory>
+									<configurationDirectory>conf</configurationDirectory>
+									<copyConfigurationDirectory>true</copyConfigurationDirectory>
+									<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+									<assembleDirectory>${project.build.directory}/stratio-connector-streaming</assembleDirectory>
+									<extraJvmArguments>$CONNECTOR_STREAMING_OPTS -Djava.net.preferIPv4Stack=true -Dcom.sun.management.jmxremote.port=${jmx.port} -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false</extraJvmArguments>
+									<filterConfigurationDirectory>true</filterConfigurationDirectory>
+									<platforms>
+										<platform>windows</platform>
+										<platform>unix</platform>
+									</platforms>
+									<programs>
+										<program>
+											<mainClass>com.stratio.connector.streaming.core.StreamingConnector</mainClass>
+											<id>stratio-connector-streaming</id>
+										</program>
+									</programs>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>com.stratio.mojo.unix</groupId>
+						<artifactId>unix-maven-plugin</artifactId>
+						<version>1.1.5</version>
+						<extensions>true</extensions>
+						<inherited>false</inherited>
+						<configuration>
+							<size>2048</size>
+							<outputFileName>stratio-connector-streaming</outputFileName>
+							<contact><![CDATA[Stratio <jmgomez@stratio.com>]]></contact>
+							<contactEmail>jmgomez@stratio.com</contactEmail>
+							<deb>
+								<section>devel</section>
+							</deb>
+							<rpm>
+								<group>stratio</group>
+								<requires>bash</requires>
+							</rpm>
+							<name>connector-streaming</name>
+							<excludeDirectoryAttributes>
+								<dir>/etc</dir>
+								<dir>/etc/init.d</dir>
+								<dir>/etc/default</dir>
+								<dir>/var</dir>
+								<dir>/opt</dir>
+								<dir>/usr</dir>
+								<dir>/bin</dir>
+							</excludeDirectoryAttributes>
+							<assembly>
+								<copyFile>
+									<path>src/main/unix/files_and_dirs/etc/init.d/connector-streaming</path>
+									<toFile>/etc/init.d/connector-streaming</toFile>
+									<attributes>
+										<user>root</user>
+										<group>root</group>
+										<mode>755</mode>
+									</attributes>
+								</copyFile>
+								<mkdirs>
+									<path>/opt/sds/connector-streaming</path>
+									<attributes>
+										<user>stratio</user>
+										<group>stratio</group>
+									</attributes>
+								</mkdirs>
+								<mkdirs>
+									<path>/var/run/sds</path>
+									<attributes>
+										<user>stratio</user>
+										<group>stratio</group>
+									</attributes>
+								</mkdirs>
+								<copyDirectory>
+									<from>target/stratio-connector-streaming/bin</from>
+									<to>/opt/sds/stratio-connector-streaming/bin</to>
+									<directoryAttributes>
+										<user>stratio</user>
+										<group>stratio</group>
+									</directoryAttributes>
+								</copyDirectory>
+								<copyDirectory>
+									<from>target/stratio-connector-streaming/repo</from>
+									<to>/opt/sds/stratio-connector-streaming/repo</to>
+									<directoryAttributes>
+										<user>stratio</user>
+										<group>stratio</group>
+									</directoryAttributes>
+								</copyDirectory>
+								<copyDirectory>
+									<from>target/stratio-connector-streaming/conf</from>
+									<to>/opt/sds/stratio-connector-streaming/conf</to>
+									<directoryAttributes>
+										<user>stratio</user>
+										<group>stratio</group>
+									</directoryAttributes>
+								</copyDirectory>
+								<copyDirectory>
+									<from>src/main/template</from>
+									<to>/opt/sds/stratio-connector-streaming/template</to>
+									<directoryAttributes>
+										<user>stratio</user>
+										<group>stratio</group>
+									</directoryAttributes>
+								</copyDirectory>
+								<copyDirectory>
+									<from>src/main/unix/files_and_dirs/etc/default</from>
+									<to>/etc/default</to>
+									<directoryAttributes>
+										<user>stratio</user>
+										<group>stratio</group>
+									</directoryAttributes>
+								</copyDirectory>
+								<copyFile>
+									<path>src/main/include/LICENSE</path>
+									<toFile>/opt/sds/stratio-connector-streaming/LICENSE</toFile>
+								</copyFile>
+								<copyFile>
+									<path>src/main/include/NOTICE</path>
+									<toFile>/opt/sds/stratio-connector-streaming/NOTICE</toFile>
+								</copyFile>
+							</assembly>
+							<defaults>
+								<directoryAttributes>
+									<mode>0755</mode>
+								</directoryAttributes>
+								<fileAttributes>
+									<mode>0644</mode>
+								</fileAttributes>
+							</defaults>
+						</configuration>
+						<executions>
+							<execution>
+								<id>deb</id>
+								<phase>package</phase>
+								<goals>
+									<goal>package-deb</goal>
+								</goals>
+								<configuration>
+									<architecture>all</architecture>
+								</configuration>
+							</execution>
+							<execution>
+								<id>rpm</id>
+								<phase>package</phase>
+								<goals>
+									<goal>package-rpm</goal>
+								</goals>
+								<configuration>
+									<architecture>noarch</architecture>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 </project>

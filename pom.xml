@@ -18,11 +18,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.stratio.connector</groupId>
-	<artifactId>stratio-connector-streaming-parent</artifactId>
+	<artifactId>stratio-connector-streaming</artifactId>
 	<version>0.5.0-SNAPSHOT</version>
-	<description>Connector for Stratio Streaming</description>
+	<description>Stratio Streaming connector parent</description>
 	<url>http://www.stratio.com</url>
-	<name>Streaming Connector parent</name>
+	<name>Stratio Streaming Connector</name>
 	<packaging>pom</packaging>
 	<parent>
 		<groupId>com.stratio</groupId>
@@ -35,6 +35,7 @@
 		<streaming.api.version>0.6.2</streaming.api.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<jmxPort>7188</jmxPort>
 	</properties>
 
 	<licenses>
@@ -85,78 +86,6 @@
 					<source>1.7</source>
 					<target>1.7</target>
 				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.18</version>
-				<configuration>
-					<includes>
-						<include>**/*Test.java</include>
-					</includes>
-					<argLine>${jacoco-UT-argline}</argLine>
-					<skipTests>${skipUTs}</skipTests>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.5</version>
-				<configuration>
-					<archive>
-						<index>true</index>
-						<manifestEntries>
-							<version>${project.version}</version>
-							<projectName>${project.name}</projectName>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.1.201405082137</version>
-				<executions>
-					<execution>
-						<id>pre-test</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-						<configuration>
-							<destFile>${project.build.directory}/jacocoUT.exec</destFile>
-							<propertyName>jacoco-UT-argline</propertyName>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
