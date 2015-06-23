@@ -28,12 +28,12 @@
 		<version>0.1.0</version>
 	</parent>
 	<properties>
-		<crossdata.version>0.3.3</crossdata.version>
-		<commons.connector.version>0.5.1</commons.connector.version>
+		<crossdata.version>0.4.0-SNAPSHOT</crossdata.version>
+		<commons.connector.version>0.6.0-SNAPSHOT</commons.connector.version>
 		<streaming.api.version>0.6.2</streaming.api.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<jmxPort>7188</jmxPort>
+		<jmx.port>7188</jmx.port>
 	</properties>
 	<licenses>
 		<license>

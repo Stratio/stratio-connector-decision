@@ -66,6 +66,7 @@ public class StreamingQueryEngine implements IQueryEngine {
         this.connectorProcessHandler = processHandler;
     }
 
+
     /**
      * Execute a query.
      *
@@ -76,7 +77,7 @@ public class StreamingQueryEngine implements IQueryEngine {
      *             if any error happens.
      */
     @Override
-    public QueryResult execute(LogicalWorkflow workflow) throws UnsupportedException, ExecutionException {
+    public QueryResult execute(String queryId, LogicalWorkflow workflow) throws UnsupportedException, ExecutionException {
         throw new UnsupportedException("execute not supported in Streaming connector");
     }
 

@@ -50,14 +50,6 @@ public class StreamingConnector extends CommonsConnector {
      * The process handler.
      */
     private transient ConnectorProcessHandler processHandler;
-    /**
-     * The connector name.
-     */
-    private String connectorName;
-    /**
-     * The datastore name.
-     */
-    private String[] datastoreName;
 
     /**
      * Constructor.
@@ -66,9 +58,15 @@ public class StreamingConnector extends CommonsConnector {
      *             if an error happens in the init.
      */
     public StreamingConnector() throws InitializationException {
+        super("/StreamingConnector.xml","/StreamingDataStore.xml");
+    }
 
-        connectorName = ManifestUtil.getConectorName("StreamingConnector.xml");
-        datastoreName = ManifestUtil.getDatastoreName("StreamingConnector.xml");
+    /**
+     * REstar the connector.
+     * @throws ExecutionException if an exception happens.
+     */
+    @Override
+    public void restart() throws ExecutionException {
 
     }
 
@@ -104,20 +102,6 @@ public class StreamingConnector extends CommonsConnector {
 
     }
 
-    @Override
-    public String getConnectorName() {
-        return connectorName;
-    }
-
-    /**
-     * Return the DataStore Name.
-     *
-     * @return DataStore Name
-     */
-    @Override
-    public String[] getDatastoreName() {
-        return datastoreName.clone();
-    }
 
     /**
      * Return the StorageEngine.
