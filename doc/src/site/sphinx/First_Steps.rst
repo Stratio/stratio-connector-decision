@@ -59,7 +59,7 @@ Prerequisites
    <version> <https://github.com/Stratio/crossdata>`__ is needed and must be
    installed. The server and the shell must be running.
 -  An installation of `Stratio Streaming
-   0.6.2 <http://docs.openstratio.org/getting-started.html#stratio-streaming>`__.
+   <version> <http://docs.stratio.com/modules/streaming-cep-engine/development/#stratio-streaming>`__.
 -  Build an StreamingConnector executable and run it following this
    `guide <https://github.com/Stratio/stratio-connector-streaming#build-an-executable-connector-streaming>`__.
 
