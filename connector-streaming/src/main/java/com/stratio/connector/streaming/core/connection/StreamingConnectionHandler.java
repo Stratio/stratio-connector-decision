@@ -18,6 +18,7 @@
 
 package com.stratio.connector.streaming.core.connection;
 
+import com.stratio.crossdata.common.exceptions.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +64,12 @@ public class StreamingConnectionHandler extends ConnectionHandler {
     @Override
     protected Connection<IStratioStreamingAPI> createNativeConnection(ICredentials iCredentials,
                     ConnectorClusterConfig connectorClusterConfig) throws ConnectionException {
-        Connection<IStratioStreamingAPI> con = new StreamingConnection(iCredentials, connectorClusterConfig);
+        Connection<IStratioStreamingAPI> con = null;
+        try {
+            con = new StreamingConnection(iCredentials, connectorClusterConfig);
+        } catch (ExecutionException e) {
+            throw new ConnectionException("An error ocurred during the connection");
+        }
 
         return con;
     }
