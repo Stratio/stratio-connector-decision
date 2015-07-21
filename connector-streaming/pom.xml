@@ -56,11 +56,6 @@
 			<artifactId>stratio-connector-commons-core</artifactId>
 			<version>${commons.connector.version}</version>
 		</dependency>
-		<!--<dependency>-->
-			<!--<groupId>com.stratio.crossdata</groupId>-->
-			<!--<artifactId>crossdata-connector</artifactId>-->
-			<!--<version>${crossdata.version}</version>-->
-		<!--</dependency>-->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
