@@ -27,6 +27,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.*;
 
+import com.stratio.connector.commons.TimerJ;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.message.MessageAndMetadata;
@@ -123,6 +124,7 @@ public class StreamingQueryTest {
 
     }
 
+    @TimerJ
     @Test
     public void listenQueryTest() throws Exception {
 

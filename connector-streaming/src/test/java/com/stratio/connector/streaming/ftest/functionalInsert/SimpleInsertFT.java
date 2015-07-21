@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.stratio.connector.commons.TimerJ;
 import org.junit.Test;
 
 import com.stratio.connector.commons.metadata.TableMetadataBuilder;

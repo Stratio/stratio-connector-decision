@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.stratio.connector.commons.TimerJ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,6 +79,7 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
      */
 
     @Override
+    @TimerJ
     protected void insert(TableMetadata targetStream, Row row, boolean isNotExists, Connection<IStratioStreamingAPI>
             connection)
             throws ExecutionException, UnsupportedException {
@@ -110,6 +112,7 @@ public class StreamingStorageEngine extends CommonsStorageEngine<IStratioStreami
      *  @throws UnsupportedException if the operation is not supported.
      */
     @Override
+    @TimerJ
     protected void insert(TableMetadata targetStream, Collection<Row> rows, boolean isNotExists,
             Connection<IStratioStreamingAPI> connection)
             throws ExecutionException, UnsupportedException {

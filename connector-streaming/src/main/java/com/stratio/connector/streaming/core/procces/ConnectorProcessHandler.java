@@ -21,6 +21,7 @@ package com.stratio.connector.streaming.core.procces;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.stratio.connector.commons.TimerJ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +52,7 @@ public class ConnectorProcessHandler {
      * @throws ExecutionException
      *             if the connection fail.
      */
+    @TimerJ
     public void startProcess(String queryId, ConnectorProcess connectorProcess) throws ExecutionException {
         if (processMap.containsKey(queryId)) {
             String msg = "The processMap with id " + queryId + " already exists ";
@@ -71,6 +73,7 @@ public class ConnectorProcessHandler {
      * @throws ConnectionProcessException
      *             if a error happens.
      */
+    @TimerJ
     public ConnectorProcess getProcess(String queryId) throws ExecutionException {
         if (!processMap.containsKey(queryId)) {
             String msg = "The processMap with id " + queryId + " not exists ";
@@ -90,6 +93,7 @@ public class ConnectorProcessHandler {
      * @throws ExecutionException
      *             if a execurion error happens.
      */
+    @TimerJ
     public void stopProcess(String queryId) throws ExecutionException {
         ThreadProcess threadProcess = processMap.get(queryId);
 

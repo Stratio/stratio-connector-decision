@@ -18,6 +18,7 @@
 
 package com.stratio.connector.streaming.core.procces;
 
+import com.stratio.connector.commons.TimerJ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,6 +95,7 @@ public class QueryProcess implements ConnectorProcess {
     /**
      * Strart the process.
      */
+    @TimerJ
     public void run() {
         try {
 

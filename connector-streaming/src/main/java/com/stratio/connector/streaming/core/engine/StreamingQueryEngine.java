@@ -17,6 +17,7 @@
  */
 package com.stratio.connector.streaming.core.engine;
 
+import com.stratio.connector.commons.TimerJ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,6 +78,7 @@ public class StreamingQueryEngine implements IQueryEngine {
      *             if any error happens.
      */
     @Override
+    @TimerJ
     public QueryResult execute(String queryId, LogicalWorkflow workflow) throws UnsupportedException, ExecutionException {
         throw new UnsupportedException("execute not supported in Streaming connector");
     }
@@ -95,6 +97,7 @@ public class StreamingQueryEngine implements IQueryEngine {
      *             if any error happens.
      */
     @Override
+    @TimerJ
     public void asyncExecute(String queryId, LogicalWorkflow workflow, IResultHandler resultHandler)
                     throws ExecutionException {
         validateLogicalWorkflow(queryId, workflow, resultHandler);
@@ -119,6 +122,7 @@ public class StreamingQueryEngine implements IQueryEngine {
      *             if any error happens.
      */
     @Override
+    @TimerJ
     public synchronized void stop(String queryId) throws ExecutionException {
         try {
             ConnectorProcess process = connectorProcessHandler.getProcess(queryId);
@@ -143,6 +147,7 @@ public class StreamingQueryEngine implements IQueryEngine {
      * @throws ExecutionException
      *             if the execution fails.
      */
+    @TimerJ
     private QueryProcess initProcess(String queryId, LogicalWorkflow workflow, IResultHandler resultHandler)
                     throws ExecutionException {
 
@@ -163,6 +168,7 @@ public class StreamingQueryEngine implements IQueryEngine {
      * @param resultHandler
      *            the resultHandler.
      */
+    @TimerJ
     private void validateLogicalWorkflow(String queryId, LogicalWorkflow workflow, IResultHandler resultHandler) {
         if (workflow.getInitialSteps().size() != 1) {
             resultHandler.processException(queryId, new ExecutionException("Only one project can be executed in "

@@ -18,6 +18,7 @@
 
 package com.stratio.connector.streaming.core.connection;
 
+import com.stratio.connector.commons.TimerJ;
 import com.stratio.crossdata.common.exceptions.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,7 @@ public class StreamingConnectionHandler extends ConnectionHandler {
      *             if an error happens establishing the connection.
      */
     @Override
+    @TimerJ
     protected Connection<IStratioStreamingAPI> createNativeConnection(ICredentials iCredentials,
                     ConnectorClusterConfig connectorClusterConfig) throws ConnectionException {
         Connection<IStratioStreamingAPI> con = null;

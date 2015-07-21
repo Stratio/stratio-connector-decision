@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.stratio.connector.commons.TimerJ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -165,6 +166,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
      *             if an error occur.
      */
     @Override
+    @TimerJ
     protected void createTable(TableMetadata streamMetadata, Connection<IStratioStreamingAPI> connection)
                     throws UnsupportedException, ExecutionException {
 
@@ -217,6 +219,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
      *             if any error happens.
      */
     @Override
+    @TimerJ
     protected void dropTable(TableName stream, Connection<IStratioStreamingAPI> connection) throws ExecutionException,
                     UnsupportedException {
         String streamName = StreamUtil.createStreamName(stream);
@@ -277,6 +280,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
      * @throws ExecutionException
      *             if columnType is not supported.
      */
+    @TimerJ
     private com.stratio.streaming.commons.constants.ColumnType convertType(ColumnType columnType)
                     throws ExecutionValidationException {
         com.stratio.streaming.commons.constants.ColumnType returnType = null;
@@ -321,6 +325,7 @@ public class StreamingMetadataEngine extends CommonsMetadataEngine<IStratioStrea
      *             if the operation is not supported
      */
     @Override
+    @TimerJ
     protected void alterTable(TableName name, AlterOptions alterOptions, Connection<IStratioStreamingAPI> connection)
                     throws ExecutionValidationException, ExecutionException {
 

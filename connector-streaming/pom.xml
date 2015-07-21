@@ -56,11 +56,11 @@
 			<artifactId>stratio-connector-commons-core</artifactId>
 			<version>${commons.connector.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.stratio.crossdata</groupId>
-			<artifactId>crossdata-connector</artifactId>
-			<version>${crossdata.version}</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>com.stratio.crossdata</groupId>-->
+			<!--<artifactId>crossdata-connector</artifactId>-->
+			<!--<version>${crossdata.version}</version>-->
+		<!--</dependency>-->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
@@ -92,28 +92,28 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>crossdata-connector-maven-plugin</artifactId>
-				<groupId>com.stratio.crossdata</groupId>
-				<version>${crossdata.version}</version>
-		<!--		<executions>
-					<execution>
-						<id>crossdata</id>
-						<goals>
-							<goal>install</goal>
-						</goals>
-						<phase>package</phase> -->
-						<configuration>
-							<mainClass>com.stratio.connector.streaming.core.StreamingConnector</mainClass>
-						</configuration>
+	<!--<build>-->
+		<!--<plugins>-->
+			<!--<plugin>-->
+				<!--<artifactId>crossdata-connector-maven-plugin</artifactId>-->
+				<!--<groupId>com.stratio.crossdata</groupId>-->
+				<!--<version>${crossdata.version}</version>-->
+		<!--&lt;!&ndash;		<executions>-->
+					<!--<execution>-->
+						<!--<id>crossdata</id>-->
+						<!--<goals>-->
+							<!--<goal>install</goal>-->
+						<!--</goals>-->
+						<!--<phase>package</phase> &ndash;&gt;-->
+						<!--<configuration>-->
+							<!--<mainClass>com.stratio.connector.streaming.core.StreamingConnector</mainClass>-->
+						<!--</configuration>-->
 
-	<!--				</execution>
-				</executions> -->
-			</plugin>
-		</plugins>
-	</build>
+	<!--&lt;!&ndash;				</execution>-->
+				<!--</executions> &ndash;&gt;-->
+			<!--</plugin>-->
+		<!--</plugins>-->
+	<!--</build>-->
 
 	<profiles>
 		<profile>
