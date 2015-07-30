@@ -4,9 +4,9 @@ set -e
 
 GROUP='stratio'
 USER='stratio'
-DIR_INSTALL='/opt/sds/stratio-connector-streaming'
-DIR_CONF='/etc/sds/stratio-connector-streaming'
-DIR_LOG='/var/log/sds/stratio-connector-streaming'
+DIR_INSTALL='/opt/sds/connectors/streaming'
+DIR_CONF='/etc/sds/connectors/streaming'
+DIR_LOG='/var/log/sds/connectors/streaming'
 
 case "$1" in
   configure)
@@ -42,13 +42,12 @@ case "$1" in
 
   ;;
 esac
-cp /opt/sds/stratio-connector-streaming/bin/stratio-connector-streaming-* /opt/sds/stratio-connector-streaming/bin/stratio-connector-streaming
-cp /opt/sds/stratio-connector-streaming/template/StreamingConnector /etc/init.d/stratio-connector-streaming
+cp /opt/sds/connectors/streaming/template/StreamingConnector /etc/init.d/stratio-connector-streaming
 chmod 755 /etc/init.d/stratio-connector-streaming
-chmod 755 /opt/sds/stratio-connector-streaming/bin/stratio-connector-streaming
+chmod 755 /opt/sds/connectors/streaming/bin/stratio-connector-streaming
 chmod +x /etc/default/stratio-connector-streaming
-export STREAMING_CONNECTOR_LIB=/opt/sds/stratio-connector-streaming/
-export STREAMING_CONNECTOR_CONF="/etc/sds/stratio-connector-streaming"
+export STREAMING_CONNECTOR_LIB=/opt/sds/connectors/streaming/
+export STREAMING_CONNECTOR_CONF="/etc/sds/connectors/streaming"
 
 
 exit 0

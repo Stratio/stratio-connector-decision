@@ -87,29 +87,6 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<!--<build>-->
-		<!--<plugins>-->
-			<!--<plugin>-->
-				<!--<artifactId>crossdata-connector-maven-plugin</artifactId>-->
-				<!--<groupId>com.stratio.crossdata</groupId>-->
-				<!--<version>${crossdata.version}</version>-->
-		<!--&lt;!&ndash;		<executions>-->
-					<!--<execution>-->
-						<!--<id>crossdata</id>-->
-						<!--<goals>-->
-							<!--<goal>install</goal>-->
-						<!--</goals>-->
-						<!--<phase>package</phase> &ndash;&gt;-->
-						<!--<configuration>-->
-							<!--<mainClass>com.stratio.connector.streaming.core.StreamingConnector</mainClass>-->
-						<!--</configuration>-->
-
-	<!--&lt;!&ndash;				</execution>-->
-				<!--</executions> &ndash;&gt;-->
-			<!--</plugin>-->
-		<!--</plugins>-->
-	<!--</build>-->
-
 	<profiles>
 		<profile>
 			<id>package</id>
@@ -186,23 +163,9 @@
 										<mode>755</mode>
 									</attributes>
 								</copyFile>
-								<mkdirs>
-									<path>/opt/sds/connector-streaming</path>
-									<attributes>
-										<user>stratio</user>
-										<group>stratio</group>
-									</attributes>
-								</mkdirs>
-								<mkdirs>
-									<path>/var/run/sds</path>
-									<attributes>
-										<user>stratio</user>
-										<group>stratio</group>
-									</attributes>
-								</mkdirs>
 								<copyDirectory>
 									<from>target/stratio-connector-streaming/bin</from>
-									<to>/opt/sds/stratio-connector-streaming/bin</to>
+									<to>/opt/sds/connectors/streaming/bin</to>
 									<directoryAttributes>
 										<user>stratio</user>
 										<group>stratio</group>
@@ -210,7 +173,7 @@
 								</copyDirectory>
 								<copyDirectory>
 									<from>target/stratio-connector-streaming/repo</from>
-									<to>/opt/sds/stratio-connector-streaming/repo</to>
+									<to>/opt/sds/connectors/streaming/repo</to>
 									<directoryAttributes>
 										<user>stratio</user>
 										<group>stratio</group>
@@ -218,7 +181,7 @@
 								</copyDirectory>
 								<copyDirectory>
 									<from>target/stratio-connector-streaming/conf</from>
-									<to>/opt/sds/stratio-connector-streaming/conf</to>
+									<to>/opt/sds/connectors/streaming/conf</to>
 									<directoryAttributes>
 										<user>stratio</user>
 										<group>stratio</group>
@@ -226,7 +189,7 @@
 								</copyDirectory>
 								<copyDirectory>
 									<from>src/main/template</from>
-									<to>/opt/sds/stratio-connector-streaming/template</to>
+									<to>/opt/sds/connectors/streaming/template</to>
 									<directoryAttributes>
 										<user>stratio</user>
 										<group>stratio</group>
@@ -242,11 +205,11 @@
 								</copyDirectory>
 								<copyFile>
 									<path>src/main/include/LICENSE</path>
-									<toFile>/opt/sds/stratio-connector-streaming/LICENSE</toFile>
+									<toFile>/opt/sds/connectors/streaming/LICENSE</toFile>
 								</copyFile>
 								<copyFile>
 									<path>src/main/include/NOTICE</path>
-									<toFile>/opt/sds/stratio-connector-streaming/NOTICE</toFile>
+									<toFile>/opt/sds/connectors/streaming/NOTICE</toFile>
 								</copyFile>
 							</assembly>
 							<defaults>

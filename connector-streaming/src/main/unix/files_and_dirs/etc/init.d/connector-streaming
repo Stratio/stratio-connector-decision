@@ -1,1 +1,1 @@
-exec /opt/sds/stratio-connector-streaming/bin/stratio-connector-streaming
+exec /opt/sds/connectors/streaming/bin/stratio-connector-streaming
