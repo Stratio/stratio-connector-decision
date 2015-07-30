@@ -36,7 +36,6 @@ case "$1" in
    echo "entra"
     mkdir $DIR_LOG
   fi
-echo "SALE"
 
   chown -R ${USER}:${GROUP} /opt/sds /etc/sds
 
