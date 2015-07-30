@@ -17,7 +17,7 @@
 
 	<groupId>com.stratio.connector</groupId>
 	<artifactId>stratio-connector-streaming</artifactId>
-	<version>0.5.0-RC1</version>
+	<version>0.5.0-RC2-SNAPSHOT</version>
 	<description>Stratio Streaming connector parent</description>
 	<url>http://www.stratio.com</url>
 	<name>Stratio Streaming Connector</name>
