@@ -135,7 +135,7 @@
 							<contact><![CDATA[Stratio <connectors@stratio.com>]]></contact>
 							<contactEmail>connectors@stratio.com</contactEmail>
 							<deb>
-								<section>devel</section>git 
+								<section>devel</section>
 							</deb>
 							<rpm>
 								<group>stratio</group>
