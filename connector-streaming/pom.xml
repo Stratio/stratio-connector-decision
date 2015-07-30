@@ -163,6 +163,20 @@
 										<mode>755</mode>
 									</attributes>
 								</copyFile>
+								<mkdirs>
+									<path>/opt/sds/connectors/streaming</path>
+									<attributes>
+										<user>stratio</user>
+										<group>stratio</group>
+									</attributes>
+								</mkdirs>
+								<mkdirs>
+									<path>/var/run/sds</path>
+									<attributes>
+										<user>stratio</user>
+										<group>stratio</group>
+									</attributes>
+								</mkdirs>
 								<copyDirectory>
 									<from>target/stratio-connector-streaming/bin</from>
 									<to>/opt/sds/connectors/streaming/bin</to>
@@ -190,6 +204,14 @@
 								<copyDirectory>
 									<from>src/main/template</from>
 									<to>/opt/sds/connectors/streaming/template</to>
+									<directoryAttributes>
+										<user>stratio</user>
+										<group>stratio</group>
+									</directoryAttributes>
+								</copyDirectory>
+								<copyDirectory>
+									<from>src/main/config</from>
+									<to>etc/sds/connectors/streaming</to>
 									<directoryAttributes>
 										<user>stratio</user>
 										<group>stratio</group>
