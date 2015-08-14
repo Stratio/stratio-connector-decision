@@ -66,34 +66,7 @@ Prerequisites
 Configuration
 -------------
 
-In the Crossdata Shell we need to add the Datastore Manifest.
-
-::
-
-       > add datastore "<path_to_manifest_folder>/StreamingDataStore.xml";
-
-The output must be:
-
-::
-
-       [INFO|Shell] Response time: 0 seconds    
-       [INFO|Shell] OK
-
-Now we need to add the ConnectorManifest.
-
-::
-
-       > add connector "<path_to_manifest_folder>/StreamingConnector.xml";  
-
-The output must be:
-
-::
-
-       [INFO|Shell] Response time: 0 seconds    
-       [INFO|Shell] OK
-
-At this point we have reported to Crossdata the connector options and
-operations. Now we configure the datastore cluster.
+Configure the datastore cluster.
 
 ::
 
@@ -108,7 +81,7 @@ The output must be similar to:
 
 Now we must run the connector.
 
-The last step is to attach the connector to the cluster created before.
+And attach the connector to the cluster created before.
 
 ::
 
