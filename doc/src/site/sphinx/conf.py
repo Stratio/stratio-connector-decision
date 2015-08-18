@@ -106,7 +106,7 @@ html_theme = 'stratio'
 # further.  For a list of options available for each theme, see the
 # documentation.
 #html_theme_options = {
-    'versions' : ['0.5.0-SNAPSHOT'],
+    'versions' : ['0.5.0'],
     'github' : 'https://github.com/Stratio/stratio-connector-streaming',
     'jira': 'https://github.com/Stratio/stratio-connector-streaming',
     'module_name' : 'connector_streaming'
@@ -197,7 +197,7 @@ html_static_path = ['_static']
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'StreamingCEPdoc'
+htmlhelp_basename = 'connector-streaming-doc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
