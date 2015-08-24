@@ -105,7 +105,7 @@ html_theme = 'stratio'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#html_theme_options = {
+html_theme_options = {
     'versions' : ['0.5.0'],
     'github' : 'https://github.com/Stratio/stratio-connector-streaming',
     'jira': 'https://github.com/Stratio/stratio-connector-streaming',
