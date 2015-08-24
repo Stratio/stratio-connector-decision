@@ -43,20 +43,6 @@ Once the package it’s created, execute this commands to install:
 
 RPM Package:
 
-::
-
-       > mvn unix:package-rpm -N
-
-DEB Package:
-
-::
-   
-       > mvn unix:package-deb -N
-
-Once the package it's created, execute this commands to install:
-
-RPM Package:
-
 ::   
     
        > rpm -i target/stratio-connector-streaming-<version>.rpm
@@ -72,6 +58,7 @@ Now to start/stop the connector:
 ::   
     
        > service stratio-connector-streaming start
+       
        > service stratio-connector-streaming stop
 
 
