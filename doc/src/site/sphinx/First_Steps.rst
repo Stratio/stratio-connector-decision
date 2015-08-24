@@ -55,11 +55,10 @@ Prerequisites
 -------------
 
 -  Basic knowledge of SQL like language.
--  First of all `Stratio Crossdata
-   <version> <https://github.com/Stratio/crossdata>`__ is needed and must be
+-  First of all `Stratio Crossdata <https://github.com/Stratio/crossdata>`__ is needed and must be
    installed. The server and the shell must be running.
 -  An installation of `Stratio Streaming
-   <version> <http://docs.stratio.com/modules/streaming-cep-engine/development/#stratio-streaming>`__.
+   <http://docs.stratio.com/modules/streaming-cep-engine/development/#stratio-streaming>`__.
 -  Build an StreamingConnector executable and run it following this
    `guide <https://github.com/Stratio/stratio-connector-streaming#build-an-executable-connector-streaming>`__.
 
@@ -279,5 +278,5 @@ Where to go from here
 
 To learn more about Stratio Crossdata, we recommend to visit the
 `Crossdata
-Reference <https://github.com/Stratio/crossdata/blob/master/_doc/meta-reference.md>`__.
+Reference <https://github.com/Stratio/crossdata>`__.
 
