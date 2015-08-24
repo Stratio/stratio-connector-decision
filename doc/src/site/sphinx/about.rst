@@ -7,9 +7,10 @@ implementation for stratio-streaming.
 Requirements
 ------------
 
-Install [Stratio Streaming]
-(http://docs.openstratio.org/getting-started.html#stratio-streaming) and
-run it. [Crossdata] (https://github.com/Stratio/crossdata) is needed to
+Install `Stratio Streaming <http://docs.openstratio.org/getting-started.html#stratio-streaming>`__ and
+run it. 
+
+`Crossdata <https://github.com/Stratio/crossdata>`__ is needed to
 interact with this connector.
 
 Compiling Stratio Connector Streaming
@@ -19,16 +20,7 @@ To automatically build execute the following command:
 
 ::
 
-       > mvn clean compile install
-
-Build an executable Connector Streaming
----------------------------------------
-
-To generate the executable execute the following command:
-
-::
-
-       > mvn package -Ppackage
+       > mvn clean install
 
 Running the Stratio Connector Streaming
 ---------------------------------------
@@ -41,7 +33,13 @@ To run Connector Streaming execute in the parent directory:
 
 Build a redistributable package
 -------------------------------
-It is possible too, to create a RPM or DEB redistributable package.
+It is possible too, to create a RPM or DEB package as:
+
+::
+
+       > mvn package -Ppackage
+       
+Once the package it’s created, execute this commands to install:
 
 RPM Package:
 
@@ -80,7 +78,7 @@ Now to start/stop the connector:
 How to use Connector Streaming
 ------------------------------
 
-A complete tutorial is available `here <_doc/FirstSteps.md>`__. The
+A complete tutorial is available `here <First_Steps.rst>`__. The
 basic commands are described below.
 
 1. Start `crossdata-server and then
@@ -103,7 +101,6 @@ At this point, we can start to send queries, that Crossdata execute with the con
 
    ::
 
-       ...
            xdsh:user> CREATE CATALOG catalogTest;
 
            xdsh:user> USE catalogTest;
@@ -113,7 +110,7 @@ At this point, we can start to send queries, that Crossdata execute with the con
            xdsh:user> SELECT * FROM tableTest WITH WINDOW 2 sec;
 
            xdsh:user> INSERT INTO tableTest(id, name) VALUES (1, 'stratio');
-       ...
+
 
 Behaviours
 ----------
