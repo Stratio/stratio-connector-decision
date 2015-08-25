@@ -205,6 +205,13 @@
 										<group>stratio</group>
 									</attributes>
 								</mkdirs>
+								<mkdirs>
+									<path>/var/log/sds/connectors</path>
+									<attributes>
+										<user>stratio</user>
+										<group>stratio</group>
+									</attributes>
+								</mkdirs>
 								<copyDirectory>
 									<from>target/stratio-connector-streaming/bin</from>
 									<to>/opt/sds/connectors/streaming/bin</to>
