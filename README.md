@@ -1,18 +1,18 @@
 # About #
 
-The Stratio Connector Streaming allows [Stratio Crossdata] (<https://github.com/Stratio/crossdata>) to interact with stratio-streaming.
+The Stratio Connector Streaming allows [Stratio Crossdata] (<http://docs.stratio.com/modules/crossdata/0.4/index.html>) to interact with stratio-streaming.
 
 ## Requirements ##
 
 Install [Stratio Streaming] (http://docs.openstratio.org/getting-started.html#stratio-streaming) and run it. 
 
-[Crossdata] (https://github.com/Stratio/crossdata) is needed to interact with this connector.
+[Crossdata] (http://docs.stratio.com/modules/crossdata/0.4/index.html) is needed to interact with this connector.
 
 ## How to use Stratio Connector-Streaming ##
 
-Requirements, installation and use of the connector can be found in [about.rst] (<https://github.com/Stratio/stratio-connector-streaming/blob/branch-0.5/doc/src/site/sphinx/about.rst>)
+Requirements, installation and use of the connector can be found [here] (<http://docs.stratio.com/modules/stratio-connector-streaming/0.5/about.html>)
 
-There also exists a [First Steps] (<https://github.com/Stratio/stratio-connector-streaming/blob/branch-0.5/doc/src/site/sphinx/First_Steps.rst>) document where through an easy example the main features of this connector are illustrated.
+There also exists a [First Steps] (<http://docs.stratio.com/modules/stratio-connector-hdfs/0.5/First_Steps.html>) document where through an easy example the main features of this connector are illustrated.
 
 # License #
 

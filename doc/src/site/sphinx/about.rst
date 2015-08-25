@@ -1,8 +1,7 @@
 About
 *****
 
-Stratio Connector Streaming is a crossdata connector interface
-implementation for stratio-streaming.
+Stratio Connector Streaming allows `Stratio Crossdata <http://docs.stratio.com/modules/crossdata/0.4/index.html>`__ to interact with Streaming.
 
 Requirements
 ------------
@@ -10,7 +9,7 @@ Requirements
 Install `Stratio Streaming <http://docs.openstratio.org/getting-started.html#stratio-streaming>`__ and
 run it. 
 
-`Crossdata <https://github.com/Stratio/crossdata>`__ is needed to
+`Crossdata <http://docs.stratio.com/modules/crossdata/0.4/index.html>`__ is needed to
 interact with this connector.
 
 Compiling Stratio Connector Streaming
@@ -68,8 +67,7 @@ How to use Connector Streaming
 A complete tutorial is available `here <First_Steps.rst>`__. The
 basic commands are described below.
 
-1. Start `crossdata-server and then
-   crossdata-shell <https://github.com/Stratio/crossdata>`__.
+1. Start `Stratio Crossdata Server and then Stratio Crossdata Shell <http://docs.stratio.com/modules/crossdata/0.4/index.html>`__. 
 2. Start Streaming Connector as it is explained before
 3. In crossdata-shell:
 
