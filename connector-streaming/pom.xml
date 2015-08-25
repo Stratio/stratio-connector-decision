@@ -183,8 +183,8 @@
 							</excludeDirectoryAttributes>
 							<assembly>
 								<copyFile>
-									<path>src/main/unix/files_and_dirs/etc/init.d/connector-streaming</path>
-									<toFile>/etc/init.d/connector-streaming</toFile>
+									<path>src/main/unix/files_and_dirs/etc/init.d/connector_streaming</path>
+									<toFile>/etc/init.d/connector_streaming</toFile>
 									<attributes>
 										<user>root</user>
 										<group>root</group>
@@ -223,7 +223,7 @@
 								</copyDirectory>
 								<copyDirectory>
 									<from>target/stratio-connector-streaming/conf</from>
-									<to>/opt/sds/connectors/streaming/conf</to>
+									<to>/opt/sds/connectors/streaming</to>
 									<directoryAttributes>
 										<user>stratio</user>
 										<group>stratio</group>
@@ -245,14 +245,15 @@
 										<group>stratio</group>
 									</directoryAttributes>
 								</copyDirectory>
-								<copyDirectory>
-									<from>src/main/unix/files_and_dirs/etc/default</from>
-									<to>/etc/default</to>
-									<directoryAttributes>
-										<user>stratio</user>
-										<group>stratio</group>
-									</directoryAttributes>
-								</copyDirectory>
+								<copyFile>
+									<path>src/main/unix/files_and_dirs/etc/default/streaming_connector</path>
+									<toFile>/etc/default/streaming_connector</toFile>
+									<attributes>
+										<user>root</user>
+										<group>root</group>
+										<mode>755</mode>
+									</attributes>
+								</copyFile>
 								<copyFile>
 									<path>src/main/include/LICENSE</path>
 									<toFile>/opt/sds/connectors/streaming/LICENSE</toFile>

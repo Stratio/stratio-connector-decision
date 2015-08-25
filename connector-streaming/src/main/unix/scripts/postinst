@@ -2,19 +2,23 @@
 
 set -e
 
+#DEB
+
 GROUP='stratio'
 USER='stratio'
 DIR_INSTALL='/opt/sds/connectors/streaming'
 DIR_CONF='/etc/sds/connectors/streaming'
+DIR_CONF='/etc/sds/connectors/streaming'
 DIR_LOG='/var/log/sds/connectors/streaming'
 
-cp /opt/sds/connectors/streaming/template/StreamingConnector /etc/init.d/stratio-connector-streaming
-chmod 755 /etc/init.d/stratio-connector-streaming
+
+chmod 755 /etc/init.d/connector_streaming
 chmod 755 /opt/sds/connectors/streaming/bin
 chmod +x /opt/sds/connectors/streaming/bin/stratio-connector-streaming
-chmod +x /etc/default/stratio-connector-streaming
+chmod +x /etc/default/streaming_connector
 export STREAMING_CONNECTOR_LIB=/opt/sds/connectors/streaming
 export STREAMING_CONNECTOR_CONF="/etc/sds/connectors/streaming"
+
 
 case "$1" in
   configure)
@@ -33,23 +37,20 @@ case "$1" in
   fi
 
   if [ ! -d "$DIR_LOG" ]; then
-   echo "entra"
     mkdir $DIR_LOG
   fi
 
-  chown -R ${USER}:${GROUP} /opt/sds /etc/sds
-
-  chown root:root /etc/init.d/stratio-connector-streaming
+  chown root:root /etc/init.d/connector_streaming
  
   chown -R ${USER}:${GROUP} $DIR_INSTALL
   chown -R ${USER}:${GROUP} $DIR_CONF
   chown -R ${USER}:${GROUP} $DIR_LOG
-  chmod 775 $DIR_INSTALL
-  chmod 775 $DIR_CONF
+  chmod -R 775 $DIR_INSTALL
   chmod 775 $DIR_LOG
-  
-  update-rc.d stratio-connector-streaming defaults
 
+  sed -i 's!"$BASEDIR"/conf!/etc/sds/connectors/streaming!g' /opt/sds/connectors/streaming/bin/stratio-connector-streaming
+
+  update-rc.d connector_streaming defaults
   ;;
 esac    
 
