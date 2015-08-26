@@ -11,37 +11,35 @@ DIR_CONF='/etc/sds/connectors/streaming'
 DIR_LOG='/var/log/sds/connectors/streaming'
 
 
-case "$1" in
-  configure)
 
-  # Add stratio group if it doesn't already exists
-  if ! getent group $GROUP >/dev/null 2>&1; then
-    groupadd ${GROUP} 
-  fi
 
-  # Add stratio user if it doesn't already exists
-  if ! getent passwd $USER >/dev/null 2>&1; then
-    [ -d /opt ] || mkdir /opt
-    useradd -M -d /opt/sds -g ${GROUP} -s /bin/bash ${USER}
-  else
-    usermod -G $GROUP $USER
-  fi
+# Add stratio group if it doesn't already exists
+if ! getent group $GROUP >/dev/null 2>&1; then
+groupadd ${GROUP}
+fi
 
-  if [ ! -d "$DIR_LOG" ]; then
-   mkdir $DIR_LOG
-  fi
+# Add stratio user if it doesn't already exists
+if ! getent passwd $USER >/dev/null 2>&1; then
+[ -d /opt ] || mkdir /opt
+useradd -M -d /opt/sds -g ${GROUP} -s /bin/bash ${USER}
+else
+usermod -G $GROUP $USER
+fi
 
-  chown root:root /etc/init.d/connector_streaming
- 
-  chown -R ${USER}:${GROUP} $DIR_INSTALL
+if [ ! -d "$DIR_LOG" ]; then
+mkdir $DIR_LOG
+fi
 
-  chown -R ${USER}:${GROUP} $DIR_CONF
-  chown -R ${USER}:${GROUP} $DIR_LOG
-  chmod -R 775 $DIR_INSTALL
-  chmod 775 $DIR_LOG
+chown root:root /etc/init.d/connector_streaming
+
+chown -R ${USER}:${GROUP} $DIR_INSTALL
+
+chown -R ${USER}:${GROUP} $DIR_CONF
+chown -R ${USER}:${GROUP} $DIR_LOG
+chmod -R 775 $DIR_INSTALL
+chmod 775 $DIR_LOG
   
-  ;;
-esac
+
 
 chmod 755 /etc/init.d/connector_streaming
 chmod 755 /opt/sds/connectors/streaming/bin/stratio-connector-streaming
