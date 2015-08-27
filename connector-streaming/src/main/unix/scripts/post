@@ -11,8 +11,6 @@ DIR_CONF='/etc/sds/connectors/streaming'
 DIR_LOG='/var/log/sds/connectors/streaming'
 
 
-
-
 # Add stratio group if it doesn't already exists
 if ! getent group $GROUP >/dev/null 2>&1; then
 groupadd ${GROUP}
@@ -26,7 +24,7 @@ else
 usermod -G $GROUP $USER
 fi
 
-if [ ! -d "$DIR_LOG" ]; then
+if [! -d "$DIR_LOG" ]; then
 mkdir $DIR_LOG
 fi
 
@@ -38,8 +36,6 @@ chown -R ${USER}:${GROUP} $DIR_CONF
 chown -R ${USER}:${GROUP} $DIR_LOG
 chmod -R 775 $DIR_INSTALL
 chmod 775 $DIR_LOG
-  
-
 
 chmod 755 /etc/init.d/connector_streaming
 chmod 755 /opt/sds/connectors/streaming/bin/stratio-connector-streaming
