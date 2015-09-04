@@ -3,6 +3,7 @@
 ## 0.5.1 (August 2015)
 * DEB and RPM generation
 * Documentation improved
+* Adapted to Stratio Crossdata 0.4.1
 
 ## 0.5.0 (August 2015)
 
