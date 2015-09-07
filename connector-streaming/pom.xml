@@ -86,55 +86,84 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>1.10</version>
+				<executions>
+					<execution>
+						<id>appassembler</id>
+						<phase>package</phase>
+						<goals>
+							<goal>assemble</goal>
+						</goals>
+						<configuration>
+							<configurationSourceDirectory>src/main/config</configurationSourceDirectory>
+							<configurationDirectory>conf</configurationDirectory>
+							<copyConfigurationDirectory>true</copyConfigurationDirectory>
+							<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+							<assembleDirectory>${project.build.directory}/stratio-connector-streaming</assembleDirectory>
+							<extraJvmArguments>$CONNECTOR_STREAMING_OPTS -Djava.net.preferIPv4Stack=true -Dcom.sun.management.jmxremote.port=${jmx.port} -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false</extraJvmArguments>
+							<filterConfigurationDirectory>true</filterConfigurationDirectory>
+							<platforms>
+								<platform>windows</platform>
+								<platform>unix</platform>
+							</platforms>
+							<programs>
+								<program>
+									<mainClass>com.stratio.connector.streaming.core.StreamingConnector</mainClass>
+									<id>stratio-connector-streaming</id>
+								</program>
+							</programs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 	<profiles>
 		<profile>
 			<id>package</id>
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>appassembler-maven-plugin</artifactId>
-						<version>1.10</version>
-						<executions>
-							<execution>
-								<id>appassembler</id>
-								<phase>package</phase>
-								<goals>
-									<goal>assemble</goal>
-								</goals>
-								<configuration>
-									<configurationSourceDirectory>src/main/config</configurationSourceDirectory>
-									<configurationDirectory>conf</configurationDirectory>
-									<copyConfigurationDirectory>true</copyConfigurationDirectory>
-									<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
-									<assembleDirectory>${project.build.directory}/stratio-connector-streaming</assembleDirectory>
-									<extraJvmArguments>$CONNECTOR_STREAMING_OPTS -Djava.net.preferIPv4Stack=true -Dcom.sun.management.jmxremote.port=${jmx.port} -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false</extraJvmArguments>
-									<filterConfigurationDirectory>true</filterConfigurationDirectory>
-									<platforms>
-										<platform>windows</platform>
-										<platform>unix</platform>
-									</platforms>
-									<programs>
-										<program>
-											<mainClass>com.stratio.connector.streaming.core.StreamingConnector</mainClass>
-											<id>stratio-connector-streaming</id>
-										</program>
-									</programs>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
 						<groupId>com.stratio.mojo.unix</groupId>
 						<artifactId>unix-maven-plugin</artifactId>
-						<version>1.1.5</version>
+						<version>1.1.6</version>
 						<extensions>true</extensions>
 						<inherited>false</inherited>
 						<configuration>
-							<size>2048</size>
 							<outputFileName>stratio-connector-streaming</outputFileName>
-							<contact><![CDATA[Stratio <jmgomez@stratio.com>]]></contact>
-							<contactEmail>jmgomez@stratio.com</contactEmail>
+							<contact><![CDATA[Stratio <connectors@stratio.com>]]></contact>
+							<contactEmail>connectors@stratio.com</contactEmail>
 							<deb>
 								<section>devel</section>
 							</deb>
@@ -154,8 +183,8 @@
 							</excludeDirectoryAttributes>
 							<assembly>
 								<copyFile>
-									<path>src/main/unix/files_and_dirs/etc/init.d/connector-streaming</path>
-									<toFile>/etc/init.d/connector-streaming</toFile>
+									<path>src/main/unix/files_and_dirs/etc/init.d/connector_streaming</path>
+									<toFile>/etc/init.d/connector_streaming</toFile>
 									<attributes>
 										<user>root</user>
 										<group>root</group>
@@ -171,6 +200,13 @@
 								</mkdirs>
 								<mkdirs>
 									<path>/var/run/sds</path>
+									<attributes>
+										<user>stratio</user>
+										<group>stratio</group>
+									</attributes>
+								</mkdirs>
+								<mkdirs>
+									<path>/var/log/sds/connectors</path>
 									<attributes>
 										<user>stratio</user>
 										<group>stratio</group>
@@ -194,7 +230,7 @@
 								</copyDirectory>
 								<copyDirectory>
 									<from>target/stratio-connector-streaming/conf</from>
-									<to>/opt/sds/connectors/streaming/conf</to>
+									<to>/opt/sds/connectors/streaming</to>
 									<directoryAttributes>
 										<user>stratio</user>
 										<group>stratio</group>
@@ -216,14 +252,15 @@
 										<group>stratio</group>
 									</directoryAttributes>
 								</copyDirectory>
-								<copyDirectory>
-									<from>src/main/unix/files_and_dirs/etc/default</from>
-									<to>/etc/default</to>
-									<directoryAttributes>
-										<user>stratio</user>
-										<group>stratio</group>
-									</directoryAttributes>
-								</copyDirectory>
+								<copyFile>
+									<path>src/main/unix/files_and_dirs/etc/default/streaming_connector</path>
+									<toFile>/etc/default/streaming_connector</toFile>
+									<attributes>
+										<user>root</user>
+										<group>root</group>
+										<mode>755</mode>
+									</attributes>
+								</copyFile>
 								<copyFile>
 									<path>src/main/include/LICENSE</path>
 									<toFile>/opt/sds/connectors/streaming/LICENSE</toFile>
@@ -235,10 +272,10 @@
 							</assembly>
 							<defaults>
 								<directoryAttributes>
-									<mode>0755</mode>
+									<mode>0775</mode>
 								</directoryAttributes>
 								<fileAttributes>
-									<mode>0644</mode>
+									<mode>0664</mode>
 								</fileAttributes>
 							</defaults>
 						</configuration>

@@ -5,7 +5,7 @@ Streaming Crossdata connector allows the integration between Crossdata
 and Stratio Streaming. Crossdata provides an easy and common language as
 well as the integration with several other databases. More information
 about Crossdata can be found at
-`Crossdata <https://github.com/Stratio/crossdata>`__
+`Crossdata <http://docs.stratio.com/modules/crossdata/0.4/index.html>`__
 
 Table of Contents
 =================
@@ -55,45 +55,17 @@ Prerequisites
 -------------
 
 -  Basic knowledge of SQL like language.
--  First of all `Stratio Crossdata
-   <version> <https://github.com/Stratio/crossdata>`__ is needed and must be
+-  First of all `Stratio Crossdata <http://docs.stratio.com/modules/crossdata/0.4/index.html>`__ is needed and must be
    installed. The server and the shell must be running.
 -  An installation of `Stratio Streaming
-   <version> <http://docs.stratio.com/modules/streaming-cep-engine/development/#stratio-streaming>`__.
+   <http://docs.stratio.com/modules/streaming-cep-engine/development/#stratio-streaming>`__.
 -  Build an StreamingConnector executable and run it following this
-   `guide <https://github.com/Stratio/stratio-connector-streaming#build-an-executable-connector-streaming>`__.
+   `guide <http://docs.stratio.com/modules/stratio-connector-streaming/0.5/about.html>`__.
 
 Configuration
 -------------
 
-In the Crossdata Shell we need to add the Datastore Manifest.
-
-::
-
-       > add datastore "<path_to_manifest_folder>/StreamingDataStore.xml";
-
-The output must be:
-
-::
-
-       [INFO|Shell] Response time: 0 seconds    
-       [INFO|Shell] OK
-
-Now we need to add the ConnectorManifest.
-
-::
-
-       > add connector "<path_to_manifest_folder>/StreamingConnector.xml";  
-
-The output must be:
-
-::
-
-       [INFO|Shell] Response time: 0 seconds    
-       [INFO|Shell] OK
-
-At this point we have reported to Crossdata the connector options and
-operations. Now we configure the datastore cluster.
+Configure the datastore cluster.
 
 ::
 
@@ -108,7 +80,7 @@ The output must be similar to:
 
 Now we must run the connector.
 
-The last step is to attach the connector to the cluster created before.
+And attach the connector to the cluster created before.
 
 ::
 
@@ -306,5 +278,5 @@ Where to go from here
 
 To learn more about Stratio Crossdata, we recommend to visit the
 `Crossdata
-Reference <https://github.com/Stratio/crossdata/blob/master/_doc/meta-reference.md>`__.
+Reference <http://docs.stratio.com/modules/crossdata/0.4/index.html>`__.
 
