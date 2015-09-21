@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.2 (September 2015)
+* Adapted to Stratio Streaming 0.8.1
+
 ## 0.5.1 (August 2015)
 * DEB and RPM generation
 * Documentation improved
