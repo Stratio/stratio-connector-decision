@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.3 (September 2015)
+* Adapted to Stratio Crossdata 0.4.3
+
 ## 0.5.2 (September 2015)
 * Adapted to Stratio Streaming 0.8.1
 
