@@ -1,3 +1,0 @@
-export STREAMING_CONNECTOR_CONF="/etc/sds/connectors/streaming"
-export STREAMING_CONNECTOR_HOME="/opt/sds/connectors/streaming"
-export STREAMING_CONNECTOR_LOGS="/var/logs/sds/connectors/streaming"

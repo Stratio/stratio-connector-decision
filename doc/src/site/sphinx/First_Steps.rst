@@ -1,11 +1,11 @@
 First Steps
 ***********
 
-Streaming Crossdata connector allows the integration between Crossdata
-and Stratio Streaming. Crossdata provides an easy and common language as
+Decision Crossdata connector allows the integration between Crossdata
+and Stratio Decision. Crossdata provides an easy and common language as
 well as the integration with several other databases. More information
 about Crossdata can be found at
-`Crossdata <http://docs.stratio.com/modules/crossdata/0.4/index.html>`__
+`Crossdata <http://docs.stratio.com/modules/crossdata/0.5/index.html>`__
 
 Table of Contents
 =================
@@ -55,12 +55,12 @@ Prerequisites
 -------------
 
 -  Basic knowledge of SQL like language.
--  First of all `Stratio Crossdata <http://docs.stratio.com/modules/crossdata/0.4/index.html>`__ is needed and must be
+-  First of all `Stratio Crossdata <http://docs.stratio.com/modules/crossdata/0.5/index.html>`__ is needed and must be
    installed. The server and the shell must be running.
--  An installation of `Stratio Streaming
-   <http://docs.stratio.com/modules/streaming-cep-engine/development/#stratio-streaming>`__.
--  Build an StreamingConnector executable and run it following this
-   `guide <http://docs.stratio.com/modules/stratio-connector-streaming/0.5/about.html>`__.
+-  An installation of `Stratio Decision
+   <http://docs.stratio.com/modules/decision-cep-engine/development/#stratio-decision>`__.
+-  Build an DecisionConnector executable and run it following this
+   `guide <http://docs.stratio.com/modules/stratio-connector-decision/0.5/about.html>`__.
 
 Configuration
 -------------
@@ -69,7 +69,7 @@ Configure the datastore cluster.
 
 ::
 
-    > ATTACH CLUSTER streamingCluster ON DATASTORE Streaming WITH OPTIONS {'KafkaServer': '[<ip>]', 'KafkaPort': '[9092]', 'zooKeeperServer':'[<ip>]','zooKeeperPort':'[2181]'};
+    > ATTACH CLUSTER decisionCluster ON DATASTORE Decision WITH OPTIONS {'KafkaServer': '[<ip>]', 'KafkaPort': '[9092]', 'zooKeeperServer':'[<ip>]','zooKeeperPort':'[2181]'};
 
 The output must be similar to:
 
@@ -84,7 +84,7 @@ And attach the connector to the cluster created before.
 
 ::
 
-      >  ATTACH CONNECTOR StreamingConnector TO streamingCluster  WITH OPTIONS {};
+      >  ATTACH CONNECTOR DecisionConnector TO decisionCluster  WITH OPTIONS {};
 
 The output must be:
 
@@ -103,7 +103,7 @@ And the output must show a message similar to:
 
 ::
 
-    Connector: connector.streamingconnector ONLINE  []  [datastore.streaming]   akka.tcp://CrossdataServerCluster@127.0.0.1:46646/user/ConnectorActor/
+    Connector: connector.decisionconnector ONLINE  []  [datastore.decision]   akka.tcp://CrossdataServerCluster@127.0.0.1:46646/user/ConnectorActor/
 
 Creating the catalog and table
 ==============================
@@ -140,7 +140,7 @@ actually created at this point.
 
 ::
 
-      > CREATE TABLE students ON CLUSTER streamingCluster (id int PRIMARY KEY, name text, age int, 
+      > CREATE TABLE students ON CLUSTER decisionCluster (id int PRIMARY KEY, name text, age int,
     enrolled boolean);
 
 And the output must show:
@@ -278,5 +278,5 @@ Where to go from here
 
 To learn more about Stratio Crossdata, we recommend to visit the
 `Crossdata
-Reference <http://docs.stratio.com/modules/crossdata/0.4/index.html>`__.
+Reference <http://docs.stratio.com/modules/crossdata/0.5/index.html>`__.
 

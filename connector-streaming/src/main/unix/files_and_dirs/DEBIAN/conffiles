@@ -1,4 +1,0 @@
-/etc/default/connectors/streaming
-/etc/sds/connectors/streaming/connector-application.conf
-/etc/sds/connectors/streaming/log.properties
-/etc/sds/connectors/streaming/connector-reference.conf

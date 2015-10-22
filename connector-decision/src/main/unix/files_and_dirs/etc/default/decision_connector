@@ -1,0 +1,3 @@
+export DECISION_CONNECTOR_CONF="/etc/sds/connectors/decision"
+export DECISION_CONNECTOR_HOME="/opt/sds/connectors/decision"
+export DECISION_CONNECTOR_LOGS="/var/logs/sds/connectors/decision"

@@ -1,18 +1,19 @@
 About
 *****
 
-Stratio Connector Streaming allows `Stratio Crossdata <http://docs.stratio.com/modules/crossdata/0.4/index.html>`__ to interact with Streaming.
+Stratio Connector Decision allows `Stratio Crossdata <http://docs.stratio.com/modules/crossdata/0.5/index.html>`__
+to interact with Decision.
 
 Requirements
 ------------
 
-Install `Stratio Streaming <http://docs.openstratio.org/getting-started.html#stratio-streaming>`__ and
+Install `Stratio Decision <http://docs.openstratio.org/getting-started.html#stratio-decision>`__ and
 run it. 
 
-`Crossdata <http://docs.stratio.com/modules/crossdata/0.4/index.html>`__ is needed to
+`Crossdata <http://docs.stratio.com/modules/crossdata/0.5/index.html>`__ is needed to
 interact with this connector.
 
-Compiling Stratio Connector Streaming
+Compiling Stratio Connector Decision
 -------------------------------------
 
 To automatically build execute the following command:
@@ -21,14 +22,14 @@ To automatically build execute the following command:
 
        > mvn clean install
 
-Running the Stratio Connector Streaming
+Running the Stratio Connector Decision
 ---------------------------------------
 
-To run Connector Streaming execute in the parent directory:
+To run Connector Decision execute in the parent directory:
 
 ::
 
-       > ./connector-streaming/target/stratio-connector-streaming/bin/stratio-connector-streaming
+       > ./connector-decision/target/stratio-connector-decision/bin/stratio-connector-decision
 
 Build a redistributable package
 -------------------------------
@@ -44,31 +45,32 @@ RPM Package:
 
 ::   
     
-       > rpm -i target/stratio-connector-streaming-<version>.rpm
+       > rpm -i target/stratio-connector-decision-<version>.rpm
 
 DEB Package:
 
 ::   
     
-       > dpkg -i target/stratio-connector-streaming-<version>.deb
+       > dpkg -i target/stratio-connector-decision-<version>.deb
 
 Now to start/stop the connector:
 
 ::   
     
-       > service stratio-connector-streaming start
+       > service stratio-connector-decision start
        
-       > service stratio-connector-streaming stop
+       > service stratio-connector-decision stop
 
 
-How to use Connector Streaming
+How to use Connector Decision
 ------------------------------
 
 A complete tutorial is available `here <First_Steps.rst>`__. The
 basic commands are described below.
 
-1. Start `Stratio Crossdata Server and then Stratio Crossdata Shell <http://docs.stratio.com/modules/crossdata/0.4/index.html>`__. 
-2. Start Streaming Connector as it is explained before
+1. Start `Stratio Crossdata Server and then Stratio Crossdata Shell <http://docs.stratio.com/modules/crossdata/0
+.5/index.html>`__.
+2. Start Decision Connector as it is explained before
 3. In crossdata-shell:
 
 Attach cluster on that datastore. The datastore name must be the same as the defined in the Datastore manifest.

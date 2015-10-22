@@ -1,0 +1,4 @@
+/etc/default/connectors/decision
+/etc/sds/connectors/decision/connector-application.conf
+/etc/sds/connectors/decision/log.properties
+/etc/sds/connectors/decision/connector-reference.conf

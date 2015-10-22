@@ -1,16 +1,16 @@
 # About #
 
-The Stratio Connector Streaming allows [Stratio Crossdata] (<http://docs.stratio.com/modules/crossdata/0.4/index.html>) to interact with stratio-streaming.
+The Stratio Connector Decision allows [Stratio Crossdata] (<http://docs.stratio.com/modules/crossdata/0.5/index.html>) to interact with stratio-decision.
 
 ## Requirements ##
 
-Install [Stratio Streaming] (http://docs.openstratio.org/getting-started.html#stratio-streaming) and run it. 
+Install [Stratio Decision] (http://docs.openstratio.org/getting-started.html#stratio-decision) and run it. 
 
-[Crossdata] (http://docs.stratio.com/modules/crossdata/0.4/index.html) is needed to interact with this connector.
+[Crossdata] (http://docs.stratio.com/modules/crossdata/0.5/index.html) is needed to interact with this connector.
 
-## How to use Stratio Connector-Streaming ##
+## How to use Stratio Connector-Decision ##
 
-Requirements, installation and use of the connector can be found [here] (<http://docs.stratio.com/modules/stratio-connector-streaming/0.5/about.html>)
+Requirements, installation and use of the connector can be found [here] (<http://docs.stratio.com/modules/stratio-connector-decision/0.5/about.html>)
 
 There also exists a [First Steps] (<http://docs.stratio.com/modules/stratio-connector-hdfs/0.5/First_Steps.html>) document where through an easy example the main features of this connector are illustrated.
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Streaming CEP documentation build configuration file, created by
+# Decision CEP documentation build configuration file, created by
 # sphinx-quickstart on Thu Jan 15 16:21:58 2015.
 #
 # This file is execfile()d with the current directory set to its
@@ -40,7 +40,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Streaming Connector'
+project = u'Decision Connector'
 copyright = u'2015 Stratio'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -107,9 +107,9 @@ html_theme = 'stratio'
 # documentation.
 html_theme_options = {
     'versions' : ['0.5.0'],
-    'github' : 'https://github.com/Stratio/stratio-connector-streaming',
-    'jira': 'https://github.com/Stratio/stratio-connector-streaming',
-    'module_name' : 'connector_streaming'
+    'github' : 'https://github.com/Stratio/stratio-connector-decision',
+    'jira': 'https://github.com/Stratio/stratio-connector-decision',
+    'module_name' : 'connector_decision'
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
@@ -197,7 +197,7 @@ html_static_path = ['_static']
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'connector-streaming-doc'
+htmlhelp_basename = 'connector-decision-doc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
