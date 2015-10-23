@@ -17,7 +17,7 @@
 
 	<groupId>com.stratio.connector</groupId>
 	<artifactId>stratio-connector-decision</artifactId>
-	<version>0.5.4-RC1-SNAPSHOT</version>
+	<version>0.5.4</version>
 	<description>Stratio Decision connector parent</description>
 	<url>http://www.stratio.com</url>
 	<name>Stratio Decision Connector</name>
